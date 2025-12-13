@@ -54,20 +54,25 @@
           rows.push(child.val());
         });
 
-        rows.reverse().forEach(log => {
-          const time = log.time
-            ? new Date(log.time).toLocaleString()
-            : "Unknown time";
+       rows.reverse().forEach(log => {
+  const time = log.time
+    ? new Date(log.time).toLocaleString()
+    : "Unknown time";
 
-          const div = document.createElement("div");
-          div.className = "row";
-          div.innerHTML = `
-            <strong>[${(log.action || "").toUpperCase()}]</strong>
-            ${log.type || ""} — ${log.device || ""}<br>
-            <small>${log.user || "unknown"} • ${time}</small>
-          `;
-          list.appendChild(div);
-        });
+  const action = (log.action || "").toLowerCase();
+  const badgeClass = action === "take" ? "badge take" : "badge return";
+  const badgeText = action.toUpperCase();
+
+  const div = document.createElement("div");
+  div.className = "row";
+  div.innerHTML = `
+    <span class="${badgeClass}">${badgeText}</span>
+    &nbsp; ${log.type || ""} — ${log.device || ""}<br>
+    <small>${log.user || "unknown"} • ${time}</small>
+  `;
+  list.appendChild(div);
+});
+
       })
       .catch(err => {
         list.innerHTML = "<p>Error loading logs</p>";

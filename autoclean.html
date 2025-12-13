@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auto-clean Scanner Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="mobile">
+
+  <img src="assets/logo.png" class="logo">
+  <h2>Auto-clean Scanner Data</h2>
+
+  <p class="hint">
+    This tool fixes missing or duplicate scanners.<br>
+    Logs are NOT modified.
+  </p>
+
+  <div class="actions">
+    <button onclick="runAutoClean()">Fix Scanner Data</button>
+    <button class="secondary" onclick="history.back()">Back</button>
+  </div>
+
+  <div id="result" class="list" style="margin-top:16px"></div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    async function runAutoClean() {
+      const result = document.getElementById("result");
+      result.innerHTML = "<p class='hint'>Running auto-clean…</p>";
+
+      const fixes = [];
+
+      const scannersSnap = await firebase.database().ref("scanners").once("value");
+      const takenSnap = await firebase.database().ref("takenScanners").once("value");
+
+      const scanners = scannersSnap.val() || {};
+      const taken = takenSnap.val() || {};
+
+      const types = new Set([
+        ...Object.keys(scanners),
+        ...Object.keys(taken)
+      ]);
+
+      for (const type of types) {
+        const avail = scanners[type] || {};
+        const inUse = taken[type] || {};
+
+        const allIds = new Set([
+          ...Object.keys(avail),
+          ...Object.keys(inUse)
+        ]);
+
+        for (const id of allIds) {
+          const inAvail = avail[id] !== undefined;
+          const inTaken = inUse[id] !== undefined;
+
+          // Case 1: In both → keep TAKEN, remove from AVAILABLE
+          if (inAvail && inTaken) {
+            await firebase.database()
+              .ref(`scanners/${type}/${id}`)
+              .remove();
+            fixes.push(`Removed duplicate ${type} ${id} from available`);
+          }
+
+          // Case 2: In neither → restore to AVAILABLE
+          if (!inAvail && !inTaken) {
+            await firebase.database()
+              .ref(`scanners/${type}/${id}`)
+              .set(true);
+            fixes.push(`Restored missing ${type} ${id} to available`);
+          }
+        }
+      }
+
+      if (fixes.length === 0) {
+        result.innerHTML = "<p class='hint'>No issues found. Data is clean ✅</p>";
+      } else {
+        result.innerHTML = fixes
+          .map(f => `<div class="row">${f}</div>`)
+          .join("");
+      }
+    }
+  </script>
+
+</body>
+</html>
 

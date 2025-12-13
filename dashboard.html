@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scanner Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="mobile">
+
+  <img src="assets/logo.png" class="logo">
+  <h2>Scanner Dashboard</h2>
+
+  <h3>WMS</h3>
+  <div id="wmsList" class="list">
+    <p class="hint">Loading...</p>
+  </div>
+
+  <h3>MUSHINY</h3>
+  <div id="mushinyList" class="list">
+    <p class="hint">Loading...</p>
+  </div>
+
+  <div class="actions">
+    <button class="secondary" onclick="history.back()">Back</button>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    function load(type, elId) {
+      const list = document.getElementById(elId);
+      list.innerHTML = "<p>Loading...</p>";
+
+      firebase.database()
+        .ref("takenScanners/" + type)
+        .on("value", snapshot => {
+          list.innerHTML = "";
+
+          if (!snapshot.exists()) {
+            list.innerHTML = "<p>No scanners taken</p>";
+            return;
+          }
+
+          snapshot.forEach(child => {
+            const data = child.val();
+            const div = document.createElement("div");
+            div.className = "row";
+            div.innerHTML = `
+              <strong>${child.key}</strong>
+              <span style="float:right; font-size:13px; color:#555">
+                ${data.user || "unknown"}
+              </span>
+            `;
+            list.appendChild(div);
+          });
+        });
+    }
+
+    load("WMS", "wmsList");
+    load("MUSHINY", "mushinyList");
+  </script>
+
+</body>
+</html>
 

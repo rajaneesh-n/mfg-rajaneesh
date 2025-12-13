@@ -1,7 +1,90 @@
 <!DOCTYPE html>
-<html><head><title>Return</title></head>
-<body>
-<h1>Return Scanner</h1>
-<input placeholder="Name"><button>Submit</button>
-<a href="mobile.html">Back</a>
-</body></html>
+<html>
+<head>
+  <title>Return Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="mobile">
+
+  <img src="assets/logo.png" class="logo">
+  <h2>Return a Scanner</h2>
+
+  <!-- TYPE SELECT -->
+  <div class="toggle">
+    <button id="btnMushiny" onclick="selectType('MUSHINY')">Mushiny</button>
+    <button id="btnWms" onclick="selectType('WMS')">WMS</button>
+  </div>
+
+  <!-- SCANNER INPUT -->
+  <input
+    type="text"
+    id="scannerId"
+    placeholder="Enter scanner number"
+  />
+
+  <!-- USER NAME -->
+  <input
+    type="text"
+    id="userName"
+    placeholder="Enter your name"
+  />
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button onclick="returnScanner()">Return</button>
+    <button class="secondary" onclick="history.back()">Back</button>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    let selectedType = null;
+
+    function selectType(type) {
+      selectedType = type;
+
+      document.getElementById("btnMushiny").classList.remove("active");
+      document.getElementById("btnWms").classList.remove("active");
+
+      if (type === "MUSHINY") {
+        document.getElementById("btnMushiny").classList.add("active");
+      } else {
+        document.getElementById("btnWms").classList.add("active");
+      }
+    }
+
+    function returnScanner() {
+      const scannerId = document.getElementById("scannerId").value.trim();
+      const user = document.getElementById("userName").value.trim();
+
+      if (!selectedType || !scannerId || !user) {
+        alert("Please select type, scanner and enter name");
+        return;
+      }
+
+      // Add scanner back
+      firebase.database()
+        .ref("scanners/" + selectedType + "/" + scannerId)
+        .set(true);
+
+      // Log return
+      firebase.database().ref("logs").push({
+        user: user,
+        device: scannerId,
+        type: selectedType,
+        action: "return",
+        time: new Date().toISOString()
+      });
+
+      alert("Scanner returned successfully");
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>

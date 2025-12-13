@@ -38,85 +38,89 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="config.js"></script>
 
-  <script>
-    let selectedType = null;
-    let selectedDevice = null;
+<script>
+  let selectedType = null;
+  let selectedDevice = null;
 
-    function selectType(type) {
-      selectedType = type;
-      selectedDevice = null;
+  function selectType(type) {
+    selectedType = type.toUpperCase(); // WMS / MUSHINY
+    selectedDevice = null;
 
-      document.getElementById("btnMushiny").classList.remove("active");
-      document.getElementById("btnWms").classList.remove("active");
+    document.getElementById("btnMushiny").classList.remove("active");
+    document.getElementById("btnWms").classList.remove("active");
 
-      if (type === "mushiny") {
-        document.getElementById("btnMushiny").classList.add("active");
-      } else {
-        document.getElementById("btnWms").classList.add("active");
-      }
-
-      loadScanners();
+    if (type === "mushiny") {
+      document.getElementById("btnMushiny").classList.add("active");
+    } else {
+      document.getElementById("btnWms").classList.add("active");
     }
 
-    function loadScanners() {
-      const list = document.getElementById("scannerList");
-      list.innerHTML = "<p>Loading devices...</p>";
+    loadScanners();
+  }
 
-      firebase.database()
-        .ref("devices")
-        .orderByChild("type")
-        .equalTo(selectedType)
-        .once("value", snap => {
+  function loadScanners() {
+    const list = document.getElementById("scannerList");
+    list.innerHTML = "<p>Loading devices...</p>";
 
-          list.innerHTML = "";
+    firebase.database()
+      .ref("scanners/" + selectedType)
+      .once("value")
+      .then(snapshot => {
+        list.innerHTML = "";
 
-          snap.forEach(child => {
-            const d = child.val();
-            if (d.status === "available") {
-              const div = document.createElement("div");
-              div.className = "row";
-              div.innerText = d.id;
-              div.onclick = () => selectDevice(div, d.id);
-              list.appendChild(div);
-            }
-          });
+        if (!snapshot.exists()) {
+          list.innerHTML = "<p>No available scanners</p>";
+          return;
+        }
 
-          if (list.innerHTML === "") {
-            list.innerHTML = "<p>No available scanners</p>";
-          }
+        snapshot.forEach(child => {
+          const scannerId = child.key;
+
+          const div = document.createElement("div");
+          div.className = "row";
+          div.innerText = scannerId;
+          div.onclick = () => selectDevice(div, scannerId);
+
+          list.appendChild(div);
         });
-    }
-
-    function selectDevice(el, id) {
-      document.querySelectorAll(".row").forEach(r => r.classList.remove("selected"));
-      el.classList.add("selected");
-      selectedDevice = id;
-    }
-
-    function submit() {
-      const user = document.getElementById("userName").value.trim();
-
-      if (!selectedType || !selectedDevice || !user) {
-        alert("Please select scanner and enter name");
-        return;
-      }
-
-      firebase.database().ref("devices/" + selectedDevice).update({
-        status: "taken",
-        holder: user
       });
+  }
 
-      firebase.database().ref("logs").push({
-        user,
-        device: selectedDevice,
-        action: "take",
-        time: new Date().toISOString()
-      });
+  function selectDevice(el, id) {
+    document.querySelectorAll(".row").forEach(r =>
+      r.classList.remove("selected")
+    );
+    el.classList.add("selected");
+    selectedDevice = id;
+  }
 
-      alert("Scanner taken successfully");
-      location.reload();
+  function submit() {
+    const user = document.getElementById("userName").value.trim();
+
+    if (!selectedType || !selectedDevice || !user) {
+      alert("Please select scanner and enter name");
+      return;
     }
-  </script>
+
+    // REMOVE scanner from available list
+    firebase.database()
+      .ref("scanners/" + selectedType + "/" + selectedDevice)
+      .remove();
+
+    // LOG action
+    firebase.database().ref("logs").push({
+      user,
+      device: selectedDevice,
+      type: selectedType,
+      action: "take",
+      time: new Date().toISOString()
+    });
+
+    alert("Scanner taken successfully");
+    location.reload();
+  }
+</script>
+
 
 </body>
 </html>

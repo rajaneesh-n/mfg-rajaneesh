@@ -1,9 +1,67 @@
 <!DOCTYPE html>
-<html><head><title>Log Report</title><link rel="stylesheet" href="style.css"></head>
-<body>
-<img src="assets/logo.png" height="60">
-<h1>Device Sign Logs Report</h1>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="config.js"></script>
-</body></html>
+<html>
+<head>
+  <title>Scanner Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="mobile">
+
+  <img src="assets/logo.png" class="logo">
+  <h2>Scanner Logs</h2>
+
+  <div id="logList" class="list">
+    <p class="hint">Loading logs...</p>
+  </div>
+
+  <div class="actions">
+    <button class="secondary" onclick="history.back()">Back</button>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    const list = document.getElementById("logList");
+
+    firebase.database()
+      .ref("logs")
+      .limitToLast(50)
+      .once("value")
+      .then(snapshot => {
+        list.innerHTML = "";
+
+        if (!snapshot.exists()) {
+          list.innerHTML = "<p>No logs found</p>";
+          return;
+        }
+
+        const rows = [];
+        snapshot.forEach(child => {
+          rows.push(child.val());
+        });
+
+        rows.reverse().forEach(log => {
+          const time = new Date(log.time).toLocaleString();
+
+          const div = document.createElement("div");
+          div.className = "row";
+          div.innerHTML = `
+            <strong>[${log.action.toUpperCase()}]</strong>
+            ${log.type} — ${log.device}<br>
+            <small>${log.user} • ${time}</small>
+          `;
+          list.appendChild(div);
+        });
+      })
+      .catch(err => {
+        list.innerHTML = "<p>Error loading logs</p>";
+        console.error(err);
+      });
+  </script>
+
+</body>
+</html>

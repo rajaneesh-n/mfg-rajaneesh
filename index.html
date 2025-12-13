@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Device Status</title>
+  <title>Scanner Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="mobile">
 
-  <img src="assets/logo.png" height="60">
+  <!-- LOGO -->
+  <img src="assets/logo.png" class="logo">
 
-  <h1>Currently Taken Scanners Report</h1>
-  <p>No scanners are currently taken.</p>
+  <h2>Scanner Management</h2>
 
-  <!-- Firebase v8 SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <div class="list">
 
-  <!-- Firebase config -->
-  <script src="config.js"></script>
+    <div class="row" onclick="location.href='mobile.html'">
+      📦 <strong>Take Scanner</strong>
+      <br><small>Assign a scanner</small>
+    </div>
+
+    <div class="row" onclick="location.href='return.html'">
+      🔁 <strong>Return Scanner</strong>
+      <br><small>Return a scanner</small>
+    </div>
+
+    <div class="row" onclick="location.href='dashboard.html'">
+      📊 <strong>Dashboard</strong>
+      <br><small>Who has which scanner</small>
+    </div>
+
+    <div class="row" onclick="location.href='logs.html'">
+      📜 <strong>Logs & Reports</strong>
+      <br><small>History and CSV export</small>
+    </div>
+
+  </div>
 
 </body>
 </html>

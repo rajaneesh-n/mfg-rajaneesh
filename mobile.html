@@ -102,7 +102,6 @@
     }
 
     function submitScanner() {
-      alert("Submit clicked");
       const user = document.getElementById("userName").value.trim();
 
       if (!selectedType || !selectedDevice || !user) {
@@ -110,31 +109,41 @@
         return;
       }
 
-// 1) Move scanner to takenScanners (for Return page)
-firebase.database()
-  .ref("takenScanners/" + selectedType + "/" + selectedDevice)
-  .set({
-    user: user,
-    time: new Date().toISOString()
-  });
+      // 1️⃣ Save to takenScanners
+      firebase.database()
+        .ref("takenScanners/" + selectedType + "/" + selectedDevice)
+        .set({
+          user: user,
+          time: new Date().toISOString()
+        })
+        .then(() => {
 
-// 2) Remove scanner from available scanners
-firebase.database()
-  .ref("scanners/" + selectedType + "/" + selectedDevice)
-  .remove();
+          // 2️⃣ Remove from available scanners
+          return firebase.database()
+            .ref("scanners/" + selectedType + "/" + selectedDevice)
+            .remove();
 
+        })
+        .then(() => {
 
-      // Log action
-      firebase.database().ref("logs").push({
-        user: user,
-        device: selectedDevice,
-        type: selectedType,
-        action: "take",
-        time: new Date().toISOString()
-      });
+          // 3️⃣ Log action
+          return firebase.database().ref("logs").push({
+            user: user,
+            device: selectedDevice,
+            type: selectedType,
+            action: "take",
+            time: new Date().toISOString()
+          });
 
-      alert("Scanner taken successfully");
-      location.reload();
+        })
+        .then(() => {
+          alert("Scanner taken successfully");
+          location.reload();
+        })
+        .catch(err => {
+          console.error("Error taking scanner:", err);
+          alert("Error taking scanner");
+        });
     }
   </script>
 

@@ -8,10 +8,18 @@
 
 <body class="mobile">
 
-  <!-- LOGO -->
   <img src="assets/logo.png" class="logo">
-
   <h2>Scanner Logs</h2>
+
+  <!-- FILTER CONTROLS -->
+  <div class="toggle">
+    <button onclick="setActionFilter('all')" id="btnAll" class="active">All</button>
+    <button onclick="setActionFilter('take')" id="btnTake">Take</button>
+    <button onclick="setActionFilter('return')" id="btnReturn">Return</button>
+  </div>
+
+  <input type="text" id="userFilter" placeholder="Filter by user">
+  <input type="text" id="scannerFilter" placeholder="Filter by scanner">
 
   <!-- CSV EXPORT -->
   <button onclick="downloadCSV()" style="margin-bottom:10px">
@@ -23,7 +31,6 @@
     <p class="hint">Loading logs...</p>
   </div>
 
-  <!-- ACTIONS -->
   <div class="actions">
     <button class="secondary" onclick="history.back()">Back</button>
   </div>
@@ -35,86 +42,90 @@
 
   <script>
     const list = document.getElementById("logList");
+    let allLogs = [];
+    let actionFilter = "all";
 
-    // LOAD LOGS (latest first)
+    function setActionFilter(type) {
+      actionFilter = type;
+
+      ["btnAll", "btnTake", "btnReturn"].forEach(id =>
+        document.getElementById(id).classList.remove("active")
+      );
+
+      if (type === "take") btnTake.classList.add("active");
+      else if (type === "return") btnReturn.classList.add("active");
+      else btnAll.classList.add("active");
+
+      renderLogs();
+    }
+
     firebase.database()
       .ref("logs")
-      .limitToLast(100)
       .once("value")
       .then(snapshot => {
-        list.innerHTML = "";
-
-        if (!snapshot.exists()) {
-          list.innerHTML = "<p>No logs found</p>";
-          return;
-        }
-
-        const rows = [];
+        allLogs = [];
         snapshot.forEach(child => {
-          rows.push(child.val());
+          allLogs.push(child.val());
         });
-
-       rows.reverse().forEach(log => {
-  const time = log.time
-    ? new Date(log.time).toLocaleString()
-    : "Unknown time";
-
-  const action = (log.action || "").toLowerCase();
-  const badgeClass = action === "take" ? "badge take" : "badge return";
-  const badgeText = action.toUpperCase();
-
-  const div = document.createElement("div");
-  div.className = "row";
-  div.innerHTML = `
-    <span class="${badgeClass}">${badgeText}</span>
-    &nbsp; ${log.type || ""} — ${log.device || ""}<br>
-    <small>${log.user || "unknown"} • ${time}</small>
-  `;
-  list.appendChild(div);
-});
-
-      })
-      .catch(err => {
-        list.innerHTML = "<p>Error loading logs</p>";
-        console.error(err);
+        renderLogs();
       });
 
-    // DOWNLOAD CSV
+    document.getElementById("userFilter").addEventListener("input", renderLogs);
+    document.getElementById("scannerFilter").addEventListener("input", renderLogs);
+
+    function renderLogs() {
+      list.innerHTML = "";
+
+      let userText = document.getElementById("userFilter").value.toLowerCase();
+      let scannerText = document.getElementById("scannerFilter").value.toLowerCase();
+
+      let filtered = allLogs.filter(log => {
+        if (actionFilter !== "all" && log.action !== actionFilter) return false;
+        if (userText && !log.user.toLowerCase().includes(userText)) return false;
+        if (scannerText && !log.device.toLowerCase().includes(scannerText)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = "<p class='hint'>No matching logs</p>";
+        return;
+      }
+
+      filtered.reverse().forEach(log => {
+        const time = log.time
+          ? new Date(log.time).toLocaleString()
+          : "Unknown time";
+
+        const badgeClass = log.action === "take" ? "badge take" : "badge return";
+
+        const div = document.createElement("div");
+        div.className = "row";
+        div.innerHTML = `
+          <span class="${badgeClass}">${log.action.toUpperCase()}</span>
+          &nbsp; ${log.type} — ${log.device}<br>
+          <small>${log.user} • ${time}</small>
+        `;
+        list.appendChild(div);
+      });
+    }
+
     function downloadCSV() {
-      firebase.database()
-        .ref("logs")
-        .once("value")
-        .then(snapshot => {
-          if (!snapshot.exists()) {
-            alert("No logs to export");
-            return;
-          }
+      let csv = "Action,Type,Scanner,User,Time\n";
 
-          let csv = "Action,Type,Scanner,User,Time\n";
+      allLogs.forEach(l => {
+        const time = l.time ? new Date(l.time).toLocaleString() : "";
+        csv += `${l.action},${l.type},${l.device},${l.user},${time}\n`;
+      });
 
-          snapshot.forEach(child => {
-            const l = child.val();
-            const time = l.time
-              ? new Date(l.time).toLocaleString()
-              : "";
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
 
-            csv += `${l.action || ""},${l.type || ""},${l.device || ""},${l.user || ""},${time}\n`;
-          });
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "scanner_logs.csv";
+      a.click();
 
-          const blob = new Blob([csv], { type: "text/csv" });
-          const url = window.URL.createObjectURL(blob);
-
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "scanner_logs.csv";
-          a.click();
-
-          window.URL.revokeObjectURL(url);
-        })
-        .catch(err => {
-          console.error("CSV export failed:", err);
-          alert("Error exporting CSV");
-        });
+      window.URL.revokeObjectURL(url);
     }
   </script>
 

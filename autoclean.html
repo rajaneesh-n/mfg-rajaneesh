@@ -12,16 +12,21 @@
   <h2>Auto-clean Scanner Data</h2>
 
   <p class="hint">
-    This tool fixes missing or duplicate scanners.<br>
-    Logs are NOT modified.
+    Preview and fix missing or duplicate scanners.<br>
+    Logs are never modified.
   </p>
 
   <div class="actions">
-    <button onclick="runAutoClean()">Fix Scanner Data</button>
-    <button class="secondary" onclick="history.back()">Back</button>
+    <button onclick="previewFixes()">Preview Issues</button>
+    <button class="secondary" onclick="location.href='index.html'">Home</button>
   </div>
 
   <div id="result" class="list" style="margin-top:16px"></div>
+
+  <div class="actions" id="applySection" style="display:none; margin-top:10px">
+    <button onclick="applyFixes()">Apply Fixes</button>
+    <button class="secondary" onclick="resetView()">Cancel</button>
+  </div>
 
   <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -29,17 +34,15 @@
   <script src="config.js"></script>
 
   <script>
-    async function runAutoClean() {
+    let plannedFixes = [];
+
+    async function previewFixes() {
+      plannedFixes = [];
       const result = document.getElementById("result");
-      result.innerHTML = "<p class='hint'>Running auto-clean…</p>";
+      result.innerHTML = "<p class='hint'>Scanning data…</p>";
 
-      const fixes = [];
-
-      const scannersSnap = await firebase.database().ref("scanners").once("value");
-      const takenSnap = await firebase.database().ref("takenScanners").once("value");
-
-      const scanners = scannersSnap.val() || {};
-      const taken = takenSnap.val() || {};
+      const scanners = (await firebase.database().ref("scanners").once("value")).val() || {};
+      const taken = (await firebase.database().ref("takenScanners").once("value")).val() || {};
 
       const types = new Set([
         ...Object.keys(scanners),
@@ -59,34 +62,53 @@
           const inAvail = avail[id] !== undefined;
           const inTaken = inUse[id] !== undefined;
 
-          // Case 1: In both → keep TAKEN, remove from AVAILABLE
           if (inAvail && inTaken) {
-            await firebase.database()
-              .ref(`scanners/${type}/${id}`)
-              .remove();
-            fixes.push(`Removed duplicate ${type} ${id} from available`);
+            plannedFixes.push({
+              msg: `Duplicate ${type} ${id} → remove from available`,
+              action: () => firebase.database().ref(`scanners/${type}/${id}`).remove()
+            });
           }
 
-          // Case 2: In neither → restore to AVAILABLE
           if (!inAvail && !inTaken) {
-            await firebase.database()
-              .ref(`scanners/${type}/${id}`)
-              .set(true);
-            fixes.push(`Restored missing ${type} ${id} to available`);
+            plannedFixes.push({
+              msg: `Missing ${type} ${id} → restore to available`,
+              action: () => firebase.database().ref(`scanners/${type}/${id}`).set(true)
+            });
           }
         }
       }
 
-      if (fixes.length === 0) {
+      if (plannedFixes.length === 0) {
         result.innerHTML = "<p class='hint'>No issues found. Data is clean ✅</p>";
-      } else {
-        result.innerHTML = fixes
-          .map(f => `<div class="row">${f}</div>`)
-          .join("");
+        return;
       }
+
+      result.innerHTML = plannedFixes
+        .map(f => `<div class="row">${f.msg}</div>`)
+        .join("");
+
+      document.getElementById("applySection").style.display = "flex";
+    }
+
+    async function applyFixes() {
+      if (!confirm("Are you sure you want to apply these fixes?")) return;
+
+      for (const fix of plannedFixes) {
+        await fix.action();
+      }
+
+      document.getElementById("result").innerHTML =
+        "<p class='hint'>Fixes applied successfully ✅</p>";
+      document.getElementById("applySection").style.display = "none";
+      plannedFixes = [];
+    }
+
+    function resetView() {
+      plannedFixes = [];
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("applySection").style.display = "none";
     }
   </script>
 
 </body>
 </html>
-

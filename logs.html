@@ -11,17 +11,16 @@
   <img src="assets/logo.png" class="logo">
   <h2>Scanner Logs</h2>
 
-  <!-- FILTER CONTROLS -->
+  <!-- FILTERS -->
   <div class="toggle">
-    <button onclick="setActionFilter('all')" id="btnAll" class="active">All</button>
-    <button onclick="setActionFilter('take')" id="btnTake">Take</button>
-    <button onclick="setActionFilter('return')" id="btnReturn">Return</button>
+    <button id="btnAll" class="active" onclick="setActionFilter('all')">All</button>
+    <button id="btnTake" onclick="setActionFilter('take')">Take</button>
+    <button id="btnReturn" onclick="setActionFilter('return')">Return</button>
   </div>
 
-  <input type="text" id="userFilter" placeholder="Filter by user">
-  <input type="text" id="scannerFilter" placeholder="Filter by scanner">
+  <input type="date" id="fromDate">
+  <input type="date" id="toDate">
 
-  <!-- CSV EXPORT -->
   <button onclick="downloadCSV()" style="margin-bottom:10px">
     Download CSV
   </button>
@@ -41,9 +40,21 @@
   <script src="config.js"></script>
 
   <script>
-    const list = document.getElementById("logList");
     let allLogs = [];
     let actionFilter = "all";
+
+    const list = document.getElementById("logList");
+
+    firebase.database()
+      .ref("logs")
+      .once("value")
+      .then(snapshot => {
+        allLogs = [];
+        snapshot.forEach(child => {
+          allLogs.push(child.val());
+        });
+        renderLogs();
+      });
 
     function setActionFilter(type) {
       actionFilter = type;
@@ -59,43 +70,38 @@
       renderLogs();
     }
 
-    firebase.database()
-      .ref("logs")
-      .once("value")
-      .then(snapshot => {
-        allLogs = [];
-        snapshot.forEach(child => {
-          allLogs.push(child.val());
-        });
-        renderLogs();
-      });
-
-    document.getElementById("userFilter").addEventListener("input", renderLogs);
-    document.getElementById("scannerFilter").addEventListener("input", renderLogs);
+    document.getElementById("fromDate").addEventListener("change", renderLogs);
+    document.getElementById("toDate").addEventListener("change", renderLogs);
 
     function renderLogs() {
       list.innerHTML = "";
 
-      let userText = document.getElementById("userFilter").value.toLowerCase();
-      let scannerText = document.getElementById("scannerFilter").value.toLowerCase();
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
 
       let filtered = allLogs.filter(log => {
         if (actionFilter !== "all" && log.action !== actionFilter) return false;
-        if (userText && !log.user.toLowerCase().includes(userText)) return false;
-        if (scannerText && !log.device.toLowerCase().includes(scannerText)) return false;
+
+        if (from) {
+          if (new Date(log.time) < new Date(from)) return false;
+        }
+
+        if (to) {
+          const end = new Date(to);
+          end.setHours(23, 59, 59, 999);
+          if (new Date(log.time) > end) return false;
+        }
+
         return true;
       });
 
       if (filtered.length === 0) {
-        list.innerHTML = "<p class='hint'>No matching logs</p>";
+        list.innerHTML = "<p class='hint'>No logs found</p>";
         return;
       }
 
       filtered.reverse().forEach(log => {
-        const time = log.time
-          ? new Date(log.time).toLocaleString()
-          : "Unknown time";
-
+        const time = new Date(log.time).toLocaleString();
         const badgeClass = log.action === "take" ? "badge take" : "badge return";
 
         const div = document.createElement("div");
@@ -112,9 +118,13 @@
     function downloadCSV() {
       let csv = "Action,Type,Scanner,User,Time\n";
 
-      allLogs.forEach(l => {
-        const time = l.time ? new Date(l.time).toLocaleString() : "";
-        csv += `${l.action},${l.type},${l.device},${l.user},${time}\n`;
+      let rows = allLogs.filter(log => {
+        if (actionFilter !== "all" && log.action !== actionFilter) return false;
+        return true;
+      });
+
+      rows.forEach(l => {
+        csv += `${l.action},${l.type},${l.device},${l.user},${new Date(l.time).toLocaleString()}\n`;
       });
 
       const blob = new Blob([csv], { type: "text/csv" });

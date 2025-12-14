@@ -10,15 +10,21 @@
 
   <img src="assets/logo.png" class="logo">
   <h2>Scanner Dashboard</h2>
+
+  <!-- SUMMARY -->
+  <div id="summary" class="list" style="margin-bottom:16px">
+    <p class="hint">Loading summary...</p>
+  </div>
+
+  <!-- OVERDUE ALERTS -->
   <div id="alerts" class="list" style="margin-bottom:16px"></div>
 
-
-  <h3>WMS</h3>
+  <h3>WMS – Taken Scanners</h3>
   <div id="wmsList" class="list">
     <p class="hint">Loading...</p>
   </div>
 
-  <h3>MUSHINY</h3>
+  <h3>MUSHINY – Taken Scanners</h3>
   <div id="mushinyList" class="list">
     <p class="hint">Loading...</p>
   </div>
@@ -32,101 +38,91 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="config.js"></script>
 
-<script>
-  const EIGHT_HOURS = 8 * 60 * 60 * 1000;
+  <script>
+    const EIGHT_HOURS = 8 * 60 * 60 * 1000;
 
-  function formatDuration(ms) {
-    const hours = Math.floor(ms / (60 * 60 * 1000));
-    const mins = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
-    return `${hours}h ${mins}m`;
-  }
+    function formatDuration(ms) {
+      const h = Math.floor(ms / (60 * 60 * 1000));
+      const m = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+      return `${h}h ${m}m`;
+    }
 
-  function load(type, elId) {
-    const list = document.getElementById(elId);
-    list.innerHTML = "<p>Loading...</p>";
+    function loadDashboard() {
+      firebase.database()
+        .ref("takenScanners")
+        .on("value", snapshot => {
+          const summary = document.getElementById("summary");
+          const alerts = document.getElementById("alerts");
+          const wmsList = document.getElementById("wmsList");
+          const mushinyList = document.getElementById("mushinyList");
 
-    firebase.database()
-      .ref("takenScanners/" + type)
-      .on("value", snapshot => {
-        list.innerHTML = "";
+          let totalTaken = 0;
+          let overdue = [];
 
-        if (!snapshot.exists()) {
-          list.innerHTML = "<p>No scanners taken</p>";
-          return;
-        }
+          wmsList.innerHTML = "";
+          mushinyList.innerHTML = "";
 
-        snapshot.forEach(child => {
-          const data = child.val();
-          const div = document.createElement("div");
-          div.className = "row";
-          div.innerHTML = `
-            <strong>${child.key}</strong>
-            <span style="float:right; font-size:13px; color:#555">
-              ${data.user || "unknown"}
-            </span>
-          `;
-          list.appendChild(div);
-        });
-      });
-  }
+          snapshot.forEach(typeSnap => {
+            const type = typeSnap.key;
 
-  function loadOverdueAlerts() {
-    const alertBox = document.getElementById("alerts");
-    alertBox.innerHTML = "<p>Checking overdue scanners...</p>";
+            typeSnap.forEach(scannerSnap => {
+              totalTaken++;
+              const id = scannerSnap.key;
+              const data = scannerSnap.val();
+              const takenTime = new Date(data.time).getTime();
+              const diff = Date.now() - takenTime;
 
-    firebase.database()
-      .ref("takenScanners")
-      .once("value")
-      .then(snapshot => {
-        const now = Date.now();
-        const overdue = [];
+              const row = document.createElement("div");
+              row.className = "row";
+              row.innerHTML = `
+                <strong>${id}</strong>
+                <span style="float:right; font-size:13px; color:#555">
+                  ${data.user || "unknown"}
+                </span>
+              `;
 
-        snapshot.forEach(typeSnap => {
-          const type = typeSnap.key;
+              if (type === "WMS") wmsList.appendChild(row);
+              else mushinyList.appendChild(row);
 
-          typeSnap.forEach(scannerSnap => {
-            const id = scannerSnap.key;
-            const data = scannerSnap.val();
-
-            if (!data.time) return;
-
-            const takenTime = new Date(data.time).getTime();
-            const diff = now - takenTime;
-
-            if (diff > EIGHT_HOURS) {
-              overdue.push({
-                type,
-                id,
-                user: data.user || "unknown",
-                duration: formatDuration(diff)
-              });
-            }
+              if (diff > EIGHT_HOURS) {
+                overdue.push({
+                  type,
+                  id,
+                  user: data.user || "unknown",
+                  duration: formatDuration(diff)
+                });
+              }
+            });
           });
+
+          summary.innerHTML = `
+            <div class="row"><strong>Total Taken:</strong> ${totalTaken}</div>
+          `;
+
+          if (overdue.length === 0) {
+            alerts.innerHTML = "<p class='hint'>✅ No overdue scanners</p>";
+          } else {
+            alerts.innerHTML =
+              "<p class='hint'>⚠️ Overdue scanners (8+ hours)</p>" +
+              overdue.map(o => `
+                <div class="row">
+                  <strong>${o.type} ${o.id}</strong><br>
+                  <small>${o.user} • ${o.duration}</small>
+                </div>
+              `).join("");
+          }
+
+          if (!wmsList.hasChildNodes()) {
+            wmsList.innerHTML = "<p class='hint'>No WMS scanners taken</p>";
+          }
+          if (!mushinyList.hasChildNodes()) {
+            mushinyList.innerHTML = "<p class='hint'>No MUSHINY scanners taken</p>";
+          }
         });
+    }
 
-        if (overdue.length === 0) {
-          alertBox.innerHTML =
-            "<p class='hint'>✅ No overdue scanners</p>";
-          return;
-        }
-
-        alertBox.innerHTML =
-          "<p class='hint'>⚠️ Overdue scanners (8+ hours)</p>" +
-          overdue.map(o => `
-            <div class="row">
-              <strong>${o.type} ${o.id}</strong><br>
-              <small>${o.user} • ${o.duration}</small>
-            </div>
-          `).join("");
-      });
-  }
-
-  load("WMS", "wmsList");
-  load("MUSHINY", "mushinyList");
-  loadOverdueAlerts();
-</script>
-
+    loadDashboard();
+  </script>
 
 </body>
 </html>
-

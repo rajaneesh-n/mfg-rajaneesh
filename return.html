@@ -29,8 +29,8 @@
 
   <!-- ACTIONS -->
   <div class="actions">
-    <button onclick="returnScanner()">Return</button>
-    <button class="secondary" onclick="history.back()">Back</button>
+    <button id="returnBtn" onclick="returnScanner()">Return</button>
+    <button class="secondary" onclick="safeBack()">Back</button>
   </div>
 
   <!-- FIREBASE -->
@@ -41,6 +41,7 @@
   <script>
     let selectedType = null;
     let selectedDevice = null;
+    let isReturning = false;
 
     function selectType(type) {
       selectedType = type;
@@ -73,22 +74,21 @@
             return;
           }
 
-snapshot.forEach(child => {
-  const data = child.val();
-  const takenBy = data.user || "unknown";
+          snapshot.forEach(child => {
+            const data = child.val();
+            const takenBy = data.user || "unknown";
 
-  const div = document.createElement("div");
-  div.className = "row";
-  div.innerHTML = `
-    <strong>${child.key}</strong>
-    <span style="float:right; font-size:13px; color:#555">
-      taken by ${takenBy}
-    </span>
-  `;
-  div.onclick = () => selectDevice(div, child.key);
-  list.appendChild(div);
-});
-
+            const div = document.createElement("div");
+            div.className = "row";
+            div.innerHTML = `
+              <strong>${child.key}</strong>
+              <span style="float:right; font-size:13px; color:#555">
+                taken by ${takenBy}
+              </span>
+            `;
+            div.onclick = () => selectDevice(div, child.key);
+            list.appendChild(div);
+          });
         })
         .catch(err => {
           list.innerHTML = "<p>Error loading scanners</p>";
@@ -105,27 +105,31 @@ snapshot.forEach(child => {
     }
 
     function returnScanner() {
+      if (isReturning) return;
+
       const user = document.getElementById("userName").value.trim();
+      const returnBtn = document.getElementById("returnBtn");
 
       if (!selectedType || !selectedDevice || !user) {
         alert("Please select scanner and enter name");
         return;
       }
 
+      isReturning = true;
+      returnBtn.disabled = true;
+      returnBtn.innerText = "Processing...";
+
       // 1️⃣ Add back to available scanners
       firebase.database()
         .ref("scanners/" + selectedType + "/" + selectedDevice)
         .set(true)
         .then(() => {
-
           // 2️⃣ Remove from takenScanners
           return firebase.database()
             .ref("takenScanners/" + selectedType + "/" + selectedDevice)
             .remove();
-
         })
         .then(() => {
-
           // 3️⃣ Log return
           return firebase.database().ref("logs").push({
             user: user,
@@ -134,7 +138,6 @@ snapshot.forEach(child => {
             action: "return",
             time: new Date().toISOString()
           });
-
         })
         .then(() => {
           alert("Scanner returned successfully");
@@ -142,8 +145,19 @@ snapshot.forEach(child => {
         })
         .catch(err => {
           console.error("Return failed:", err);
-          alert("Error returning scanner");
+          alert("Something went wrong. Please try again.");
+          isReturning = false;
+          returnBtn.disabled = false;
+          returnBtn.innerText = "Return";
         });
+    }
+
+    function safeBack() {
+      if (isReturning) {
+        alert("Please wait, processing in progress");
+        return;
+      }
+      history.back();
     }
   </script>
 

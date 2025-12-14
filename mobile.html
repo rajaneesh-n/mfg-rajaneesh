@@ -29,8 +29,8 @@
 
   <!-- ACTIONS -->
   <div class="actions">
-    <button onclick="submitScanner()">Submit</button>
-    <button class="secondary" onclick="history.back()">Back</button>
+    <button id="submitBtn" onclick="submitScanner()">Submit</button>
+    <button class="secondary" onclick="safeBack()">Back</button>
   </div>
 
   <!-- FIREBASE -->
@@ -41,6 +41,7 @@
   <script>
     let selectedType = null;
     let selectedDevice = null;
+    let isSubmitting = false;
 
     function selectType(type) {
       selectedType = type;
@@ -102,12 +103,19 @@
     }
 
     function submitScanner() {
+      if (isSubmitting) return;
+
       const user = document.getElementById("userName").value.trim();
+      const submitBtn = document.getElementById("submitBtn");
 
       if (!selectedType || !selectedDevice || !user) {
         alert("Please select scanner and enter name");
         return;
       }
+
+      isSubmitting = true;
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Processing...";
 
       // 1️⃣ Save to takenScanners
       firebase.database()
@@ -117,15 +125,12 @@
           time: new Date().toISOString()
         })
         .then(() => {
-
           // 2️⃣ Remove from available scanners
           return firebase.database()
             .ref("scanners/" + selectedType + "/" + selectedDevice)
             .remove();
-
         })
         .then(() => {
-
           // 3️⃣ Log action
           return firebase.database().ref("logs").push({
             user: user,
@@ -134,7 +139,6 @@
             action: "take",
             time: new Date().toISOString()
           });
-
         })
         .then(() => {
           alert("Scanner taken successfully");
@@ -142,8 +146,19 @@
         })
         .catch(err => {
           console.error("Error taking scanner:", err);
-          alert("Error taking scanner");
+          alert("Something went wrong. Please try again.");
+          isSubmitting = false;
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Submit";
         });
+    }
+
+    function safeBack() {
+      if (isSubmitting) {
+        alert("Please wait, processing in progress");
+        return;
+      }
+      history.back();
     }
   </script>
 

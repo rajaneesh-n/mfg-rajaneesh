@@ -19,12 +19,8 @@
     <button id="btnWms" onclick="selectType('WMS')">WMS</button>
   </div>
 
-  <!-- SCROLLABLE SCANNER LIST -->
-  <div id="scannerScroll" style="
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 140px;
-  ">
+  <!-- SCROLLABLE LIST (ONLY THIS SCROLLS) -->
+  <div class="scroll-area">
     <div id="scannerList" class="list">
       <p class="hint">Select WMS or Mushiny</p>
     </div>
@@ -34,14 +30,7 @@
   <input type="text" id="userName" placeholder="Enter your name">
 
   <!-- FIXED ACTION BAR -->
-  <div class="actions" style="
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 16px;
-    background: #f4f6f8;
-  ">
+  <div class="actions">
     <button id="submitBtn" onclick="submitScanner()">Submit</button>
     <button class="secondary" onclick="safeBack()">Back</button>
   </div>

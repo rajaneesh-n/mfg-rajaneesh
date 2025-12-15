@@ -125,3 +125,19 @@ input[type="text"] {
   font-size: 18px;
   gap: 8px;
 }
+/* HOME PAGE LAYOUT FIX */
+.home-row {
+  cursor: pointer;
+}
+
+.home-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.home-icon {
+  font-size: 26px;
+}

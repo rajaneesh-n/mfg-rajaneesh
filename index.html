@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Scanner Management</title>
+  <title>Scanner App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="mobile">
 
+  <!-- LOGO -->
   <img src="assets/logo.png" class="logo">
+
   <h2>Scanner Management</h2>
 
-  <div class="list">
+  <div class="actions" style="margin-top:40px">
+    <button onclick="location.href='mobile.html'">
+      Take a Scanner
+    </button>
 
-    <div class="row" onclick="location.href='mobile.html'">
-      📦 <strong>Take Scanner</strong><br>
-      <small>Assign a scanner</small>
-    </div>
-
-    <div class="row" onclick="location.href='return.html'">
-      🔁 <strong>Return Scanner</strong><br>
-      <small>Return a scanner</small>
-    </div>
-
+    <button onclick="location.href='return.html'" style="margin-top:12px">
+      Return a Scanner
+    </button>
   </div>
 
 </body>

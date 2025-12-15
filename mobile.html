@@ -19,16 +19,29 @@
     <button id="btnWms" onclick="selectType('WMS')">WMS</button>
   </div>
 
-  <!-- SCANNER LIST -->
-  <div id="scannerList" class="list">
-    <p class="hint">Select WMS or Mushiny</p>
+  <!-- SCROLLABLE SCANNER LIST -->
+  <div id="scannerScroll" style="
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 140px;
+  ">
+    <div id="scannerList" class="list">
+      <p class="hint">Select WMS or Mushiny</p>
+    </div>
   </div>
 
   <!-- USER NAME -->
   <input type="text" id="userName" placeholder="Enter your name">
 
-  <!-- ACTIONS -->
-  <div class="actions">
+  <!-- FIXED ACTION BAR -->
+  <div class="actions" style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    background: #f4f6f8;
+  ">
     <button id="submitBtn" onclick="submitScanner()">Submit</button>
     <button class="secondary" onclick="safeBack()">Back</button>
   </div>
@@ -61,7 +74,7 @@
 
     function loadScanners() {
       const list = document.getElementById("scannerList");
-      list.innerHTML = "<p>Loading devices...</p>";
+      list.innerHTML = "<p class='hint'>Loading devices...</p>";
 
       firebase.database()
         .ref("scanners/" + selectedType)
@@ -70,7 +83,7 @@
           list.innerHTML = "";
 
           if (!snapshot.exists()) {
-            list.innerHTML = "<p>No available scanners</p>";
+            list.innerHTML = "<p class='hint'>No available scanners</p>";
             return;
           }
 
@@ -85,11 +98,11 @@
           });
 
           if (!list.hasChildNodes()) {
-            list.innerHTML = "<p>No available scanners</p>";
+            list.innerHTML = "<p class='hint'>No available scanners</p>";
           }
         })
         .catch(err => {
-          list.innerHTML = "<p>Error loading scanners</p>";
+          list.innerHTML = "<p class='hint'>Error loading scanners</p>";
           console.error(err);
         });
     }
@@ -117,7 +130,6 @@
       submitBtn.disabled = true;
       submitBtn.innerText = "Processing...";
 
-      // 1️⃣ Save to takenScanners
       firebase.database()
         .ref("takenScanners/" + selectedType + "/" + selectedDevice)
         .set({
@@ -125,13 +137,11 @@
           time: new Date().toISOString()
         })
         .then(() => {
-          // 2️⃣ Remove from available scanners
           return firebase.database()
             .ref("scanners/" + selectedType + "/" + selectedDevice)
             .remove();
         })
         .then(() => {
-          // 3️⃣ Log action
           return firebase.database().ref("logs").push({
             user: user,
             device: selectedDevice,
@@ -145,8 +155,8 @@
           location.reload();
         })
         .catch(err => {
-          console.error("Error taking scanner:", err);
-          alert("Something went wrong. Please try again.");
+          console.error(err);
+          alert("Something went wrong");
           isSubmitting = false;
           submitBtn.disabled = false;
           submitBtn.innerText = "Submit";
@@ -154,10 +164,7 @@
     }
 
     function safeBack() {
-      if (isSubmitting) {
-        alert("Please wait, processing in progress");
-        return;
-      }
+      if (isSubmitting) return;
       history.back();
     }
   </script>

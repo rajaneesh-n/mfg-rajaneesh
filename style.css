@@ -110,3 +110,21 @@ h3 {
 input[type="text"] {
   width: 100%;
   padding: 14px;
+/* Primary action buttons (Submit / Return) */
+.actions button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Secondary back button */
+.actions button.secondary {
+  width: 100%;
+  padding: 14px;
+}
+
+/* Press / active effect (like your screenshot) */
+.actions button:active {
+  opacity: 0.85;
+}

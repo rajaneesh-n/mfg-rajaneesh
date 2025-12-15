@@ -15,23 +15,34 @@
 
   <p style="
     text-align:center;
-    margin:16px 0 24px;
-    font-weight:500;
+    margin: 12px 0 24px;
+    font-weight: 500;
+    color: #444;
   ">
     What would you like to do?
   </p>
 
-  <!-- MAIN ACTIONS -->
+  <!-- ACTION CARDS -->
   <div class="list">
 
-    <div class="row" style="padding:20px; font-size:18px;"
-         onclick="location.href='mobile.html'">
-      📦 <strong>Take a Scanner</strong>
+    <div class="row home-row" onclick="location.href='mobile.html'">
+      <div class="home-content">
+        <span class="home-icon">📦</span>
+        <div>
+          <strong>Take a Scanner</strong><br>
+          <small>Assign a scanner</small>
+        </div>
+      </div>
     </div>
 
-    <div class="row" style="padding:20px; font-size:18px;"
-         onclick="location.href='return.html'">
-      🔁 <strong>Return Scanner</strong>
+    <div class="row home-row" onclick="location.href='return.html'">
+      <div class="home-content">
+        <span class="home-icon">🔁</span>
+        <div>
+          <strong>Return a Scanner</strong><br>
+          <small>Return a scanner</small>
+        </div>
+      </div>
     </div>
 
   </div>

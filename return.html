@@ -19,16 +19,29 @@
     <button id="btnWms" onclick="selectType('WMS')">WMS</button>
   </div>
 
-  <!-- TAKEN SCANNER LIST -->
-  <div id="scannerList" class="list">
-    <p class="hint">Select scanner to return</p>
+  <!-- SCROLLABLE TAKEN SCANNER LIST -->
+  <div id="scannerScroll" style="
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 140px;
+  ">
+    <div id="scannerList" class="list">
+      <p class="hint">Select scanner to return</p>
+    </div>
   </div>
 
   <!-- USER NAME -->
   <input type="text" id="userName" placeholder="Enter your name">
 
-  <!-- ACTIONS -->
-  <div class="actions">
+  <!-- FIXED ACTION BAR -->
+  <div class="actions" style="
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    background: #f4f6f8;
+  ">
     <button id="returnBtn" onclick="returnScanner()">Return</button>
     <button class="secondary" onclick="safeBack()">Back</button>
   </div>
@@ -61,7 +74,7 @@
 
     function loadTakenScanners() {
       const list = document.getElementById("scannerList");
-      list.innerHTML = "<p>Loading taken scanners...</p>";
+      list.innerHTML = "<p class='hint'>Loading taken scanners...</p>";
 
       firebase.database()
         .ref("takenScanners/" + selectedType)
@@ -70,7 +83,7 @@
           list.innerHTML = "";
 
           if (!snapshot.exists()) {
-            list.innerHTML = "<p>No scanners to return</p>";
+            list.innerHTML = "<p class='hint'>No scanners to return</p>";
             return;
           }
 
@@ -91,7 +104,7 @@
           });
         })
         .catch(err => {
-          list.innerHTML = "<p>Error loading scanners</p>";
+          list.innerHTML = "<p class='hint'>Error loading scanners</p>";
           console.error(err);
         });
     }
@@ -119,18 +132,15 @@
       returnBtn.disabled = true;
       returnBtn.innerText = "Processing...";
 
-      // 1️⃣ Add back to available scanners
       firebase.database()
         .ref("scanners/" + selectedType + "/" + selectedDevice)
         .set(true)
         .then(() => {
-          // 2️⃣ Remove from takenScanners
           return firebase.database()
             .ref("takenScanners/" + selectedType + "/" + selectedDevice)
             .remove();
         })
         .then(() => {
-          // 3️⃣ Log return
           return firebase.database().ref("logs").push({
             user: user,
             device: selectedDevice,
@@ -144,8 +154,8 @@
           location.reload();
         })
         .catch(err => {
-          console.error("Return failed:", err);
-          alert("Something went wrong. Please try again.");
+          console.error(err);
+          alert("Something went wrong");
           isReturning = false;
           returnBtn.disabled = false;
           returnBtn.innerText = "Return";
@@ -153,10 +163,7 @@
     }
 
     function safeBack() {
-      if (isReturning) {
-        alert("Please wait, processing in progress");
-        return;
-      }
+      if (isReturning) return;
       history.back();
     }
   </script>

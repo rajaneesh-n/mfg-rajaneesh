@@ -9,6 +9,9 @@ body.mobile {
   padding: 16px;
   background: #f4f6f8;
   color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* LOGO */
@@ -24,16 +27,11 @@ h2 {
   margin-bottom: 20px;
 }
 
-h3 {
-  margin: 16px 0 8px;
-  color: #333;
-}
-
 /* TOGGLE BUTTONS */
 .toggle {
   display: flex;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .toggle button {
@@ -52,20 +50,26 @@ h3 {
   border-color: #2563eb;
 }
 
-/* LIST */
+/* SCROLLABLE LIST AREA (RED BOX FIX) */
 .list {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  overflow: hidden;
-  margin-bottom: 16px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+
+  /* KEY FIX */
+  max-height: 40vh;   /* only this area scrolls */
 }
 
 /* ROWS */
 .row {
-  padding: 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .row:last-child {
@@ -88,42 +92,44 @@ h3 {
   text-align: center;
 }
 
-/* INPUTS */
+/* INPUT */
 input[type="text"] {
   width: 100%;
   padding: 14px;
-  font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ccc;
-  margin-bottom: 16px;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
-/* ACTION BUTTONS CONTAINER */
+/* ACTION BAR (STAYS AT BOTTOM) */
 .actions {
-  margin-top: 10px;
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
 }
 
-/* PRIMARY BUTTONS (Submit / Return) */
+/* PRIMARY / SECONDARY BUTTONS SIDE BY SIDE */
 .actions button {
-  width: 100%;
+  flex: 1;
   padding: 16px;
   font-size: 16px;
   border-radius: 10px;
   border: none;
-  background: #2563eb;
-  color: #fff;
   cursor: pointer;
-  margin-bottom: 10px;
 }
 
-/* SECONDARY BUTTON (Back) */
+.actions button:not(.secondary) {
+  background: #2563eb;
+  color: #fff;
+}
+
 .actions button.secondary {
   background: #9ca3af;
   color: #fff;
 }
 
-/* PRESS / ACTIVE EFFECT (like your screenshot) */
+/* PRESS EFFECT (HIGHLIGHT ON TAP) */
 .actions button:active {
-  transform: scale(0.98);
-  opacity: 0.9;
+  opacity: 0.85;
 }

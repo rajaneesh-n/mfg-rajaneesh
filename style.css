@@ -30,6 +30,7 @@ body.mobile {
 h2 {
   text-align: center;
   margin: 10px 0 12px;
+  font-weight: bold;
 }
 
 /* TOGGLE */
@@ -46,6 +47,7 @@ h2 {
   border-radius: 12px;
   border: 1px solid #ccc;
   background: #fff;
+  font-weight: bold; /* WMS & MUSHINY bold */
 }
 
 .toggle button.active {
@@ -69,11 +71,15 @@ h2 {
   overflow: hidden;
 }
 
-/* ROW */
+/* ROW (SCANNERS) */
 .row {
   padding: 16px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
+
+  /* FIXES */
+  font-weight: bold;      /* scanner numbers bold */
+  text-align: center;     /* scanner numbers centered */
 }
 
 .row:last-child {
@@ -110,12 +116,21 @@ input[type="text"] {
   border: none;
 }
 
+/* SUBMIT & RETURN */
+.actions button.primary {
+  background-color: #2563eb; /* Mushiny blue */
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* BACK BUTTON */
 .actions button.secondary {
   background: #9ca3af;
   color: #fff;
+  font-weight: bold;
 }
 
-/* HOME PAGE ROW FIX */
+/* HOME PAGE ROW */
 .home-row {
   display: flex;
   flex-direction: column;
@@ -124,9 +139,6 @@ input[type="text"] {
   padding: 26px;
   font-size: 18px;
   gap: 8px;
-}
-/* HOME PAGE LAYOUT FIX */
-.home-row {
   cursor: pointer;
 }
 
@@ -140,22 +152,4 @@ input[type="text"] {
 
 .home-icon {
   font-size: 26px;
-}
-/* ===== BOLD TEXT FIXES ===== */
-
-/* WMS & MUSHINY toggle buttons */
-.toggle button {
-  font-weight: bold;
-}
-
-/* Scanner list items */
-.row {
-  font-weight: bold;
-}
-
-/* SUBMIT & RETURN primary buttons */
-.actions button.primary {
-  background-color: #2563eb; /* Mushiny blue */
-  color: #ffffff;
-  font-weight: bold;
 }

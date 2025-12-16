@@ -141,3 +141,21 @@ input[type="text"] {
 .home-icon {
   font-size: 26px;
 }
+/* ===== BOLD TEXT FIXES ===== */
+
+/* WMS & MUSHINY toggle buttons */
+.toggle button {
+  font-weight: bold;
+}
+
+/* Scanner list items */
+.row {
+  font-weight: bold;
+}
+
+/* SUBMIT & RETURN primary buttons */
+.actions button.primary {
+  background-color: #2563eb; /* Mushiny blue */
+  color: #ffffff;
+  font-weight: bold;
+}

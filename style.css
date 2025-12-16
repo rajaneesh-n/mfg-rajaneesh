@@ -16,7 +16,7 @@ body.mobile {
 
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* 🚫 stop page scrolling */
+  overflow: hidden; /* stop page scrolling */
 }
 
 /* ================= LOGO ================= */
@@ -47,7 +47,7 @@ h2 {
   border-radius: 12px;
   border: 1px solid #ccc;
   background: #fff;
-  font-weight: bold; /* WMS & MUSHINY bold */
+  font-weight: bold;
 }
 
 .toggle button.active {
@@ -77,8 +77,8 @@ h2 {
   border-bottom: 1px solid #eee;
   cursor: pointer;
 
-  font-weight: bold;     /* scanner numbers bold */
-  text-align: center;    /* scanner numbers centered */
+  font-weight: bold;
+  text-align: center;
 }
 
 .row:last-child {
@@ -147,6 +147,17 @@ input[type="text"] {
   text-align: left;
 }
 
+/* HOME ICON */
 .home-icon {
   font-size: 26px;
+}
+
+/* ================= HOME SUBTEXT (NORMAL FONT) ================= */
+/* "Assign a scanner" / "Return a scanner" */
+.home-content small,
+.home-content p,
+.home-content .subtitle {
+  font-weight: normal;
+  font-size: 14px;
+  color: #555;
 }

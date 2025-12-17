@@ -19,7 +19,7 @@
     <button id="btnWms" onclick="selectType('WMS')">WMS</button>
   </div>
 
-  <!-- SCROLLABLE LIST (ONLY THIS SCROLLS) -->
+  <!-- SCROLLABLE LIST -->
   <div class="scroll-area">
     <div id="scannerList" class="list">
       <p class="hint">Select WMS or Mushiny</p>
@@ -29,7 +29,7 @@
   <!-- USER NAME -->
   <input type="text" id="userName" placeholder="Enter your name">
 
-  <!-- FIXED ACTION BAR -->
+  <!-- ACTION BAR -->
   <div class="actions">
     <button id="submitBtn" onclick="submitScanner()">Submit</button>
     <button class="secondary" onclick="safeBack()">Back</button>
@@ -141,7 +141,11 @@
         })
         .then(() => {
           alert("Scanner taken successfully");
-          location.reload();
+
+          // ✅ AUTO REDIRECT TO HOME
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1200);
         })
         .catch(err => {
           console.error(err);

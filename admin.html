@@ -1,24 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Scanner Management – Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="admin">
+<body class="mobile">
+
+  <!-- LOGO -->
+  <img src="assets/logo.png" class="logo">
+
+  <!-- HEADER -->
   <h2>Scanner Management – Admin</h2>
-  <p>This is the Admin Dashboard entry file.</p>
-  <p>If you can see this page, admin.html is working correctly.</p>
+  <p style="
+    text-align:center;
+    margin: 8px 0 20px;
+    font-weight: 500;
+    color: #444;
+  ">
+    Admin dashboard & reports
+  </p>
 
-  <ul>
-    <li>Dashboard cards</li>
-    <li>Current scanner status</li>
-    <li>Scanner logs</li>
-    <li>CSV export</li>
-  </ul>
+  <!-- ADMIN HOME CARDS -->
+  <div class="list">
 
-  <p><strong>Next step:</strong> Replace this placeholder with the full admin dashboard code I provided.</p>
+    <!-- DASHBOARD -->
+    <div class="row home-row" onclick="location.href='dashboard.html'">
+      <div class="home-content">
+        <span class="home-icon">📊</span>
+        <div>
+          <strong>Dashboard</strong><br>
+          <small>Overview, counts & health</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURRENT SCANNER STATUS -->
+    <div class="row home-row" onclick="location.href='available.html'">
+      <div class="home-content">
+        <span class="home-icon">📦</span>
+        <div>
+          <strong>Current Scanner Status</strong><br>
+          <small>Who is holding which scanner</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGS -->
+    <div class="row home-row" onclick="location.href='logs.html'">
+      <div class="home-content">
+        <span class="home-icon">🧾</span>
+        <div>
+          <strong>Logs & Reports</strong><br>
+          <small>Take / Return history</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </body>
 </html>

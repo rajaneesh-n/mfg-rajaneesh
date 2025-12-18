@@ -1,85 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Scanner Management – Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background: #f4f6f8;
+      color: #222;
     }
 
     .container {
       max-width: 1100px;
-      margin: auto;
-      padding: 20px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
-    h1 {
+    .header {
       text-align: center;
-      margin-bottom: 5px;
+      padding: 20px 10px;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 20px;
+    .header img {
+      max-width: 120px;
+      margin-bottom: 10px;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background: #fff;
-      padding: 14px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-
-    .card h3 {
+    .header h1 {
       margin: 0;
+      font-size: 26px;
+    }
+
+    .header p {
+      margin-top: 6px;
+      color: #555;
+    }
+
+    /* STAT CARDS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .stat-card span {
+      display: block;
       font-size: 13px;
       color: #666;
     }
 
-    .card p {
-      margin: 5px 0 0;
+    .stat-card strong {
       font-size: 24px;
-      font-weight: bold;
     }
 
-    .warning {
-      background: #fff3cd;
-      color: #856404;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      display: none;
-      font-weight: bold;
-    }
-
+    /* SECTIONS */
     .section {
       background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 16px;
       margin-bottom: 20px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
     }
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+    }
+
+    button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    button.secondary {
+      background: #9ca3af;
+    }
+
+    /* TABLES */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
     }
 
     table {
@@ -89,277 +114,209 @@
     }
 
     th, td {
-      padding: 8px;
+      padding: 8px 10px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
+      white-space: nowrap;
     }
 
-    th {
+    thead {
       background: #f3f4f6;
     }
 
-    .status-overdue { color: red; font-weight: bold; }
-    .status-long { color: orange; font-weight: bold; }
-
-    .btn {
-      padding: 7px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #2563eb;
-      color: #fff;
-      font-size: 13px;
+    .status-overdue {
+      color: #b91c1c;
+      font-weight: 600;
     }
 
-    .btn.secondary {
-      background: #9ca3af;
+    .status-long {
+      color: #b45309;
+      font-weight: 600;
     }
 
-    input {
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 13px;
+    .take {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .return {
+      color: #b91c1c;
+      font-weight: 600;
     }
 
     .footer {
       text-align: center;
-      margin-top: 20px;
+      margin: 30px 0;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
-  <img src="assets/logo.png" class="logo">
-
-  <h1>Scanner Management – Admin</h1>
-  <div class="subtitle">Dashboard, live status & reports</div>
-
-  <div id="overdueBanner" class="warning">
-    ⚠️ Overdue scanners detected. Immediate action required.
+  <div class="header">
+    <img src="assets/logo.png" alt="MFG Logo">
+    <h1>Scanner Management – Admin</h1>
+    <p>Dashboard, live status & reports</p>
   </div>
 
-  <div class="cards">
-    <div class="card"><h3>Total Scanners</h3><p id="statTotal">–</p></div>
-    <div class="card"><h3>Available</h3><p id="statAvailable">–</p></div>
-    <div class="card"><h3>Taken</h3><p id="statTaken">–</p></div>
-    <div class="card"><h3>Overdue</h3><p id="statOverdue">–</p></div>
-  </div>
+  <div class="container">
 
-  <!-- SEARCH -->
-  <div class="section">
-    <div class="section-header">
-      <strong>Search</strong>
-      <input type="text" id="searchInput" placeholder="Scanner or User">
-    </div>
-  </div>
-
-  <!-- STATUS -->
-  <div class="section">
-    <div class="section-header">
-      <strong>Currently Taken Scanners</strong>
-      <div>
-        <button class="btn secondary" onclick="exportStatusCSV()">Export CSV</button>
-        <button class="btn" onclick="loadStatus()">Refresh</button>
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card">
+        <span>Total Scanners</span>
+        <strong id="statTotal">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Available</span>
+        <strong id="statAvailable">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Taken</span>
+        <strong id="statTaken">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Overdue</span>
+        <strong id="statOverdue">–</strong>
       </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Scanner</th>
-          <th>Type</th>
-          <th>User</th>
-          <th>Taken Since</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="statusTable"></tbody>
-    </table>
-  </div>
+    <!-- CURRENTLY TAKEN -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Currently Taken Scanners</h2>
+        <button onclick="loadStatus()">Refresh</button>
+      </div>
 
-  <!-- LOGS -->
-  <div class="section">
-    <div class="section-header">
-      <strong>Scanner Logs</strong>
-      <div>
-        <input type="date" id="fromDate">
-        <input type="date" id="toDate">
-        <button class="btn secondary" onclick="exportLogsCSV()">Export CSV</button>
-        <button class="btn" onclick="loadLogs()">Refresh</button>
+      <div class="table-wrap">
+        <table id="statusTable">
+          <thead>
+            <tr>
+              <th>Scanner</th>
+              <th>Type</th>
+              <th>User</th>
+              <th>Taken Since</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5">Loading…</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Scanner</th>
-          <th>Type</th>
-          <th>User</th>
-          <th>Date / Time</th>
-        </tr>
-      </thead>
-      <tbody id="logsTable"></tbody>
-    </table>
+    <!-- LOGS -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Scanner Logs</h2>
+        <button onclick="loadLogs()">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="logsTable">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Scanner</th>
+              <th>Type</th>
+              <th>User</th>
+              <th>Date / Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="5">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="secondary" onclick="location.href='index.html'">
+        Back to Home
+      </button>
+    </div>
+
   </div>
 
-  <div class="footer">
-    <button class="btn secondary" onclick="location.href='index.html'">
-      Back to Home
-    </button>
-  </div>
-</div>
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="config.js"></script>
+  <script>
+    const SOFT = 8;
+    const HARD = 24;
 
-<script>
-const OVERDUE_HOURS = 24;
-let statusRows = [];
-let logsRows = [];
+    function hoursDiff(iso) {
+      return (Date.now() - new Date(iso).getTime()) / 3600000;
+    }
 
-setInterval(() => {
-  loadStatus();
-  loadLogs();
-}, 300000);
+    function loadStatus() {
+      const tbody = document.querySelector("#statusTable tbody");
+      tbody.innerHTML = "";
 
-document.getElementById("searchInput").addEventListener("input", () => {
-  renderStatus();
-  renderLogs();
-});
+      firebase.database().ref("takenScanners").once("value").then(snap => {
+        let total = 0, taken = 0, overdue = 0;
 
-function loadStatus() {
-  const db = firebase.database();
+        snap.forEach(typeSnap => {
+          typeSnap.forEach(dev => {
+            taken++; total++;
+            const v = dev.val();
+            const h = hoursDiff(v.time);
+            let status = "OK", cls = "";
 
-  Promise.all([
-    db.ref("scanners").once("value"),
-    db.ref("takenScanners").once("value")
-  ]).then(([scannersSnap, takenSnap]) => {
+            if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdue++; }
+            else if (h >= SOFT) { status = "Long"; cls = "status-long"; overdue++; }
 
-    let available = 0;
-    let taken = 0;
-    let overdue = 0;
-    statusRows = [];
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${dev.key}</td>
+              <td>${typeSnap.key}</td>
+              <td>${v.user}</td>
+              <td>${Math.floor(h)}h</td>
+              <td class="${cls}">${status}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
 
-    // AVAILABLE = scanners node
-    scannersSnap.forEach(typeSnap => {
-      typeSnap.forEach(() => available++);
-    });
+        document.getElementById("statTaken").innerText = taken;
+        document.getElementById("statOverdue").innerText = overdue;
+      });
 
-    // TAKEN = takenScanners node
-    takenSnap.forEach(typeSnap => {
-      typeSnap.forEach(dev => {
-        taken++;
-        const v = dev.val();
-        const hours = Math.floor((Date.now() - new Date(v.time)) / 3600000);
-        const status = hours >= OVERDUE_HOURS ? "Overdue" : "Long";
-        if (status === "Overdue") overdue++;
+      firebase.database().ref("scanners").once("value").then(snap => {
+        let available = 0, total = 0;
+        snap.forEach(t => t.forEach(() => { available++; total++; }));
+        document.getElementById("statAvailable").innerText = available;
+        document.getElementById("statTotal").innerText = total + parseInt(document.getElementById("statTaken").innerText || 0);
+      });
+    }
 
-        statusRows.push({
-          device: dev.key,
-          type: typeSnap.key,
-          user: v.user,
-          hours,
-          status
+    function loadLogs() {
+      const tbody = document.querySelector("#logsTable tbody");
+      tbody.innerHTML = "";
+
+      firebase.database().ref("logs").limitToLast(200).once("value").then(snap => {
+        const rows = [];
+        snap.forEach(c => rows.push(c.val()));
+        rows.reverse().forEach(l => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="${l.action === 'take' ? 'take' : 'return'}">${l.action.toUpperCase()}</td>
+            <td>${l.device}</td>
+            <td>${l.type}</td>
+            <td>${l.user}</td>
+            <td>${new Date(l.time).toLocaleString()}</td>
+          `;
+          tbody.appendChild(tr);
         });
       });
-    });
+    }
 
-    const total = available + taken;
-
-    document.getElementById("statAvailable").innerText = available;
-    document.getElementById("statTaken").innerText = taken;
-    document.getElementById("statTotal").innerText = total;
-    document.getElementById("statOverdue").innerText = overdue;
-    document.getElementById("overdueBanner").style.display =
-      overdue ? "block" : "none";
-
-    renderStatus();
-  });
-}
-
-function renderStatus() {
-  const q = document.getElementById("searchInput").value.toLowerCase();
-  const tbody = document.getElementById("statusTable");
-  tbody.innerHTML = "";
-
-  statusRows.filter(r =>
-    r.device.includes(q) || r.user.toLowerCase().includes(q)
-  ).forEach(r => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${r.device}</td>
-        <td>${r.type}</td>
-        <td>${r.user}</td>
-        <td>${r.hours}h</td>
-        <td class="${r.status === "Overdue" ? "status-overdue" : "status-long"}">
-          ${r.status}
-        </td>
-      </tr>`;
-  });
-}
-
-function loadLogs() {
-  firebase.database().ref("logs").once("value").then(snap => {
-    logsRows = [];
-    snap.forEach(l => logsRows.push(l.val()));
-    renderLogs();
-  });
-}
-
-function renderLogs() {
-  const q = document.getElementById("searchInput").value.toLowerCase();
-  const from = document.getElementById("fromDate").value;
-  const to = document.getElementById("toDate").value;
-  const tbody = document.getElementById("logsTable");
-  tbody.innerHTML = "";
-
-  logsRows.filter(l => {
-    const d = new Date(l.time);
-    if (from && d < new Date(from)) return false;
-    if (to && d > new Date(to + "T23:59")) return false;
-    return l.device.includes(q) || l.user.toLowerCase().includes(q);
-  }).forEach(l => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${l.action.toUpperCase()}</td>
-        <td>${l.device}</td>
-        <td>${l.type}</td>
-        <td>${l.user}</td>
-        <td>${new Date(l.time).toLocaleString()}</td>
-      </tr>`;
-  });
-}
-
-function exportStatusCSV() {
-  downloadCSV("scanner_status.csv", statusRows);
-}
-
-function exportLogsCSV() {
-  downloadCSV("scanner_logs.csv", logsRows);
-}
-
-function downloadCSV(name, rows) {
-  if (!rows.length) return alert("No data");
-  const keys = Object.keys(rows[0]);
-  const csv = [keys.join(",")].concat(
-    rows.map(r => keys.map(k => `"${r[k]}"`).join(","))
-  ).join("\n");
-
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([csv]));
-  a.download = name;
-  a.click();
-}
-
-loadStatus();
-loadLogs();
-</script>
+    loadStatus();
+    loadLogs();
+  </script>
 
 </body>
 </html>

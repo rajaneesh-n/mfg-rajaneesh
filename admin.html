@@ -241,15 +241,17 @@ function loadStatus() {
     db.ref("takenScanners").once("value")
   ]).then(([scannersSnap, takenSnap]) => {
 
-    let total = 0;
+    let available = 0;
     let taken = 0;
     let overdue = 0;
     statusRows = [];
 
+    // AVAILABLE = scanners node
     scannersSnap.forEach(typeSnap => {
-      typeSnap.forEach(() => total++);
+      typeSnap.forEach(() => available++);
     });
 
+    // TAKEN = takenScanners node
     takenSnap.forEach(typeSnap => {
       typeSnap.forEach(dev => {
         taken++;
@@ -268,10 +270,11 @@ function loadStatus() {
       });
     });
 
-    document.getElementById("statTotal").innerText = total;
+    const total = available + taken;
+
+    document.getElementById("statAvailable").innerText = available;
     document.getElementById("statTaken").innerText = taken;
-    document.getElementById("statAvailable").innerText =
-      Math.max(0, total - taken);
+    document.getElementById("statTotal").innerText = total;
     document.getElementById("statOverdue").innerText = overdue;
     document.getElementById("overdueBanner").style.display =
       overdue ? "block" : "none";

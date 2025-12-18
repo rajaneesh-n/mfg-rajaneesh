@@ -169,8 +169,11 @@
     <table>
       <thead>
         <tr>
-          <th>Scanner</th><th>Type</th><th>User</th>
-          <th>Taken Since</th><th>Status</th>
+          <th>Scanner</th>
+          <th>Type</th>
+          <th>User</th>
+          <th>Taken Since</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody id="statusTable"></tbody>
@@ -192,8 +195,11 @@
     <table>
       <thead>
         <tr>
-          <th>Action</th><th>Scanner</th><th>Type</th>
-          <th>User</th><th>Date / Time</th>
+          <th>Action</th>
+          <th>Scanner</th>
+          <th>Type</th>
+          <th>User</th>
+          <th>Date / Time</th>
         </tr>
       </thead>
       <tbody id="logsTable"></tbody>
@@ -201,7 +207,9 @@
   </div>
 
   <div class="footer">
-    <button class="btn secondary" onclick="location.href='index.html'">Back to Home</button>
+    <button class="btn secondary" onclick="location.href='index.html'">
+      Back to Home
+    </button>
   </div>
 </div>
 
@@ -211,9 +219,9 @@
 <script src="config.js"></script>
 
 <script>
+const OVERDUE_HOURS = 24;
 let statusRows = [];
 let logsRows = [];
-const OVERDUE_HOURS = 24;
 
 setInterval(() => {
   loadStatus();
@@ -262,9 +270,11 @@ function loadStatus() {
 
     document.getElementById("statTotal").innerText = total;
     document.getElementById("statTaken").innerText = taken;
-    document.getElementById("statAvailable").innerText = total - taken;
+    document.getElementById("statAvailable").innerText =
+      Math.max(0, total - taken);
     document.getElementById("statOverdue").innerText = overdue;
-    document.getElementById("overdueBanner").style.display = overdue ? "block" : "none";
+    document.getElementById("overdueBanner").style.display =
+      overdue ? "block" : "none";
 
     renderStatus();
   });
@@ -284,7 +294,9 @@ function renderStatus() {
         <td>${r.type}</td>
         <td>${r.user}</td>
         <td>${r.hours}h</td>
-        <td class="${r.status === "Overdue" ? "status-overdue" : "status-long"}">${r.status}</td>
+        <td class="${r.status === "Overdue" ? "status-overdue" : "status-long"}">
+          ${r.status}
+        </td>
       </tr>`;
   });
 }

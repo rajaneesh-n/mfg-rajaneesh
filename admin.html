@@ -115,7 +115,7 @@
       background: #9ca3af;
     }
 
-    input, select {
+    input {
       padding: 6px;
       border-radius: 6px;
       border: 1px solid #ccc;
@@ -218,7 +218,7 @@ const OVERDUE_HOURS = 24;
 setInterval(() => {
   loadStatus();
   loadLogs();
-}, 300000); // auto-refresh 5 mins
+}, 300000);
 
 document.getElementById("searchInput").addEventListener("input", () => {
   renderStatus();
@@ -226,24 +226,46 @@ document.getElementById("searchInput").addEventListener("input", () => {
 });
 
 function loadStatus() {
-  firebase.database().ref("takenScanners").once("value").then(snap => {
-    statusRows = [];
+  const db = firebase.database();
+
+  Promise.all([
+    db.ref("scanners").once("value"),
+    db.ref("takenScanners").once("value")
+  ]).then(([scannersSnap, takenSnap]) => {
+
+    let total = 0;
+    let taken = 0;
     let overdue = 0;
-    snap.forEach(typeSnap => {
+    statusRows = [];
+
+    scannersSnap.forEach(typeSnap => {
+      typeSnap.forEach(() => total++);
+    });
+
+    takenSnap.forEach(typeSnap => {
       typeSnap.forEach(dev => {
+        taken++;
         const v = dev.val();
-        const hours = (Date.now() - new Date(v.time)) / 3600000;
+        const hours = Math.floor((Date.now() - new Date(v.time)) / 3600000);
         const status = hours >= OVERDUE_HOURS ? "Overdue" : "Long";
         if (status === "Overdue") overdue++;
+
         statusRows.push({
-          device: dev.key, type: typeSnap.key,
-          user: v.user, hours: Math.floor(hours), status
+          device: dev.key,
+          type: typeSnap.key,
+          user: v.user,
+          hours,
+          status
         });
       });
     });
-    document.getElementById("statTaken").innerText = statusRows.length;
+
+    document.getElementById("statTotal").innerText = total;
+    document.getElementById("statTaken").innerText = taken;
+    document.getElementById("statAvailable").innerText = total - taken;
     document.getElementById("statOverdue").innerText = overdue;
     document.getElementById("overdueBanner").style.display = overdue ? "block" : "none";
+
     renderStatus();
   });
 }
@@ -252,13 +274,16 @@ function renderStatus() {
   const q = document.getElementById("searchInput").value.toLowerCase();
   const tbody = document.getElementById("statusTable");
   tbody.innerHTML = "";
+
   statusRows.filter(r =>
     r.device.includes(q) || r.user.toLowerCase().includes(q)
   ).forEach(r => {
     tbody.innerHTML += `
       <tr>
-        <td>${r.device}</td><td>${r.type}</td>
-        <td>${r.user}</td><td>${r.hours}h</td>
+        <td>${r.device}</td>
+        <td>${r.type}</td>
+        <td>${r.user}</td>
+        <td>${r.hours}h</td>
         <td class="${r.status === "Overdue" ? "status-overdue" : "status-long"}">${r.status}</td>
       </tr>`;
   });
@@ -278,6 +303,7 @@ function renderLogs() {
   const to = document.getElementById("toDate").value;
   const tbody = document.getElementById("logsTable");
   tbody.innerHTML = "";
+
   logsRows.filter(l => {
     const d = new Date(l.time);
     if (from && d < new Date(from)) return false;
@@ -287,8 +313,10 @@ function renderLogs() {
     tbody.innerHTML += `
       <tr>
         <td>${l.action.toUpperCase()}</td>
-        <td>${l.device}</td><td>${l.type}</td>
-        <td>${l.user}</td><td>${new Date(l.time).toLocaleString()}</td>
+        <td>${l.device}</td>
+        <td>${l.type}</td>
+        <td>${l.user}</td>
+        <td>${new Date(l.time).toLocaleString()}</td>
       </tr>`;
   });
 }
@@ -307,6 +335,7 @@ function downloadCSV(name, rows) {
   const csv = [keys.join(",")].concat(
     rows.map(r => keys.map(k => `"${r[k]}"`).join(","))
   ).join("\n");
+
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([csv]));
   a.download = name;

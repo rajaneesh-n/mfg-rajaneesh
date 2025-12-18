@@ -1,65 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Scanner Management – Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    .header {
+      text-align: center;
+      padding: 16px;
+      background: #f4f6f8;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* DASHBOARD CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .card-label {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* SECTIONS */
+    .section {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .controls input,
+    .controls select,
+    .controls button {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 13px;
+    }
+
+    .controls button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .controls button.secondary {
+      background: #9ca3af;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    /* STATUS COLORS */
+    .ok { color: #15803d; font-weight: 600; }
+    .soft { color: #b45309; font-weight: 600; }
+    .hard { color: #b91c1c; font-weight: 600; }
+
+    .take { color: #15803d; font-weight: 600; }
+    .return { color: #b91c1c; font-weight: 600; }
+
+    .footer {
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .footer button {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background: #9ca3af;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
-<body class="mobile">
-
-  <!-- LOGO -->
-  <img src="assets/logo.png" class="logo">
+<body>
 
   <!-- HEADER -->
-  <h2>Scanner Management – Admin</h2>
-  <p style="
-    text-align:center;
-    margin: 8px 0 20px;
-    font-weight: 500;
-    color: #444;
-  ">
-    Admin dashboard & reports
-  </p>
+  <div class="header">
+    <img src="assets/logo.png" class="logo">
+    <h2>Scanner Management – Admin</h2>
+    <div class="subtitle">Dashboard, live status & reports</div>
+  </div>
 
-  <!-- ADMIN HOME CARDS -->
-  <div class="list">
+  <div class="container">
 
     <!-- DASHBOARD -->
-    <div class="row home-row" onclick="location.href='dashboard.html'">
-      <div class="home-content">
-        <span class="home-icon">📊</span>
-        <div>
-          <strong>Dashboard</strong><br>
-          <small>Overview, counts & health</small>
-        </div>
-      </div>
+    <div class="card-grid">
+      <div class="card"><div class="card-label">Total Scanners</div><div class="card-value" id="total">–</div></div>
+      <div class="card"><div class="card-label">Available</div><div class="card-value" id="available">–</div></div>
+      <div class="card"><div class="card-label">Taken</div><div class="card-value" id="taken">–</div></div>
+      <div class="card"><div class="card-label">Overdue</div><div class="card-value" id="overdue">–</div></div>
     </div>
 
-    <!-- CURRENT SCANNER STATUS -->
-    <div class="row home-row" onclick="location.href='available.html'">
-      <div class="home-content">
-        <span class="home-icon">📦</span>
-        <div>
-          <strong>Current Scanner Status</strong><br>
-          <small>Who is holding which scanner</small>
+    <!-- CURRENT STATUS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Currently Taken Scanners</div>
+        <div class="controls">
+          <select id="typeFilter">
+            <option value="ALL">All</option>
+            <option value="MUSHINY">Mushiny</option>
+            <option value="WMS">WMS</option>
+          </select>
+          <button onclick="loadStatus()">Refresh</button>
         </div>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Taken Since</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="statusBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- LOGS -->
-    <div class="row home-row" onclick="location.href='logs.html'">
-      <div class="home-content">
-        <span class="home-icon">🧾</span>
-        <div>
-          <strong>Logs & Reports</strong><br>
-          <small>Take / Return history</small>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Scanner Logs</div>
+        <div class="controls">
+          <select id="actionFilter">
+            <option value="ALL">All</option>
+            <option value="take">Take</option>
+            <option value="return">Return</option>
+          </select>
+          <button onclick="loadLogs()">Refresh</button>
         </div>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Date / Time</th>
+          </tr>
+        </thead>
+        <tbody id="logsBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <button onclick="location.href='index.html'">Back to Home</button>
     </div>
 
   </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    const SOFT = 8, HARD = 24;
+
+    function hoursSince(iso) {
+      return (Date.now() - new Date(iso).getTime()) / 36e5;
+    }
+
+    function loadStatus() {
+      const body = document.getElementById("statusBody");
+      body.innerHTML = "<tr><td colspan='5'>Loading…</td></tr>";
+
+      firebase.database().ref("takenScanners").once("value").then(snap => {
+        body.innerHTML = "";
+        let taken = 0, overdue = 0;
+
+        snap.forEach(typeSnap => {
+          typeSnap.forEach(dev => {
+            taken++;
+            const hrs = hoursSince(dev.val().time);
+            let cls = "ok", label = "OK";
+            if (hrs >= HARD) { cls = "hard"; label = "Overdue"; overdue++; }
+            else if (hrs >= SOFT) { cls = "soft"; label = "Long"; overdue++; }
+
+            body.innerHTML += `
+              <tr>
+                <td>${dev.key}</td>
+                <td>${typeSnap.key}</td>
+                <td>${dev.val().user}</td>
+                <td>${Math.floor(hrs)}h</td>
+                <td class="${cls}">${label}</td>
+              </tr>`;
+          });
+        });
+
+        document.getElementById("taken").innerText = taken;
+        document.getElementById("overdue").innerText = overdue;
+      });
+    }
+
+    function loadLogs() {
+      const body = document.getElementById("logsBody");
+      body.innerHTML = "<tr><td colspan='5'>Loading…</td></tr>";
+
+      firebase.database().ref("logs").limitToLast(100).once("value").then(snap => {
+        body.innerHTML = "";
+        snap.forEach(l => {
+          const v = l.val();
+          body.innerHTML += `
+            <tr>
+              <td class="${v.action}">${v.action.toUpperCase()}</td>
+              <td>${v.device}</td>
+              <td>${v.type}</td>
+              <td>${v.user}</td>
+              <td>${new Date(v.time).toLocaleString()}</td>
+            </tr>`;
+        });
+      });
+    }
+
+    function loadCounts() {
+      firebase.database().ref("scanners").once("value").then(s => {
+        let available = 0;
+        s.forEach(t => t.forEach(() => available++));
+        document.getElementById("available").innerText = available;
+      });
+
+      firebase.database().ref("takenScanners").once("value").then(s => {
+        let total = 0;
+        s.forEach(t => t.forEach(() => total++));
+        document.getElementById("taken").innerText = total;
+        document.getElementById("total").innerText =
+          total + Number(document.getElementById("available").innerText || 0);
+      });
+    }
+
+    loadCounts();
+    loadStatus();
+    loadLogs();
+  </script>
 
 </body>
 </html>

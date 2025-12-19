@@ -4,84 +4,69 @@
   <meta charset="UTF-8" />
   <title>Scanner Management – Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- IMPORTANT:
-       Do NOT include style.css here, it affects admin layout.
-       <link rel="stylesheet" href="style.css" />
-  -->
+  <link rel="stylesheet" href="style.css" />
 
   <style>
-    body.admin {
+    body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background: #f4f6f8;
       color: #222;
     }
 
-    body.admin .container {
+    .container {
       max-width: 1100px;
       margin: 0 auto;
       padding: 16px;
     }
 
-    body.admin .header {
+    .header {
       text-align: center;
       padding: 20px 10px;
     }
 
-    body.admin .logo {
-      width: 120px;
+    .header img {
       max-width: 120px;
-      height: auto;
-      display: block;
-      margin: 0 auto 10px;
+      margin-bottom: 10px;
     }
 
-    body.admin .header h1 {
+    .header h1 {
       margin: 0;
       font-size: 26px;
     }
 
-    body.admin .header p {
+    .header p {
       margin-top: 6px;
       color: #555;
     }
 
-    body.admin .warning {
-      display: none;
-      background: #fff3cd;
-      color: #856404;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-
-    body.admin .stats {
+    /* STAT CARDS */
+    .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
       margin: 20px 0;
     }
 
-    body.admin .stat-card {
+    .stat-card {
       background: #fff;
       border-radius: 12px;
       padding: 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    body.admin .stat-card span {
+    .stat-card span {
       display: block;
       font-size: 13px;
       color: #666;
     }
 
-    body.admin .stat-card strong {
+    .stat-card strong {
       font-size: 24px;
     }
 
-    body.admin .section {
+    /* SECTIONS */
+    .section {
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -89,7 +74,12 @@
       margin-bottom: 20px;
     }
 
-    body.admin .section-header {
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -97,7 +87,7 @@
       gap: 8px;
     }
 
-    body.admin button {
+    button {
       padding: 6px 12px;
       border-radius: 8px;
       border: none;
@@ -107,92 +97,99 @@
       font-size: 13px;
     }
 
-    body.admin button.secondary {
+    button.secondary {
       background: #9ca3af;
     }
 
-    body.admin input {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 13px;
-    }
-
-    body.admin .table-wrap {
+    /* TABLES */
+    .table-wrap {
       overflow-x: auto;
       margin-top: 10px;
     }
 
-    body.admin table {
+    table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
 
-    body.admin th, body.admin td {
+    th, td {
       padding: 8px 10px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
       white-space: nowrap;
     }
 
-    body.admin thead {
+    thead {
       background: #f3f4f6;
     }
 
-    body.admin .status-overdue { color: #b91c1c; font-weight: 600; }
-    body.admin .status-long { color: #b45309; font-weight: 600; }
-    body.admin .take { color: #15803d; font-weight: 600; }
-    body.admin .return { color: #b91c1c; font-weight: 600; }
+    .status-overdue {
+      color: #b91c1c;
+      font-weight: 600;
+    }
 
-    body.admin .footer {
+    .status-long {
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    .take {
+      color: #15803d;
+      font-weight: 600;
+    }
+
+    .return {
+      color: #b91c1c;
+      font-weight: 600;
+    }
+
+    .footer {
       text-align: center;
       margin: 30px 0;
     }
   </style>
 </head>
 
-<body class="admin">
+<body>
 
   <div class="header">
-    <img src="assets/logo.png" class="logo" alt="MFG Logo">
+    <img src="assets/logo.png" alt="MFG Logo">
     <h1>Scanner Management – Admin</h1>
     <p>Dashboard, live status & reports</p>
   </div>
 
   <div class="container">
 
-    <div id="overdueBanner" class="warning">
-      ⚠️ Overdue scanners detected. Immediate action required.
-    </div>
-
+    <!-- STATS -->
     <div class="stats">
-      <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
-      <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
-      <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
-      <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
-    </div>
-
-    <!-- SEARCH -->
-    <div class="section">
-      <div class="section-header">
-        <strong>Search</strong>
-        <input type="text" id="searchInput" placeholder="Scanner or User">
+      <div class="stat-card">
+        <span>Total Scanners</span>
+        <strong id="statTotal">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Available</span>
+        <strong id="statAvailable">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Taken</span>
+        <strong id="statTaken">–</strong>
+      </div>
+      <div class="stat-card">
+        <span>Overdue</span>
+        <strong id="statOverdue">–</strong>
       </div>
     </div>
 
-    <!-- STATUS -->
+    <!-- CURRENTLY TAKEN -->
     <div class="section">
       <div class="section-header">
         <h2>Currently Taken Scanners</h2>
-        <div>
-          <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
-          <button onclick="loadStatus()">Refresh</button>
-        </div>
+        <button onclick="loadStatus()">Refresh</button>
       </div>
 
       <div class="table-wrap">
-        <table>
+        <table id="statusTable">
           <thead>
             <tr>
               <th>Scanner</th>
@@ -202,7 +199,7 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody id="statusTable">
+          <tbody>
             <tr><td colspan="5">Loading…</td></tr>
           </tbody>
         </table>
@@ -213,16 +210,11 @@
     <div class="section">
       <div class="section-header">
         <h2>Scanner Logs</h2>
-        <div>
-          <input type="date" id="fromDate">
-          <input type="date" id="toDate">
-          <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
-          <button onclick="loadLogs()">Refresh</button>
-        </div>
+        <button onclick="loadLogs()">Refresh</button>
       </div>
 
       <div class="table-wrap">
-        <table>
+        <table id="logsTable">
           <thead>
             <tr>
               <th>Action</th>
@@ -232,7 +224,7 @@
               <th>Date / Time</th>
             </tr>
           </thead>
-          <tbody id="logsTable">
+          <tbody>
             <tr><td colspan="5">Loading…</td></tr>
           </tbody>
         </table>
@@ -240,7 +232,9 @@
     </div>
 
     <div class="footer">
-      <button class="secondary" onclick="location.href='index.html'">Back to Home</button>
+      <button class="secondary" onclick="location.href='index.html'">
+        Back to Home
+      </button>
     </div>
 
   </div>
@@ -253,176 +247,72 @@
   <script>
     const SOFT = 8;
     const HARD = 24;
-    let statusRows = [];
-    let logRows = [];
 
     function hoursDiff(iso) {
       return (Date.now() - new Date(iso).getTime()) / 3600000;
     }
 
-    document.getElementById("searchInput").addEventListener("input", () => {
-      renderStatus();
-      renderLogs();
-    });
-
     function loadStatus() {
-      const tbody = document.getElementById("statusTable");
+      const tbody = document.querySelector("#statusTable tbody");
       tbody.innerHTML = "";
-      statusRows = [];
 
-      // 1) Load taken first
-      firebase.database().ref("takenScanners").once("value").then(takenSnap => {
-        let taken = 0, overdue = 0;
+      firebase.database().ref("takenScanners").once("value").then(snap => {
+        let total = 0, taken = 0, overdue = 0;
 
-        takenSnap.forEach(typeSnap => {
+        snap.forEach(typeSnap => {
           typeSnap.forEach(dev => {
-            taken++;
-            const v = dev.val() || {};
-            const h = v.time ? hoursDiff(v.time) : 0;
-
+            taken++; total++;
+            const v = dev.val();
+            const h = hoursDiff(v.time);
             let status = "OK", cls = "";
+
             if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdue++; }
             else if (h >= SOFT) { status = "Long"; cls = "status-long"; overdue++; }
 
-            statusRows.push({
-              device: dev.key,
-              type: typeSnap.key,
-              user: v.user || "",
-              hours: Math.floor(h),
-              status,
-              cls
-            });
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${dev.key}</td>
+              <td>${typeSnap.key}</td>
+              <td>${v.user}</td>
+              <td>${Math.floor(h)}h</td>
+              <td class="${cls}">${status}</td>
+            `;
+            tbody.appendChild(tr);
           });
         });
 
         document.getElementById("statTaken").innerText = taken;
         document.getElementById("statOverdue").innerText = overdue;
-        document.getElementById("overdueBanner").style.display = overdue ? "block" : "none";
-
-        // 2) Load available list (scanners)
-        firebase.database().ref("scanners").once("value").then(scanSnap => {
-          let available = 0;
-          scanSnap.forEach(t => t.forEach(() => available++));
-
-          document.getElementById("statAvailable").innerText = available;
-          document.getElementById("statTotal").innerText = available + taken;
-
-          renderStatus();
-        });
       });
-    }
 
-    function renderStatus() {
-      const q = (document.getElementById("searchInput").value || "").toLowerCase();
-      const tbody = document.getElementById("statusTable");
-      tbody.innerHTML = "";
-
-      const filtered = statusRows.filter(r =>
-        String(r.device).toLowerCase().includes(q) ||
-        String(r.user).toLowerCase().includes(q)
-      );
-
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="5">No matching results.</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(r => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${r.device}</td>
-            <td>${r.type}</td>
-            <td>${r.user}</td>
-            <td>${r.hours}h</td>
-            <td class="${r.cls}">${r.status}</td>
-          </tr>`;
+      firebase.database().ref("scanners").once("value").then(snap => {
+        let available = 0, total = 0;
+        snap.forEach(t => t.forEach(() => { available++; total++; }));
+        document.getElementById("statAvailable").innerText = available;
+        document.getElementById("statTotal").innerText = total + parseInt(document.getElementById("statTaken").innerText || 0);
       });
     }
 
     function loadLogs() {
-      const tbody = document.getElementById("logsTable");
+      const tbody = document.querySelector("#logsTable tbody");
       tbody.innerHTML = "";
 
-      firebase.database().ref("logs").limitToLast(300).once("value").then(snap => {
-        logRows = [];
-        snap.forEach(c => logRows.push(c.val() || {}));
-        renderLogs();
+      firebase.database().ref("logs").limitToLast(200).once("value").then(snap => {
+        const rows = [];
+        snap.forEach(c => rows.push(c.val()));
+        rows.reverse().forEach(l => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="${l.action === 'take' ? 'take' : 'return'}">${l.action.toUpperCase()}</td>
+            <td>${l.device}</td>
+            <td>${l.type}</td>
+            <td>${l.user}</td>
+            <td>${new Date(l.time).toLocaleString()}</td>
+          `;
+          tbody.appendChild(tr);
+        });
       });
     }
-
-    function renderLogs() {
-      const q = (document.getElementById("searchInput").value || "").toLowerCase();
-      const from = document.getElementById("fromDate").value;
-      const to = document.getElementById("toDate").value;
-      const tbody = document.getElementById("logsTable");
-      tbody.innerHTML = "";
-
-      const fromDate = from ? new Date(from + "T00:00:00") : null;
-      const toDate = to ? new Date(to + "T23:59:59") : null;
-
-      const filtered = logRows.filter(l => {
-        const device = String(l.device || "").toLowerCase();
-        const user = String(l.user || "").toLowerCase();
-        const d = l.time ? new Date(l.time) : null;
-
-        if (q && !device.includes(q) && !user.includes(q)) return false;
-        if (fromDate && d && d < fromDate) return false;
-        if (toDate && d && d > toDate) return false;
-
-        return true;
-      });
-
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="5">No matching results.</td></tr>`;
-        return;
-      }
-
-      // newest first
-      filtered.sort((a,b) => (b.time || "").localeCompare(a.time || ""));
-
-      filtered.forEach(l => {
-        const cls = l.action === "take" ? "take" : "return";
-        tbody.innerHTML += `
-          <tr>
-            <td class="${cls}">${String(l.action || "").toUpperCase()}</td>
-            <td>${l.device || ""}</td>
-            <td>${l.type || ""}</td>
-            <td>${l.user || ""}</td>
-            <td>${l.time ? new Date(l.time).toLocaleString() : ""}</td>
-          </tr>`;
-      });
-    }
-
-    function exportStatusCSV() {
-      downloadCSV("scanner_status.csv", statusRows, ["device","type","user","hours","status"]);
-    }
-
-    function exportLogsCSV() {
-      downloadCSV("scanner_logs.csv", logRows, ["action","device","type","user","time"]);
-    }
-
-    function csvEscape(v) {
-      if (v == null) return "";
-      const s = String(v);
-      return (s.includes(",") || s.includes('"') || s.includes("\n"))
-        ? '"' + s.replace(/"/g, '""') + '"'
-        : s;
-    }
-
-    function downloadCSV(name, rows, keys) {
-      if (!rows || !rows.length) return alert("No data");
-      const header = keys.join(",");
-      const lines = rows.map(r => keys.map(k => csvEscape(r[k])).join(","));
-      const csv = [header, ...lines].join("\n");
-
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8;"}));
-      a.download = name;
-      a.click();
-    }
-
-    // Auto refresh every 5 mins
-    setInterval(() => { loadStatus(); loadLogs(); }, 300000);
 
     loadStatus();
     loadLogs();

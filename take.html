@@ -1,7 +1,101 @@
 <!DOCTYPE html>
-<html><head><title>Take</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Take Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+      text-align: center;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
 <body>
-<h1>Take Scanner</h1>
-<input placeholder="Name"><button>Submit</button>
-<a href="mobile.html">Back</a>
-</body></html>
+
+<h2>Take Scanner</h2>
+
+<select id="type">
+  <option value="">Select Scanner Type</option>
+  <option value="MUSHINY">MUSHINY</option>
+  <option value="WMS">WMS</option>
+</select>
+
+<input id="scanner" placeholder="Scanner Number">
+<input id="user" placeholder="Your Name">
+
+<button onclick="takeScanner()">Submit</button>
+
+<br><br>
+<a href="mobile.html">⬅ Back</a>
+
+<script>
+function takeScanner() {
+  const type = document.getElementById("type").value;
+  const scanner = document.getElementById("scanner").value.trim();
+  const user = document.getElementById("user").value.trim();
+
+  if (!type || !scanner || !user) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  const db = firebase.database();
+
+  // Check if already taken
+  db.ref(`takenScanners/${type}/${scanner}`).once("value").then(snap => {
+    if (snap.exists()) {
+      alert("Scanner already taken");
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    // Mark as taken
+    db.ref(`takenScanners/${type}/${scanner}`).set({
+      user: user,
+      time: now
+    });
+
+    // Remove from available scanners
+    db.ref(`scanners/${type}/${scanner}`).remove();
+
+    // WRITE LOG (THIS WAS MISSING)
+    db.ref("logs").push({
+      action: "take",
+      device: scanner,
+      type: type,
+      user: user,
+      time: now
+    });
+
+    alert("Scanner taken successfully");
+    window.location.href = "mobile.html";
+  });
+}
+</script>
+
+</body>
+</html>

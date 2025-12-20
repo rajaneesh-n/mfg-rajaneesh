@@ -5,36 +5,18 @@
   <title>Take Scanner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="config.js"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-      text-align: center;
-    }
-    select, input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-    button {
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; text-align: center; }
+    select, input, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
+    button { background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; }
   </style>
 </head>
 
 <body>
-
 <h2>Take Scanner</h2>
 
 <select id="type">
@@ -52,7 +34,7 @@
 <a href="mobile.html">⬅ Back</a>
 
 <script>
-function takeScanner() {
+async function takeScanner() {
   const type = document.getElementById("type").value;
   const scanner = document.getElementById("scanner").value.trim();
   const user = document.getElementById("user").value.trim();
@@ -63,39 +45,37 @@ function takeScanner() {
   }
 
   const db = firebase.database();
+  const now = new Date().toISOString();
 
-  // Check if already taken
-  db.ref(`takenScanners/${type}/${scanner}`).once("value").then(snap => {
-    if (snap.exists()) {
-      alert("Scanner already taken");
-      return;
-    }
+  const takenRef = db.ref(`takenScanners/${type}/${scanner}`);
+  const availableRef = db.ref(`scanners/${type}/${scanner}`);
 
-    const now = new Date().toISOString();
+  // 1) already taken?
+  const takenSnap = await takenRef.once("value");
+  if (takenSnap.exists()) {
+    alert("Scanner already taken");
+    return;
+  }
 
-    // Mark as taken
-    db.ref(`takenScanners/${type}/${scanner}`).set({
-      user: user,
-      time: now
-    });
+  // 2) must exist in available list (this prevents breaking totals)
+  const availSnap = await availableRef.once("value");
+  if (!availSnap.exists()) {
+    alert("This scanner is NOT available in the system. Ask admin or return it first.");
+    return;
+  }
 
-    // Remove from available scanners
-    db.ref(`scanners/${type}/${scanner}`).remove();
+  // 3) atomic update (prevents half updates)
+  const logKey = db.ref("logs").push().key;
+  const updates = {};
+  updates[`takenScanners/${type}/${scanner}`] = { user, time: now };
+  updates[`scanners/${type}/${scanner}`] = null;
+  updates[`logs/${logKey}`] = { action: "take", device: scanner, type, user, time: now };
 
-    // WRITE LOG (THIS WAS MISSING)
-    db.ref("logs").push({
-      action: "take",
-      device: scanner,
-      type: type,
-      user: user,
-      time: now
-    });
+  await db.ref().update(updates);
 
-    alert("Scanner taken successfully");
-    window.location.href = "mobile.html";
-  });
+  alert("Scanner taken successfully");
+  window.location.href = "mobile.html";
 }
 </script>
-
 </body>
 </html>

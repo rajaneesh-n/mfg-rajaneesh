@@ -275,12 +275,13 @@
       });
 
       // total = available + taken (this keeps total stable if your DB is correct)
-      const totalToShow = availableCount + takenCount;
+      const TOTAL_SCANNERS = 53;
+      
+document.getElementById("statTotal").innerText = TOTAL_SCANNERS;
+document.getElementById("statTaken").innerText = takenCount;
+document.getElementById("statAvailable").innerText = TOTAL_SCANNERS - takenCount;
+document.getElementById("statOverdue").innerText = overdueCount;
 
-      document.getElementById("statTotal").innerText = totalToShow;
-      document.getElementById("statAvailable").innerText = availableCount;
-      document.getElementById("statTaken").innerText = takenCount;
-      document.getElementById("statOverdue").innerText = overdueCount;
 
       document.getElementById("warningBanner").style.display =
         overdueCount > 0 ? "block" : "none";

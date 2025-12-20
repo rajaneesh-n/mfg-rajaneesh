@@ -7,35 +7,27 @@
 </head>
 
 <body class="mobile">
-
-  <!-- LOGO -->
   <img src="assets/logo.png" class="logo">
-
   <h2>Return a Scanner</h2>
 
-  <!-- TYPE SELECT -->
   <div class="toggle">
     <button id="btnMushiny" onclick="selectType('MUSHINY')">Mushiny</button>
     <button id="btnWms" onclick="selectType('WMS')">WMS</button>
   </div>
 
-  <!-- SCROLLABLE TAKEN SCANNER LIST -->
   <div class="scroll-area">
     <div id="scannerList" class="list">
       <p class="hint">Select scanner to return</p>
     </div>
   </div>
 
-  <!-- USER NAME -->
   <input type="text" id="userName" placeholder="Enter your name">
 
-  <!-- FIXED ACTION BAR -->
   <div class="actions">
     <button id="returnBtn" onclick="returnScanner()">Return</button>
     <button class="secondary" onclick="safeBack()">Back</button>
   </div>
 
-  <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="config.js"></script>
@@ -52,11 +44,8 @@
       document.getElementById("btnMushiny").classList.remove("active");
       document.getElementById("btnWms").classList.remove("active");
 
-      if (type === "MUSHINY") {
-        document.getElementById("btnMushiny").classList.add("active");
-      } else {
-        document.getElementById("btnWms").classList.add("active");
-      }
+      if (type === "MUSHINY") document.getElementById("btnMushiny").classList.add("active");
+      else document.getElementById("btnWms").classList.add("active");
 
       loadTakenScanners();
     }
@@ -77,7 +66,7 @@
           }
 
           snapshot.forEach(child => {
-            const data = child.val();
+            const data = child.val() || {};
             const takenBy = data.user || "unknown";
 
             const div = document.createElement("div");
@@ -99,14 +88,12 @@
     }
 
     function selectDevice(el, id) {
-      document.querySelectorAll(".row").forEach(r =>
-        r.classList.remove("selected")
-      );
+      document.querySelectorAll(".row").forEach(r => r.classList.remove("selected"));
       el.classList.add("selected");
       selectedDevice = id;
     }
 
-    function returnScanner() {
+    async function returnScanner() {
       if (isReturning) return;
 
       const user = document.getElementById("userName").value.trim();
@@ -121,38 +108,27 @@
       returnBtn.disabled = true;
       returnBtn.innerText = "Processing...";
 
-      firebase.database()
-        .ref("scanners/" + selectedType + "/" + selectedDevice)
-        .set(true)
-        .then(() => {
-          return firebase.database()
-            .ref("takenScanners/" + selectedType + "/" + selectedDevice)
-            .remove();
-        })
-        .then(() => {
-          return firebase.database().ref("logs").push({
-            user: user,
-            device: selectedDevice,
-            type: selectedType,
-            action: "return",
-            time: new Date().toISOString()
-          });
-        })
-        .then(() => {
-          alert("Scanner returned successfully");
+      try {
+        const db = firebase.database();
+        const now = new Date().toISOString();
+        const logKey = db.ref("logs").push().key;
 
-          // ✅ AUTO REDIRECT TO HOME
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 1200);
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Something went wrong");
-          isReturning = false;
-          returnBtn.disabled = false;
-          returnBtn.innerText = "Return";
-        });
+        const updates = {};
+        updates[`scanners/${selectedType}/${selectedDevice}`] = true;
+        updates[`takenScanners/${selectedType}/${selectedDevice}`] = null;
+        updates[`logs/${logKey}`] = { action: "return", device: selectedDevice, type: selectedType, user, time: now };
+
+        await db.ref().update(updates);
+
+        alert("Scanner returned successfully");
+        setTimeout(() => window.location.href = "index.html", 800);
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong");
+        isReturning = false;
+        returnBtn.disabled = false;
+        returnBtn.innerText = "Return";
+      }
     }
 
     function safeBack() {
@@ -160,6 +136,5 @@
       history.back();
     }
   </script>
-
 </body>
 </html>

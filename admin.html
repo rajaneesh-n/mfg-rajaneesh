@@ -15,6 +15,7 @@
     }
 
     .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
     .header { text-align: center; padding: 20px 10px; }
     .header img { max-width: 120px; margin-bottom: 10px; }
     .header h1 { margin: 0; font-size: 26px; }
@@ -42,10 +43,15 @@
       border-radius: 14px;
       padding: 16px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 86px;
+      justify-content: center;
     }
 
     .stat-card span { font-size: 13px; color: #666; }
-    .stat-card strong { font-size: 30px; font-weight: 800; }
+    .stat-card strong { font-size: 30px; font-weight: 800; line-height: 1; }
 
     .section {
       background: #fff;
@@ -64,11 +70,17 @@
       margin-bottom: 12px;
     }
 
+    .section-header h2 { margin: 0; font-size: 20px; }
+
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
     .search-box {
       width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid #d1d5db;
+      font-size: 14px;
+      background: #fff;
       margin: 10px 0 18px;
     }
 
@@ -79,143 +91,343 @@
       cursor: pointer;
       background: #2563eb;
       color: #fff;
+      font-size: 13px;
       font-weight: 700;
     }
 
     button.secondary { background: #9ca3af; }
 
+    input[type="date"] {
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 13px;
+      background: #fff;
+    }
+
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; text-align: left; }
     thead { background: #f3f4f6; }
 
-    .take { color: #15803d; font-weight: 800; }
-    .return { color: #b91c1c; font-weight: 800; }
-    .status-long { color: #b45309; font-weight: 800; }
+    .status-overdue { color: #b91c1c; font-weight: 800; }
+    .status-long    { color: #b45309; font-weight: 800; }
+    .status-ok      { color: #111827; font-weight: 700; }
 
-    .empty-row { text-align: center; color: #6b7280; padding: 16px; }
+    .take   { color: #15803d; font-weight: 800; }
+    .return { color: #b91c1c; font-weight: 800; }
+
+    .empty-row { color: #6b7280; text-align: center; padding: 18px 10px; }
+
+    .footer { text-align: center; margin: 26px 0; }
   </style>
 </head>
 
 <body>
-<div class="header">
-  <img src="assets/logo.png">
-  <h1>Scanner Management – Admin</h1>
-  <p>Dashboard, live status & reports</p>
-</div>
-
-<div class="container">
-
-  <div id="warningBanner" class="warning">
-    ⚠️ Overdue scanners detected. Immediate action required.
+  <div class="header">
+    <img src="assets/logo.png" alt="MFG Logo">
+    <h1>Scanner Management – Admin</h1>
+    <p>Dashboard, live status & reports</p>
   </div>
 
-  <div class="stats">
-    <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
-    <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
-    <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
-    <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
-  </div>
+  <div class="container">
 
-  <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
-
-  <!-- LOGS -->
-  <div class="section">
-    <div class="section-header">
-      <h2>Scanner Logs</h2>
-      <button onclick="loadLogs()">Refresh</button>
+    <div id="warningBanner" class="warning">
+      ⚠️ Overdue scanners detected. Immediate action required.
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Scanner</th>
-          <th>Type</th>
-          <th>User</th>
-          <th>Taken At</th>
-          <th>Returned At</th>
-          <th>Duration</th>
-        </tr>
-      </thead>
-      <tbody id="logsTable">
-        <tr><td colspan="6" class="empty-row">Loading…</td></tr>
-      </tbody>
-    </table>
+    <div class="stats">
+      <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
+      <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
+      <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
+      <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
+    </div>
+
+    <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+
+    <!-- TAKEN -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Currently Taken Scanners</h2>
+        <div class="controls">
+          <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
+          <button onclick="loadStatus()">Refresh</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Taken Since</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="statusTable">
+          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LOGS -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Scanner Logs</h2>
+        <div class="controls">
+          <input type="date" id="fromDate">
+          <input type="date" id="toDate">
+          <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
+          <button onclick="loadLogs()">Refresh</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Date / Time</th>
+          </tr>
+        </thead>
+        <tbody id="logsTable">
+          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <button class="secondary" onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
   </div>
 
-  <div class="footer">
-    <button class="secondary" onclick="location.href='index.html'">Back to Home</button>
-  </div>
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
 
-</div>
+  <script>
+    const SOFT = 8;
+    const HARD = 24;
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="config.js"></script>
+    let statusRows = [];
+    let logRows = [];
 
-<script>
-let logRows = [];
+    const elSearch = document.getElementById("searchInput");
 
-async function loadLogs() {
-  const snap = await firebase.database().ref("logs").once("value");
-  logRows = [];
-  snap.forEach(c => logRows.push(c.val()));
-  renderLogs();
-}
+    elSearch.addEventListener("input", () => {
+      renderStatus();
+      renderLogs();
+    });
 
-/* ✅ FIXED + PAIRED LOG RENDER */
-function renderLogs() {
-  const tb = document.getElementById("logsTable");
-  tb.innerHTML = "";
+    setInterval(() => {
+      loadStatus();
+      loadLogs();
+    }, 300000);
 
-  const sorted = logRows
-    .slice()
-    .sort((a,b) => new Date(a.time) - new Date(b.time));
-
-  const open = {};
-  const pairs = [];
-
-  sorted.forEach(l => {
-    const key = `${l.type}_${l.device}`;
-
-    if (l.action === "take") {
-      open[key] = { ...l, takeTime: l.time, returnTime: null };
+    function hoursDiff(iso) {
+      return (Date.now() - new Date(iso).getTime()) / 3600000;
     }
 
-    if (l.action === "return" && open[key]) {
-      open[key].returnTime = l.time;
-      pairs.push(open[key]);
-      delete open[key];
+    async function loadStatus() {
+      const db = firebase.database();
+      document.getElementById("statusTable").innerHTML =
+        `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
+
+      const [scannersSnap, takenSnap] = await Promise.all([
+        db.ref("scanners").once("value"),
+        db.ref("takenScanners").once("value"),
+      ]);
+
+      // available = count of /scanners
+      let availableCount = 0;
+      scannersSnap.forEach(typeSnap => typeSnap.forEach(() => availableCount++));
+
+      // taken = count of /takenScanners
+      statusRows = [];
+      let takenCount = 0;
+      let overdueCount = 0; // (same meaning as before: long + overdue attention)
+
+      takenSnap.forEach(typeSnap => {
+        typeSnap.forEach(devSnap => {
+          takenCount++;
+          const v = devSnap.val() || {};
+          const h = Math.floor(hoursDiff(v.time || new Date().toISOString()));
+
+          let status = "OK";
+          let cls = "status-ok";
+
+          if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdueCount++; }
+          else if (h >= SOFT) { status = "Long"; cls = "status-long"; overdueCount++; }
+
+          statusRows.push({
+            scanner: devSnap.key,
+            type: typeSnap.key,
+            user: v.user || "",
+            hours: h,
+            status,
+            cls
+          });
+        });
+      });
+
+      // total = available + taken (this keeps total stable if your DB is correct)
+      const totalToShow = availableCount + takenCount;
+
+      document.getElementById("statTotal").innerText = totalToShow;
+      document.getElementById("statAvailable").innerText = availableCount;
+      document.getElementById("statTaken").innerText = takenCount;
+      document.getElementById("statOverdue").innerText = overdueCount;
+
+      document.getElementById("warningBanner").style.display =
+        overdueCount > 0 ? "block" : "none";
+
+      renderStatus();
     }
-  });
 
-  Object.values(open).forEach(p => pairs.push(p));
+    function renderStatus() {
+      const q = (elSearch.value || "").toLowerCase().trim();
+      const tb = document.getElementById("statusTable");
+      tb.innerHTML = "";
 
-  if (!pairs.length) {
-    tb.innerHTML = `<tr><td colspan="6" class="empty-row">No logs found.</td></tr>`;
-    return;
-  }
+      const filtered = statusRows
+        .filter(r =>
+          String(r.scanner || "").includes(q) ||
+          String(r.user || "").toLowerCase().includes(q)
+        )
+        .sort((a,b) => b.hours - a.hours);
 
-  pairs.reverse().forEach(p => {
-    const taken = new Date(p.takeTime);
-    const returned = p.returnTime ? new Date(p.returnTime) : null;
-    const duration = returned
-      ? Math.round((returned - taken) / 60000) + " min"
-      : "<span class='status-long'>Still Taken</span>";
+      if (!filtered.length) {
+        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;
+        return;
+      }
 
-    tb.innerHTML += `
-      <tr>
-        <td>${p.device}</td>
-        <td>${p.type}</td>
-        <td>${p.user}</td>
-        <td>${taken.toLocaleString()}</td>
-        <td>${returned ? returned.toLocaleString() : "-"}</td>
-        <td>${duration}</td>
-      </tr>
-    `;
-  });
-}
+      filtered.forEach(r => {
+        tb.innerHTML += `
+          <tr>
+            <td>${r.scanner}</td>
+            <td>${r.type}</td>
+            <td>${r.user}</td>
+            <td>${r.hours}h</td>
+            <td class="${r.cls}">${r.status}</td>
+          </tr>
+        `;
+      });
+    }
 
-loadLogs();
-</script>
+    async function loadLogs() {
+      const db = firebase.database();
+      document.getElementById("logsTable").innerHTML =
+        `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
+
+      // IMPORTANT: orderByChild("time") ensures time ordering in RTDB
+      const snap = await db.ref("logs").orderByChild("time").limitToLast(800).once("value");
+
+      logRows = [];
+      snap.forEach(child => {
+        const v = child.val();
+        if (v) logRows.push(v);
+      });
+
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const q = (elSearch.value || "").toLowerCase().trim();
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
+
+      const tb = document.getElementById("logsTable");
+      tb.innerHTML = "";
+
+      // sort newest first (safe even if time missing)
+      const newestFirst = logRows.slice().sort((a,b) => {
+        const ta = new Date(a?.time || 0).getTime();
+        const tb2 = new Date(b?.time || 0).getTime();
+        return tb2 - ta;
+      });
+
+      const filtered = newestFirst.filter(l => {
+        if (!l) return false;
+
+        const d = new Date(l.time || 0);
+
+        if (from && d < new Date(from)) return false;
+        if (to && d > new Date(to + "T23:59:59")) return false;
+
+        // ✅ SAFE conversions (prevents silent break)
+        const device = String(l.device ?? "");
+        const user = String(l.user ?? "").toLowerCase();
+
+        return device.includes(q) || user.includes(q);
+      });
+
+      if (!filtered.length) {
+        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No logs found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(l => {
+        const act = String(l.action || "").toLowerCase();
+        tb.innerHTML += `
+          <tr>
+            <td class="${act === 'take' ? 'take' : 'return'}">${String(l.action || "").toUpperCase()}</td>
+            <td>${String(l.device ?? "")}</td>
+            <td>${String(l.type ?? "")}</td>
+            <td>${String(l.user ?? "")}</td>
+            <td>${new Date(l.time || 0).toLocaleString()}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function exportStatusCSV() {
+      exportCSV(
+        statusRows.map(r => ({
+          scanner: r.scanner,
+          type: r.type,
+          user: r.user,
+          taken_since_hours: r.hours,
+          status: r.status
+        })),
+        "scanner_status.csv"
+      );
+    }
+
+    function exportLogsCSV() {
+      exportCSV(
+        logRows
+          .slice()
+          .sort((a,b) => new Date(b?.time || 0) - new Date(a?.time || 0))
+          .map(l => ({
+            action: String(l.action || "").toUpperCase(),
+            scanner: String(l.device ?? ""),
+            type: String(l.type ?? ""),
+            user: String(l.user ?? ""),
+            time: l.time || ""
+          })),
+        "scanner_logs.csv"
+      );
+    }
+
+    function exportCSV(rows, name) {
+      if (!rows || !rows.length) return alert("No data to export");
+      const keys = Object.keys(rows[0]);
+      const csv = [keys.join(",")]
+        .concat(rows.map(r => keys.map(k => `"${String(r[k] ?? "").replace(/"/g,'""')}"`).join(",")))
+        .join("\n");
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      a.download = name;
+      a.click();
+    }
+
+    loadStatus();
+    loadLogs();
+  </script>
 </body>
 </html>

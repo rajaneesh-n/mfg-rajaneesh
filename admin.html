@@ -14,83 +14,51 @@
       color: #222;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
 
-    .header {
-      text-align: center;
-      padding: 20px 10px;
-    }
+    .header { text-align: center; padding: 20px 10px; }
+    .header img { max-width: 120px; margin-bottom: 10px; }
+    .header h1 { margin: 0; font-size: 26px; }
+    .header p { margin-top: 6px; color: #555; }
 
-    .header img {
-      max-width: 120px;
-      margin-bottom: 10px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 26px;
-    }
-
-    .header p {
-      margin-top: 6px;
-      color: #555;
-    }
-
-    /* WARNING BANNER */
     .warning {
       background: #fff3cd;
       color: #856404;
       padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 15px;
+      border-radius: 12px;
+      margin: 10px 0 18px;
       display: none;
-      font-weight: 600;
-      text-align: left;
+      font-weight: 700;
     }
 
-    /* STAT CARDS */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 12px;
-      margin: 20px 0;
+      margin: 18px 0;
     }
 
     .stat-card {
       background: #fff;
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      text-align: left; /* keep clean layout */
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      min-height: 78px;
+      gap: 8px;
+      min-height: 86px;
       justify-content: center;
     }
 
-    .stat-card span {
-      font-size: 13px;
-      color: #666;
-    }
+    .stat-card span { font-size: 13px; color: #666; }
+    .stat-card strong { font-size: 30px; font-weight: 800; line-height: 1; }
 
-    .stat-card strong {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
-    /* SECTIONS */
     .section {
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       padding: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .section-header {
@@ -98,384 +66,387 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
+
+    .section-header h2 { margin: 0; font-size: 20px; }
+
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
     .search-box {
       width: 100%;
       padding: 10px 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid #d1d5db;
-      margin: 10px 0 18px;
       font-size: 14px;
       background: #fff;
-    }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
+      margin: 10px 0 18px;
     }
 
     button {
       padding: 8px 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       border: none;
       cursor: pointer;
       background: #2563eb;
       color: #fff;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    button.secondary {
-      background: #9ca3af;
-    }
+    button.secondary { background: #9ca3af; }
 
-    input[type="date"]{
-      padding: 7px 10px;
-      border-radius: 10px;
+    input[type="date"] {
+      padding: 8px 10px;
+      border-radius: 12px;
       border: 1px solid #d1d5db;
       font-size: 13px;
       background: #fff;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; text-align: left; }
+    thead { background: #f3f4f6; }
 
-    th, td {
-      padding: 10px 10px;
-      border-bottom: 1px solid #e5e7eb;
-      white-space: nowrap;
-      text-align: left;
-    }
+    .status-overdue { color: #b91c1c; font-weight: 800; }
+    .status-long    { color: #b45309; font-weight: 800; }
+    .status-ok      { color: #111827; font-weight: 700; }
 
-    thead {
-      background: #f3f4f6;
-    }
+    .take   { color: #15803d; font-weight: 800; }
+    .return { color: #b91c1c; font-weight: 800; }
 
-    .status-overdue { color: #b91c1c; font-weight: 700; }
-    .status-long    { color: #b45309; font-weight: 700; }
-    .status-ok      { color: #111827; font-weight: 600; }
+    .empty-row { color: #6b7280; text-align: center; padding: 18px 10px; }
 
-    .take   { color: #15803d; font-weight: 700; }
-    .return { color: #b91c1c; font-weight: 700; }
-
-    .empty-row {
-      color: #6b7280;
-      text-align: center;
-      padding: 18px 10px;
-    }
-
-    .footer {
-      text-align: center;
-      margin: 30px 0;
-    }
+    .footer { text-align: center; margin: 26px 0; }
   </style>
 </head>
 
 <body>
-
-<div class="header">
-  <img src="assets/logo.png" alt="MFG Logo">
-  <h1>Scanner Management – Admin</h1>
-  <p>Dashboard, live status & reports</p>
-</div>
-
-<div class="container">
-
-  <div id="warningBanner" class="warning">
-    ⚠️ Overdue scanners detected. Immediate action required.
+  <div class="header">
+    <img src="assets/logo.png" alt="MFG Logo">
+    <h1>Scanner Management – Admin</h1>
+    <p>Dashboard, live status & reports</p>
   </div>
 
-  <div class="stats">
-    <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
-    <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
-    <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
-    <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
-  </div>
+  <div class="container">
 
-  <!-- SEARCH (C) -->
-  <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
-
-  <!-- TAKEN (A + C + D + E) -->
-  <div class="section">
-    <div class="section-header">
-      <h2>Currently Taken Scanners</h2>
-      <div class="controls">
-        <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
-        <button onclick="loadStatus()">Refresh</button>
-      </div>
+    <div id="warningBanner" class="warning">
+      ⚠️ Overdue scanners detected. Immediate action required.
     </div>
 
-    <table>
-      <thead>
-        <tr><th>Scanner</th><th>Type</th><th>User</th><th>Taken Since</th><th>Status</th></tr>
-      </thead>
-      <tbody id="statusTable">
-        <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- LOGS (A + B + C + D) -->
-  <div class="section">
-    <div class="section-header">
-      <h2>Scanner Logs</h2>
-      <div class="controls">
-        <input type="date" id="fromDate">
-        <input type="date" id="toDate">
-        <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
-        <button onclick="loadLogs()">Refresh</button>
-      </div>
+    <div class="stats">
+      <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
+      <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
+      <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
+      <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
     </div>
 
-    <table>
-      <thead>
-        <tr><th>Action</th><th>Scanner</th><th>Type</th><th>User</th><th>Date / Time</th></tr>
-      </thead>
-      <tbody id="logsTable">
-        <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-      </tbody>
-    </table>
+    <!-- (C) Search -->
+    <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+
+    <!-- TAKEN -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Currently Taken Scanners</h2>
+        <div class="controls">
+          <!-- (A) CSV export -->
+          <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
+          <button onclick="loadStatus()">Refresh</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Taken Since</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="statusTable">
+          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LOGS -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Scanner Logs</h2>
+        <div class="controls">
+          <!-- (B) Date filter -->
+          <input type="date" id="fromDate">
+          <input type="date" id="toDate">
+          <!-- (A) CSV export -->
+          <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
+          <button onclick="loadLogs()">Refresh</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Scanner</th>
+            <th>Type</th>
+            <th>User</th>
+            <th>Date / Time</th>
+          </tr>
+        </thead>
+        <tbody id="logsTable">
+          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <button class="secondary" onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
   </div>
 
-  <div class="footer">
-    <button class="secondary" onclick="location.href='index.html'">Back to Home</button>
-  </div>
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="config.js"></script>
 
-</div>
+  <script>
+    // Thresholds
+    const SOFT = 8;   // Long after 8 hours
+    const HARD = 24;  // Overdue after 24 hours
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="config.js"></script>
+    // If settings/totalScanners doesn't exist, we'll use this fallback.
+    // Change to your real total if needed.
+    const DEFAULT_TOTAL = 53;
 
-<script>
-  // Thresholds
-  const SOFT = 8;   // Long after 8 hours
-  const HARD = 24;  // Overdue after 24 hours
+    // Caches
+    let statusRows = [];
+    let logRows = [];
 
-  // Data caches
-  let statusRows = [];
-  let logRows = [];
+    const elSearch = document.getElementById("searchInput");
 
-  const elSearch = document.getElementById("searchInput");
-
-  // (D) Auto-refresh every 5 minutes
-  setInterval(() => {
-    loadStatus();
-    loadLogs();
-  }, 300000);
-
-  // (C) Live search
-  elSearch.addEventListener("input", () => {
-    renderStatus();
-    renderLogs();
-  });
-
-  function hoursDiff(iso) {
-    return (Date.now() - new Date(iso).getTime()) / 3600000;
-  }
-
-  // ✅ IMPORTANT: Your DB logic is:
-  // /scanners = available list
-  // /takenScanners = taken list
-  // Total = Available + Taken  (this matches your old working code)
-  async function loadStatus() {
-    const tbody = document.getElementById("statusTable");
-    tbody.innerHTML = `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
-
-    const db = firebase.database();
-
-    const [availableSnap, takenSnap] = await Promise.all([
-      db.ref("scanners").once("value"),
-      db.ref("takenScanners").once("value")
-    ]);
-
-    // Count available from /scanners
-    let availableCount = 0;
-    availableSnap.forEach(typeSnap => {
-      typeSnap.forEach(() => availableCount++);
+    // (C) Search
+    elSearch.addEventListener("input", () => {
+      renderStatus();
+      renderLogs();
     });
 
-    // Build taken rows from /takenScanners
-    statusRows = [];
-    let takenCount = 0;
-    let overdueCount = 0;
+    // (D) Auto-refresh every 5 mins
+    setInterval(() => {
+      loadStatus();
+      loadLogs();
+    }, 300000);
 
-    takenSnap.forEach(typeSnap => {
-      typeSnap.forEach(devSnap => {
-        takenCount++;
+    function hoursDiff(iso) {
+      return (Date.now() - new Date(iso).getTime()) / 3600000;
+    }
 
-        const v = devSnap.val();
-        const h = Math.floor(hoursDiff(v.time));
+    async function loadStatus() {
+      const db = firebase.database();
+      document.getElementById("statusTable").innerHTML = `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
 
-        let status = "OK";
-        let cls = "status-ok";
+      // Read everything together
+      const [settingsSnap, scannersSnap, takenSnap] = await Promise.all([
+        db.ref("settings/totalScanners").once("value"),
+        db.ref("scanners").once("value"),
+        db.ref("takenScanners").once("value"),
+      ]);
 
-        if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdueCount++; }
-        else if (h >= SOFT) { status = "Long"; cls = "status-long"; }
+      // 1) Count available from /scanners
+      let availableCount = 0;
+      scannersSnap.forEach(typeSnap => {
+        typeSnap.forEach(() => availableCount++);
+      });
 
-        statusRows.push({
-          scanner: devSnap.key,
-          type: typeSnap.key,
-          user: v.user || "",
-          hours: h,
-          status,
-          cls
+      // 2) Build taken list from /takenScanners
+      statusRows = [];
+      let takenCount = 0;
+      let overdueCount = 0;
+
+      takenSnap.forEach(typeSnap => {
+        typeSnap.forEach(devSnap => {
+          takenCount++;
+
+          const v = devSnap.val() || {};
+          const h = Math.floor(hoursDiff(v.time));
+          let status = "OK";
+          let cls = "status-ok";
+
+          if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdueCount++; }
+          else if (h >= SOFT) { status = "Long"; cls = "status-long"; }
+
+          statusRows.push({
+            scanner: devSnap.key,
+            type: typeSnap.key,
+            user: v.user || "",
+            hours: h,
+            status,
+            cls
+          });
         });
       });
-    });
 
-    // Update stats (stable + correct)
-    document.getElementById("statAvailable").innerText = availableCount;
-    document.getElementById("statTaken").innerText = takenCount;
-    document.getElementById("statTotal").innerText = availableCount + takenCount;
-    document.getElementById("statOverdue").innerText = overdueCount;
+      // 3) Decide what TOTAL should be
+      // If you want the dashboard to ALWAYS show 53 (even if /scanners is incomplete),
+      // set settings/totalScanners = 53 in Firebase.
+      const configuredTotal = settingsSnap.exists() ? Number(settingsSnap.val()) : DEFAULT_TOTAL;
+      const computedTotal = availableCount + takenCount;
 
-    // (E) Banner only when REAL overdue exists (>= 24 hours)
-    document.getElementById("warningBanner").style.display = overdueCount > 0 ? "block" : "none";
+      // If configuredTotal is smaller than what we already see, don't shrink it.
+      const totalToShow = Math.max(configuredTotal || 0, computedTotal);
 
-    renderStatus();
-  }
+      // If totalToShow is bigger than computedTotal, we show available as (totalToShow - taken)
+      // so your dashboard stays stable (53 total).
+      const availableToShow = Math.max(0, totalToShow - takenCount);
 
-  function renderStatus() {
-    const q = (elSearch.value || "").toLowerCase().trim();
-    const tbody = document.getElementById("statusTable");
-    tbody.innerHTML = "";
+      document.getElementById("statTotal").innerText = totalToShow;
+      document.getElementById("statTaken").innerText = takenCount;
+      document.getElementById("statAvailable").innerText = availableToShow;
+      document.getElementById("statOverdue").innerText = overdueCount;
 
-    const filtered = statusRows
-      .filter(r => (r.scanner || "").includes(q) || (r.user || "").toLowerCase().includes(q))
-      .sort((a,b) => b.hours - a.hours); // show longest first
+      // (E) Banner only if REAL overdue exists
+      document.getElementById("warningBanner").style.display = overdueCount > 0 ? "block" : "none";
 
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;
-      return;
+      renderStatus();
     }
 
-    filtered.forEach(r => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${r.scanner}</td>
-          <td>${r.type}</td>
-          <td>${r.user}</td>
-          <td>${r.hours}h</td>
-          <td class="${r.cls}">${r.status}</td>
-        </tr>
-      `;
-    });
-  }
+    function renderStatus() {
+      const q = (elSearch.value || "").toLowerCase().trim();
+      const tb = document.getElementById("statusTable");
+      tb.innerHTML = "";
 
-  async function loadLogs() {
-    const tbody = document.getElementById("logsTable");
-    tbody.innerHTML = `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
+      const filtered = statusRows
+        .filter(r => String(r.scanner || "").includes(q) || String(r.user || "").toLowerCase().includes(q))
+        .sort((a,b) => b.hours - a.hours);
 
-    const db = firebase.database();
+      if (!filtered.length) {
+        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;
+        return;
+      }
 
-    // If your logs are written under /logs with fields: action, device, type, user, time
-    // ordering by child "time" makes the list stable.
-    const snap = await db.ref("logs").orderByChild("time").limitToLast(500).once("value");
-
-    logRows = [];
-    snap.forEach(c => logRows.push(c.val()));
-
-    renderLogs();
-  }
-
-  function renderLogs() {
-    const q = (elSearch.value || "").toLowerCase().trim();
-    const from = document.getElementById("fromDate").value;
-    const to = document.getElementById("toDate").value;
-
-    const tbody = document.getElementById("logsTable");
-    tbody.innerHTML = "";
-
-    // newest first
-    const newestFirst = logRows.slice().reverse();
-
-    const filtered = newestFirst.filter(l => {
-      if (!l) return false;
-
-      const d = new Date(l.time);
-
-      // (B) Date filter
-      if (from && d < new Date(from)) return false;
-      if (to && d > new Date(to + "T23:59:59")) return false;
-
-      // (C) Search by scanner/user
-      const device = String(l.device || "");
-      const user = String(l.user || "").toLowerCase();
-
-      return device.includes(q) || user.includes(q);
-    });
-
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td class="empty-row" colspan="5">No logs found for this filter.</td></tr>`;
-      return;
+      filtered.forEach(r => {
+        tb.innerHTML += `
+          <tr>
+            <td>${r.scanner}</td>
+            <td>${r.type}</td>
+            <td>${r.user}</td>
+            <td>${r.hours}h</td>
+            <td class="${r.cls}">${r.status}</td>
+          </tr>
+        `;
+      });
     }
 
-    filtered.forEach(l => {
-      const act = (l.action || "").toLowerCase();
-      tbody.innerHTML += `
-        <tr>
-          <td class="${act === 'take' ? 'take' : 'return'}">${String(l.action || '').toUpperCase()}</td>
-          <td>${l.device || ""}</td>
-          <td>${l.type || ""}</td>
-          <td>${l.user || ""}</td>
-          <td>${new Date(l.time).toLocaleString()}</td>
-        </tr>
-      `;
-    });
-  }
+    async function loadLogs() {
+      const db = firebase.database();
+      document.getElementById("logsTable").innerHTML = `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
 
-  // (A) CSV Export
-  function exportStatusCSV() {
-    exportCSV(
-      statusRows.map(r => ({
-        scanner: r.scanner,
-        type: r.type,
-        user: r.user,
-        taken_since_hours: r.hours,
-        status: r.status
-      })),
-      "scanner_status.csv"
-    );
-  }
+      // Use orderByChild("time") so we always get latest correctly
+      const snap = await db.ref("logs").orderByChild("time").limitToLast(800).once("value");
 
-  function exportLogsCSV() {
-    exportCSV(
-      logRows.map(l => ({
-        action: (l.action || "").toUpperCase(),
-        scanner: l.device || "",
-        type: l.type || "",
-        user: l.user || "",
-        time: l.time || ""
-      })),
-      "scanner_logs.csv"
-    );
-  }
+      logRows = [];
+      snap.forEach(c => logRows.push(c.val()));
 
-  function exportCSV(rows, name) {
-    if (!rows || !rows.length) return alert("No data to export");
-    const keys = Object.keys(rows[0]);
-    const csv = [keys.join(",")]
-      .concat(rows.map(r => keys.map(k => `"${String(r[k] ?? "").replace(/"/g,'""')}"`).join(",")))
-      .join("\n");
+      renderLogs();
+    }
 
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-    a.download = name;
-    a.click();
-  }
+    function renderLogs() {
+      const q = (elSearch.value || "").toLowerCase().trim();
+      const from = document.getElementById("fromDate").value;
+      const to = document.getElementById("toDate").value;
 
-  loadStatus();
-  loadLogs();
-</script>
+      const tb = document.getElementById("logsTable");
+      tb.innerHTML = "";
 
+      // newest first
+      const newestFirst = logRows.slice().sort((a,b) => {
+        const ta = new Date(a?.time || 0).getTime();
+        const tb2 = new Date(b?.time || 0).getTime();
+        return tb2 - ta;
+      });
+
+      const filtered = newestFirst.filter(l => {
+        if (!l) return false;
+
+        const d = new Date(l.time);
+
+        // (B) Date filter
+        if (from && d < new Date(from)) return false;
+        if (to && d > new Date(to + "T23:59:59")) return false;
+
+        // (C) Search
+        const device = String(l.device || "");
+        const user = String(l.user || "").toLowerCase();
+        return device.includes(q) || user.includes(q);
+      });
+
+      if (!filtered.length) {
+        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No logs found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(l => {
+        const act = String(l.action || "").toLowerCase();
+        tb.innerHTML += `
+          <tr>
+            <td class="${act === 'take' ? 'take' : 'return'}">${String(l.action || "").toUpperCase()}</td>
+            <td>${l.device || ""}</td>
+            <td>${l.type || ""}</td>
+            <td>${l.user || ""}</td>
+            <td>${new Date(l.time).toLocaleString()}</td>
+          </tr>
+        `;
+      });
+    }
+
+    // (A) CSV Export
+    function exportStatusCSV() {
+      exportCSV(
+        statusRows.map(r => ({
+          scanner: r.scanner,
+          type: r.type,
+          user: r.user,
+          taken_since_hours: r.hours,
+          status: r.status
+        })),
+        "scanner_status.csv"
+      );
+    }
+
+    function exportLogsCSV() {
+      exportCSV(
+        logRows
+          .slice()
+          .sort((a,b) => new Date(b?.time || 0) - new Date(a?.time || 0))
+          .map(l => ({
+            action: String(l.action || "").toUpperCase(),
+            scanner: l.device || "",
+            type: l.type || "",
+            user: l.user || "",
+            time: l.time || ""
+          })),
+        "scanner_logs.csv"
+      );
+    }
+
+    function exportCSV(rows, name) {
+      if (!rows || !rows.length) return alert("No data to export");
+      const keys = Object.keys(rows[0]);
+      const csv = [keys.join(",")]
+        .concat(rows.map(r => keys.map(k => `"${String(r[k] ?? "").replace(/"/g,'""')}"`).join(",")))
+        .join("\n");
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      a.download = name;
+      a.click();
+    }
+
+    loadStatus();
+    loadLogs();
+  </script>
 </body>
 </html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Home – Scanner Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f4f6f8;
+      color: #111;
+    }
+
+    .header {
+      text-align: center;
+      padding: 24px 16px 16px;
+    }
+
+    .header img {
+      max-width: 110px;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header p {
+      margin-top: 6px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px 12px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      cursor: pointer;
+      text-decoration: none;
+      color: #111;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .full-width {
+      grid-column: span 2;
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .footer {
+      text-align: center;
+      margin: 28px 0 16px;
+    }
+
+    .footer a {
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <img src="assets/logo.png" alt="MFG Logo">
+    <h1>Scanner Management</h1>
+    <p>Admin Home</p>
+  </div>
+
+  <!-- GRID -->
+  <div class="container">
+    <div class="grid">
+
+      <!-- Dashboard -->
+      <a class="card" href="admin.html#cards">
+        <div class="icon">📊</div>
+        <div class="label">Dashboard</div>
+      </a>
+
+      <!-- Live Status -->
+      <a class="card" href="admin.html#status">
+        <div class="icon">📦</div>
+        <div class="label">Live Status</div>
+      </a>
+
+      <!-- Logs -->
+      <a class="card" href="admin.html#logs">
+        <div class="icon">🧾</div>
+        <div class="label">Logs</div>
+      </a>
+
+      <!-- Exports -->
+      <a class="card" href="admin.html#exports">
+        <div class="icon">⬇️</div>
+        <div class="label">Exports</div>
+      </a>
+
+      <!-- Overdue -->
+      <a class="card full-width" href="admin.html#status">
+        <div class="icon">🚨</div>
+        <div class="label">Overdue Scanners</div>
+      </a>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="index.html">← Back to Scanner App</a>
+    </div>
+  </div>
+
+</body>
+</html>

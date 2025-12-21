@@ -119,6 +119,19 @@
     .empty-row { color: #6b7280; text-align: center; padding: 18px 10px; }
 
     .footer { text-align: center; margin: 26px 0; }
+    /* Anchor offset for fixed header */
+.section {
+  scroll-margin-top: 140px;
+}
+
+/* Highlight active section when navigated via hash */
+.section:target {
+  outline: 3px solid #2563eb;
+  outline-offset: 6px;
+  border-radius: 14px;
+  background: #eef2ff;
+}
+
   </style>
 </head>
 
@@ -429,6 +442,18 @@ document.getElementById("statOverdue").innerText = overdueCount;
 
     loadStatus();
     loadLogs();
+    // Smooth scroll to section after page load (for hash navigation)
+window.addEventListener("load", () => {
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  }
+});
+
   </script>
 </body>
 </html>

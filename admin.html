@@ -476,17 +476,21 @@ function showView(view) {
 
     loadStatus();
     loadLogs();
-    // Smooth scroll to section after page load (for hash navigation)
-window.addEventListener("load", () => {
-  if (window.location.hash) {
-    const target = document.querySelector(window.location.hash);
-    if (target) {
-      setTimeout(() => {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 300);
-    }
+function applyViewFromHash() {
+  const hash = window.location.hash.replace("#", "");
+
+  if (hash === "status") {
+    showView("status");
+  } else if (hash === "logs") {
+    showView("logs");
+  } else {
+    showView("dashboard"); // default
   }
-});
+}
+
+window.addEventListener("load", applyViewFromHash);
+window.addEventListener("hashchange", applyViewFromHash);
+
 
   </script>
 </body>

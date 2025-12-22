@@ -340,7 +340,7 @@ document.getElementById("statOverdue").innerText = overdueCount;
           <tr>
             <td>${r.scanner}</td>
             <td>${r.type}</td>
-            <td>${r.user}</td>
+            <td>${String(r.user || "").toUpperCase()}</td>
             <td>${r.hours}h</td>
             <td class="${r.cls}">${r.status}</td>
           </tr>
@@ -407,7 +407,7 @@ document.getElementById("statOverdue").innerText = overdueCount;
             <td class="${act === 'take' ? 'take' : 'return'}">${String(l.action || "").toUpperCase()}</td>
             <td>${String(l.device ?? "")}</td>
             <td>${String(l.type ?? "")}</td>
-            <td>${String(l.user ?? "")}</td>
+            <td>${String(l.user ?? "").toUpperCase()}</td>
             <td>${new Date(l.time || 0).toLocaleString()}</td>
           </tr>
         `;

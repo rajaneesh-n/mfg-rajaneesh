@@ -144,6 +144,9 @@
   border-radius: 14px;
   background: #eef2ff;
 }
+.hidden {
+  display: none !important;
+}
 
   </style>
 </head>
@@ -452,6 +455,24 @@ document.getElementById("statOverdue").innerText = overdueCount;
       a.download = name;
       a.click();
     }
+function showView(view) {
+  const sections = ["dashboard", "status", "logs"];
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
+
+  if (view === "dashboard") {
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("hidden");
+    });
+  } else {
+    const el = document.getElementById(view);
+    if (el) el.classList.remove("hidden");
+  }
+}
 
     loadStatus();
     loadLogs();

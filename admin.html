@@ -147,39 +147,22 @@
 .hidden {
   display: none !important;
 }
-/* ===== FIXED HEADER / FOOTER LAYOUT ===== */
+/* === STICKY ADMIN HEADER & FOOTER (SAFE) === */
 
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Header stays fixed */
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  width: 100%;
+  z-index: 100;
   background: #f4f6f8;
-  z-index: 1000;
 }
 
-/* Footer stays fixed */
 .footer {
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  width: 100%;
   background: #f4f6f8;
   padding-bottom: 16px;
 }
 
-/* Only middle content scrolls */
-.scroll-content {
-  position: absolute;
-  top: 140px;   /* height of header */
-  bottom: 90px; /* height of footer */
-  width: 100%;
-  overflow-y: auto;
-}
 
   </style>
 </head>

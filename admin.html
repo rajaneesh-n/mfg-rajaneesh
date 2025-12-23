@@ -188,6 +188,7 @@
       <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
       <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
       <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
+  <div class="stat-card"><span>Multi-Scanner Users</span><strong id="statMulti">–</strong></div>
     </div>
 
     <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
@@ -302,11 +303,15 @@
       statusRows = [];
       let takenCount = 0;
       let overdueCount = 0; // (same meaning as before: long + overdue attention)
+      const userScanCount = {};
 
       takenSnap.forEach(typeSnap => {
         typeSnap.forEach(devSnap => {
           takenCount++;
           const v = devSnap.val() || {};
+          const user = v.user || "UNKNOWN";
+          userScanCount[user] = (userScanCount[user] || 0) + 1;
+
           const h = Math.floor(hoursDiff(v.time || new Date().toISOString()));
 
           let status = "OK";
@@ -333,7 +338,8 @@ document.getElementById("statTotal").innerText = TOTAL_SCANNERS;
 document.getElementById("statTaken").innerText = takenCount;
 document.getElementById("statAvailable").innerText = TOTAL_SCANNERS - takenCount;
 document.getElementById("statOverdue").innerText = overdueCount;
-
+const multiUsers = Object.values(userScanCount).filter(c => c > 1).length;
+document.getElementById("statMulti").innerText = multiUsers;
 
       document.getElementById("warningBanner").style.display =
         overdueCount > 0 ? "block" : "none";
@@ -363,7 +369,10 @@ document.getElementById("statOverdue").innerText = overdueCount;
           <tr>
             <td>${r.scanner}</td>
             <td>${r.type}</td>
-            <td>${String(r.user || "").toUpperCase()}</td>
+          <td>
+            ${String(r.user || "").toUpperCase()}
+            ${userScanCount[r.user] > 1 ? " ⚠️" : ""}
+          </td>
             <td>${r.hours}h</td>
             <td class="${r.cls}">${r.status}</td>
           </tr>

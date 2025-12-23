@@ -83,6 +83,28 @@
       background: #fff;
       margin: 10px 0 18px;
     }
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin: 16px 0 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar select {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .filter-bar .checkbox {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     button {
       padding: 8px 12px;
@@ -240,7 +262,21 @@
   </div>
 </div>
 
-    <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+    <div class="filter-bar">
+      <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+
+      <select id="typeFilter">
+        <option value="all">All</option>
+        <option value="WMS">WMS</option>
+        <option value="MUSHINY">MUSHINY</option>
+      </select>
+
+      <label class="checkbox">
+        <input type="checkbox" id="overdueOnly">
+        Overdue Only
+      </label>
+    </div>
+
 
     <!-- TAKEN -->
 <div class="section" id="status">
@@ -325,6 +361,9 @@
       renderStatus();
       renderLogs();
     });
+    
+    document.getElementById("typeFilter").addEventListener("change", renderStatus);
+    document.getElementById("overdueOnly").addEventListener("change", renderStatus);
 
     setInterval(() => {
       loadStatus();
@@ -416,11 +455,24 @@ document.getElementById("statMulti").innerText = multiUsers;
       const tb = document.getElementById("statusTable");
       tb.innerHTML = "";
 
+      const type = document.getElementById("typeFilter").value;
+      const overdueOnly = document.getElementById("overdueOnly").checked;
+
       const filtered = statusRows
-        .filter(r =>
-          String(r.scanner || "").includes(q) ||
-          String(r.user || "").toLowerCase().includes(q)
-        )
+        .filter(r => {
+          const matchesSearch =
+            String(r.scanner || "").includes(q) ||
+            String(r.user || "").toLowerCase().includes(q);
+
+          const matchesType =
+            type === "all" || r.type === type;
+
+          const matchesOverdue =
+            !overdueOnly || r.status !== "OK";
+
+        return matchesSearch && matchesType && matchesOverdue;
+      })
+        
         .sort((a,b) => b.hours - a.hours);
 
       if (!filtered.length) {

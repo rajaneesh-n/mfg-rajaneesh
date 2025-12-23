@@ -213,6 +213,32 @@
       <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
   <div class="stat-card"><span>Multi-Scanner Users</span><strong id="statMulti">–</strong></div>
     </div>
+      
+  <!-- DAILY SUMMARY -->
+<div class="section" id="dailySummary">
+  <div class="section-header">
+    <h2>Daily Summary (Today)</h2>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <span>Taken Today</span>
+      <strong id="sumTaken">–</strong>
+    </div>
+    <div class="stat-card">
+      <span>Returned Today</span>
+      <strong id="sumReturned">–</strong>
+    </div>
+    <div class="stat-card">
+      <span>Currently Overdue</span>
+      <strong id="sumOverdue">–</strong>
+    </div>
+    <div class="stat-card">
+      <span>Multi-Scanner Users</span>
+      <strong id="sumMulti">–</strong>
+    </div>
+  </div>
+</div>
 
     <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
 
@@ -420,10 +446,9 @@ document.getElementById("statMulti").innerText = multiUsers;
 
     async function loadLogs() {
       const db = firebase.database();
-      document.getElementById("logsTable").innerHTML =
-        `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
+        document.getElementById("logsTable").innerHTML =
+    `      <tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
 
-      // IMPORTANT: orderByChild("time") ensures time ordering in RTDB
       const snap = await db.ref("logs").orderByChild("time").limitToLast(800).once("value");
 
       logRows = [];
@@ -433,6 +458,7 @@ document.getElementById("statMulti").innerText = multiUsers;
       });
 
       renderLogs();
+      loadDailySummary(); // ✅ STEP 3 (THIS IS THE ONLY CHANGE)
     }
 
     function renderLogs() {
@@ -482,6 +508,33 @@ document.getElementById("statMulti").innerText = multiUsers;
           </tr>
         `;
       });
+    }
+    // ===== DAILY SUMMARY (STEP 2) =====
+    function loadDailySummary() {
+      const today = new Date().toDateString();
+
+        let takenToday = 0;
+        let returnedToday = 0;
+
+        logRows.forEach(l => {
+          if (!l || !l.time) return;
+
+          const logDate = new Date(l.time).toDateString();
+          if (logDate !== today) return;
+
+          const action = String(l.action || "").toLowerCase();
+          if (action === "take") takenToday++;
+          if (action === "return") returnedToday++;
+        });
+
+        document.getElementById("sumTaken").innerText = takenToday;
+        document.getElementById("sumReturned").innerText = returnedToday;
+
+        document.getElementById("sumOverdue").innerText =
+          document.getElementById("statOverdue").innerText;
+
+        document.getElementById("sumMulti").innerText =
+          document.getElementById("statMulti").innerText;
     }
 
     function exportStatusCSV() {

@@ -304,7 +304,7 @@
       statusRows = [];
       userScanCount = {};   // RESET global object
       let takenCount = 0;
-      let overdueCount = 0; // (same meaning as before: long + overdue attention)
+      let overdueCount = 0; // HARD overdue only (>= 24h)
 
       takenSnap.forEach(typeSnap => {
         typeSnap.forEach(devSnap => {
@@ -318,8 +318,15 @@
           let status = "OK";
           let cls = "status-ok";
 
-          if (h >= HARD) { status = "Overdue"; cls = "status-overdue"; overdueCount++; }
-          else if (h >= SOFT) { status = "Long"; cls = "status-long"; overdueCount++; }
+          if (h >= HARD) {
+            status = "Overdue";
+            cls = "status-overdue";
+            overdueCount++; // ONLY 24h+ counted
+          }
+          else if (h >= SOFT) {
+            status = "Long";
+            cls = "status-long";
+          }
 
           statusRows.push({
             scanner: devSnap.key,

@@ -147,6 +147,39 @@
 .hidden {
   display: none !important;
 }
+/* ===== FIXED HEADER / FOOTER LAYOUT ===== */
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header stays fixed */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #f4f6f8;
+  z-index: 1000;
+}
+
+/* Footer stays fixed */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #f4f6f8;
+  padding-bottom: 16px;
+}
+
+/* Only middle content scrolls */
+.scroll-content {
+  position: absolute;
+  top: 140px;   /* height of header */
+  bottom: 90px; /* height of footer */
+  width: 100%;
+  overflow-y: auto;
+}
 
   </style>
 </head>
@@ -158,7 +191,10 @@
     <p>Dashboard, live status & reports</p>
   </div>
 
-  <div class="container">
+  <!-- SCROLL START -->
+  <div class="scroll-content">
+    <div class="container">
+
 
     <div id="warningBanner" class="warning">
       ⚠️ Overdue scanners detected. Immediate action required.
@@ -227,9 +263,13 @@
       </table>
     </div>
 
-    <div class="footer">
-      <button class="secondary" onclick="location.href='admin-home.html'">Back to Home</button>
-    </div>
+        </div> <!-- container -->
+  </div> <!-- SCROLL END -->
+
+  <div class="footer">
+    <button class="secondary" onclick="location.href='admin-home.html'">Back to Home</button>
+  </div>
+
 
   </div>
 

@@ -186,7 +186,14 @@
 <div class="stats" id="dashboard">
       <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
       <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
-      <div class="stat-card"><span>Taken</span><strong id="statTaken">–</strong></div>
+      <div class="stat-card">
+        <span>Taken</span>
+        <strong id="statTaken">–</strong>
+        <div style="font-size:12px;color:#555;margin-top:6px">
+          WMS: <span id="statTakenWMS">–</span><br>
+          MUSHINY: <span id="statTakenMUSHINY">–</span>
+        </div>
+      </div>
       <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
   <div class="stat-card"><span>Multi-Scanner Users</span><strong id="statMulti">–</strong></div>
     </div>
@@ -305,10 +312,15 @@
       userScanCount = {};   // RESET global object
       let takenCount = 0;
       let overdueCount = 0; // HARD overdue only (>= 24h)
+      let takenWMS = 0;
+      let takenMUSHINY = 0;
 
       takenSnap.forEach(typeSnap => {
         typeSnap.forEach(devSnap => {
           takenCount++;
+          if (typeSnap.key === "WMS") takenWMS++;
+          if (typeSnap.key === "MUSHINY") takenMUSHINY++;
+
           const v = devSnap.val() || {};
           const user = v.user || "UNKNOWN";
           userScanCount[user] = (userScanCount[user] || 0) + 1;
@@ -344,6 +356,8 @@
       
 document.getElementById("statTotal").innerText = TOTAL_SCANNERS;
 document.getElementById("statTaken").innerText = takenCount;
+  document.getElementById("statTakenWMS").innerText = takenWMS;
+  document.getElementById("statTakenMUSHINY").innerText = takenMUSHINY;
 document.getElementById("statAvailable").innerText = TOTAL_SCANNERS - takenCount;
 document.getElementById("statOverdue").innerText = overdueCount;
 const multiUsers = Object.values(userScanCount).filter(c => c > 1).length;

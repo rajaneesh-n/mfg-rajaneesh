@@ -75,6 +75,40 @@
     .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
     .search-box {
+      .search-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .filter-chips {
+        display: flex;
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        background: #fff;
+        color: #374151;
+      }
+
+      .chip.active {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+      }
+
+      .chip.danger.active {
+        background: #b91c1c;
+        border-color: #b91c1c;
+      }
+
       width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
@@ -263,7 +297,17 @@
 </div>
 
     <div class="filter-bar">
-      <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+      <div class="search-row">
+  <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+
+  <div class="filter-chips">
+    <span class="chip active" data-type="ALL">All</span>
+    <span class="chip" data-type="WMS">WMS</span>
+    <span class="chip" data-type="MUSHINY">MUSHINY</span>
+    <span class="chip danger" data-type="OVERDUE">Overdue</span>
+  </div>
+</div>
+
 
       <select id="typeFilter">
         <option value="all">All</option>
@@ -361,9 +405,30 @@
       renderStatus();
       renderLogs();
     });
-    
-    document.getElementById("typeFilter").addEventListener("change", renderStatus);
-    document.getElementById("overdueOnly").addEventListener("change", renderStatus);
+    let activeType = "ALL";
+let overdueOnly = false;
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+
+    // reset chip UI
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+
+    const type = chip.dataset.type;
+
+    if (type === "OVERDUE") {
+      overdueOnly = true;
+      activeType = "ALL";
+    } else {
+      overdueOnly = false;
+      activeType = type;
+    }
+
+    renderStatus();
+  });
+});
+
 
     setInterval(() => {
       loadStatus();

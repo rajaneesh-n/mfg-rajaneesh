@@ -74,41 +74,14 @@
 
     .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .search-box {
-      .search-row {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      .filter-chips {
-        display: flex;
-        gap: 8px;
-      }
-
-      .chip {
-        padding: 6px 12px;
-        border-radius: 999px;
-        border: 1px solid #d1d5db;
-        font-size: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        background: #fff;
-        color: #374151;
-      }
-
-      .chip.active {
-        background: #2563eb;
-        color: #fff;
-        border-color: #2563eb;
-      }
-
-      .chip.danger.active {
-        background: #b91c1c;
-        border-color: #b91c1c;
-      }
-
       width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
@@ -117,27 +90,32 @@
       background: #fff;
       margin: 10px 0 18px;
     }
-    .filter-bar {
+
+    .filter-chips {
       display: flex;
-      gap: 12px;
-      align-items: center;
-      margin: 16px 0 20px;
-      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .filter-bar select {
-      padding: 10px 12px;
-      border-radius: 12px;
+    .chip {
+      padding: 6px 12px;
+      border-radius: 999px;
       border: 1px solid #d1d5db;
-      font-size: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
       background: #fff;
+      color: #374151;
     }
 
-    .filter-bar .checkbox {
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .chip.active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+
+    .chip.danger.active {
+      background: #b91c1c;
+      border-color: #b91c1c;
     }
 
     button {
@@ -507,9 +485,6 @@ document.getElementById("statMulti").innerText = multiUsers;
       const tb = document.getElementById("statusTable");
       tb.innerHTML = "";
 
-      const type = document.getElementById("typeFilter").value;
-      const overdueOnly = document.getElementById("overdueOnly").checked;
-
       const filtered = statusRows
         .filter(r => {
           const matchesSearch =
@@ -517,15 +492,15 @@ document.getElementById("statMulti").innerText = multiUsers;
             String(r.user || "").toLowerCase().includes(q);
 
           const matchesType =
-            type === "all" || r.type === type;
+            activeType === "ALL" || r.type === activeType;
 
           const matchesOverdue =
             !overdueOnly || r.status !== "OK";
 
-        return matchesSearch && matchesType && matchesOverdue;
-      })
-        
+          return matchesSearch && matchesType && matchesOverdue;
+        })
         .sort((a,b) => b.hours - a.hours);
+
 
       if (!filtered.length) {
         tb.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;

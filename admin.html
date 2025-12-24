@@ -296,6 +296,10 @@
         <span class="chip" data-type="WMS">WMS</span>
         <span class="chip" data-type="MUSHINY">MUSHINY</span>
         <span class="chip danger" data-type="OVERDUE">Overdue</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;">
+          <input type="checkbox" id="autoRefreshToggle">
+          Auto Refresh (30s)
+        </label>
       </div>
     </div>
 
@@ -413,10 +417,21 @@
     });
   });
 
-    setInterval(() => {
-      loadStatus();
-      loadLogs();
-    }, 300000);
+    let autoRefreshTimer = null;
+
+    const autoToggle = document.getElementById("autoRefreshToggle");
+
+    autoToggle.addEventListener("change", () => {
+      if (autoToggle.checked) {
+        autoRefreshTimer = setInterval(() => {
+          loadStatus();
+          loadLogs();
+        }, 30000);
+      } else {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
+    });
 
     function hoursDiff(iso) {
       return (Date.now() - new Date(iso).getTime()) / 3600000;

@@ -81,30 +81,41 @@
       flex-wrap: wrap;
     }
 
+    .search-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Search input */
     .search-box {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
+      flex: 1;
+      min-width: 240px;
+      padding: 12px 14px;
+      border-radius: 14px;
       border: 1px solid #d1d5db;
       font-size: 14px;
       background: #fff;
-      margin: 10px 0 18px;
     }
 
+    /* Filter buttons */
     .filter-chips {
       display: flex;
       gap: 8px;
     }
 
     .chip {
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
       background: #fff;
       color: #374151;
+      white-space: nowrap;
     }
 
     .chip.active {
@@ -274,18 +285,19 @@
   </div>
 </div>
 
-    <div class="filter-bar">
-      <div class="search-row">
-  <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+    <div class="search-row">
+      <input
+        id="searchInput"
+        class="search-box"
+        placeholder="Search by scanner or user"
+      />
 
-  <div class="filter-chips">
-    <span class="chip active" data-type="ALL">All</span>
-    <span class="chip" data-type="WMS">WMS</span>
-    <span class="chip" data-type="MUSHINY">MUSHINY</span>
-    <span class="chip danger" data-type="OVERDUE">Overdue</span>
-  </div>
-</div>
-</div>
+      <div class="filter-chips">
+        <span class="chip" data-type="WMS">WMS</span>
+        <span class="chip" data-type="MUSHINY">MUSHINY</span>
+        <span class="chip danger" data-type="OVERDUE">Overdue</span>
+      </div>
+    </div>
 
     <!-- TAKEN -->
 <div class="section" id="status">
@@ -371,29 +383,35 @@
       renderLogs();
     });
     let activeType = "ALL";
-let overdueOnly = false;
+    let overdueOnly = false;
 
-document.querySelectorAll(".chip").forEach(chip => {
-  chip.addEventListener("click", () => {
+    document.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
 
-    // reset chip UI
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    chip.classList.add("active");
+      const type = chip.dataset.type;
 
-    const type = chip.dataset.type;
+      // Toggle logic
+      if (type === "OVERDUE") {
+        overdueOnly = !overdueOnly;
+        activeType = "ALL";
+      } else {
+        // clicking same type again resets filter
+        activeType = (activeType === type) ? "ALL" : type;
+        overdueOnly = false;
+      }
 
-    if (type === "OVERDUE") {
-      overdueOnly = true;
-      activeType = "ALL";
-    } else {
-      overdueOnly = false;
-      activeType = type;
-    }
+      // Update UI
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
 
-    renderStatus();
+      if (overdueOnly) {
+        document.querySelector('.chip[data-type="OVERDUE"]').classList.add("active");
+      } else if (activeType !== "ALL") {
+        document.querySelector(`.chip[data-type="${activeType}"]`).classList.add("active");
+      }
+
+      renderStatus();
+    });
   });
-});
-
 
     setInterval(() => {
       loadStatus();

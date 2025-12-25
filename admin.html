@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Scanner Management – Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
 
   <style>
     body {
@@ -14,12 +13,11 @@
       color: #222;
     }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
-
-    .header { text-align: center; padding: 20px 10px; }
-    .header img { max-width: 120px; margin-bottom: 10px; }
-    .header h1 { margin: 0; font-size: 26px; }
-    .header p { margin-top: 6px; color: #555; }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
 
     .warning {
       background: #fff3cd;
@@ -46,12 +44,26 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      min-height: 86px;
       justify-content: center;
     }
 
-    .stat-card span { font-size: 13px; color: #666; }
-    .stat-card strong { font-size: 30px; font-weight: 800; line-height: 1; }
+    .stat-card span {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .stat-card strong {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .taken-breakdown {
+      font-size: 12px;
+      color: #555;
+      display: flex;
+      gap: 12px;
+    }
 
     .section {
       background: #fff;
@@ -59,37 +71,26 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.06);
       padding: 16px;
       margin-bottom: 18px;
+      scroll-margin-top: 100px;
     }
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 12px;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .section-header h2 { margin: 0; font-size: 20px; }
-
-    .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
-    .search-row {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
     }
 
     .search-row {
       display: flex;
-      align-items: center;
       gap: 12px;
       margin: 16px 0 20px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
-    /* Search input */
     .search-box {
       flex: 1;
       min-width: 240px;
@@ -97,13 +98,13 @@
       border-radius: 14px;
       border: 1px solid #d1d5db;
       font-size: 14px;
-      background: #fff;
     }
 
-    /* Filter buttons */
     .filter-chips {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     .chip {
@@ -114,8 +115,6 @@
       font-weight: 700;
       cursor: pointer;
       background: #fff;
-      color: #374151;
-      white-space: nowrap;
     }
 
     .chip.active {
@@ -129,6 +128,45 @@
       border-color: #b91c1c;
     }
 
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    .status-overdue { color: #b91c1c; font-weight: 800; }
+    .status-long { color: #b45309; font-weight: 800; }
+    .status-ok { font-weight: 700; }
+
+    .take { color: #15803d; font-weight: 800; }
+    .return { color: #b91c1c; font-weight: 800; }
+
+    .empty-row {
+      text-align: center;
+      color: #6b7280;
+      padding: 18px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      text-align: center;
+      margin: 26px 0;
+    }
+
     button {
       padding: 8px 12px;
       border-radius: 12px;
@@ -136,597 +174,151 @@
       cursor: pointer;
       background: #2563eb;
       color: #fff;
-      font-size: 13px;
       font-weight: 700;
-    }
-
-    button.secondary { background: #9ca3af; }
-
-    input[type="date"] {
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid #d1d5db;
       font-size: 13px;
-      background: #fff;
     }
 
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; white-space: nowrap; text-align: left; }
-    thead { background: #f3f4f6; }
-
-    .status-overdue { color: #b91c1c; font-weight: 800; }
-    .status-long    { color: #b45309; font-weight: 800; }
-    .status-ok      { color: #111827; font-weight: 700; }
-
-    .take   { color: #15803d; font-weight: 800; }
-    .return { color: #b91c1c; font-weight: 800; }
-
-    .empty-row { color: #6b7280; text-align: center; padding: 18px 10px; }
-
-    .footer { text-align: center; margin: 26px 0; }
-    /* Anchor offset for fixed header */
-.section {
-  scroll-margin-top: 140px;
-}
-
-/* Highlight active section when navigated via hash */
-.section:target {
-  outline: 3px solid #2563eb;
-  outline-offset: 6px;
-  border-radius: 14px;
-  background: #eef2ff;
-}
-
-    /* Anchor offset for fixed header */
-.section {
-  scroll-margin-top: 140px;
-}
-
-/* Highlight active section when navigated via hash */
-.section:target {
-  outline: 3px solid #2563eb;
-  outline-offset: 6px;
-  border-radius: 14px;
-  background: #eef2ff;
-}
-.hidden {
-  display: none !important;
-}
-/* === STICKY ADMIN HEADER & FOOTER (SAFE) === */
-
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: #f4f6f8;
-}
-
-.footer {
-  position: sticky;
-  bottom: 0;
-  background: #f4f6f8;
-  padding-bottom: 16px;
-}
-
-/* Taken card breakdown styling */
-.taken-breakdown {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #555;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.taken-breakdown strong {
-  font-weight: 600;
-  font-size: 13px;
-  color: #111;
-}
-
-
+    button.secondary {
+      background: #9ca3af;
+    }
   </style>
 </head>
 
 <body>
-  <div class="header">
-    <img src="assets/logo.png" alt="MFG Logo">
-    <h1>Scanner Management – Admin</h1>
-    <p>Dashboard, live status & reports</p>
+
+<div class="container">
+
+  <div id="warningBanner" class="warning">
+    ⚠️ Overdue scanners detected. Immediate action required.
   </div>
 
-  <!-- SCROLL START -->
-  <div class="scroll-content">
-    <div class="container">
-
-
-    <div id="warningBanner" class="warning">
-      ⚠️ Overdue scanners detected. Immediate action required.
-    </div>
-
-<div class="stats" id="dashboard">
-      <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
-      <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
-      <div class="stat-card">
-        <span>Taken</span>
-        <strong id="statTaken">–</strong>
-         <div class="taken-breakdown">
-          <span>• WMS <strong id="statTakenWMS">–</strong></span>
-          <span>• MUSHINY <strong id="statTakenMUSHINY">–</strong></span>
-        </div>
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="stats">
+    <div class="stat-card"><span>Total Scanners</span><strong id="statTotal">–</strong></div>
+    <div class="stat-card"><span>Available</span><strong id="statAvailable">–</strong></div>
+    <div class="stat-card">
+      <span>Taken</span>
+      <strong id="statTaken">–</strong>
+      <div class="taken-breakdown">
+        <span>WMS <strong id="statTakenWMS">–</strong></span>
+        <span>MUSHINY <strong id="statTakenMUSHINY">–</strong></span>
       </div>
-      <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
-  <div class="stat-card"><span>Multi-Scanner Users</span><strong id="statMulti">–</strong></div>
     </div>
-      
+    <div class="stat-card"><span>Overdue</span><strong id="statOverdue">–</strong></div>
+    <div class="stat-card"><span>Multi-Scanner Users</span><strong id="statMulti">–</strong></div>
+  </div>
+
   <!-- DAILY SUMMARY -->
-<div class="section" id="dailySummary">
-  <div class="section-header">
-    <h2>Daily Summary (Today)</h2>
-  </div>
-
-  <div class="stats">
-    <div class="stat-card">
-      <span>Taken Today</span>
-      <strong id="sumTaken">–</strong>
+  <div class="section" id="dailySummary">
+    <div class="section-header">
+      <h2>Daily Summary (Today)</h2>
     </div>
-    <div class="stat-card">
-      <span>Returned Today</span>
-      <strong id="sumReturned">–</strong>
-    </div>
-    <div class="stat-card">
-      <span>Currently Overdue</span>
-      <strong id="sumOverdue">–</strong>
-    </div>
-    <div class="stat-card">
-      <span>Multi-Scanner Users</span>
-      <strong id="sumMulti">–</strong>
+    <div class="stats">
+      <div class="stat-card"><span>Taken Today</span><strong id="sumTaken">–</strong></div>
+      <div class="stat-card"><span>Returned Today</span><strong id="sumReturned">–</strong></div>
+      <div class="stat-card"><span>Currently Overdue</span><strong id="sumOverdue">–</strong></div>
+      <div class="stat-card"><span>Multi-Scanner Users</span><strong id="sumMulti">–</strong></div>
     </div>
   </div>
-</div>
 
-    <div class="search-row">
-      <input
-        id="searchInput"
-        class="search-box"
-        placeholder="Search by scanner or user"
-      />
-
-      <div class="filter-chips">
-        <span class="chip" data-type="WMS">WMS</span>
-        <span class="chip" data-type="MUSHINY">MUSHINY</span>
-        <span class="chip danger" data-type="OVERDUE">Overdue</span>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;">
-          <input type="checkbox" id="autoRefreshToggle">
-          Auto Refresh (30s)
-        </label>
-      </div>
+  <!-- FILTERS -->
+  <div class="search-row" id="filtersRow">
+    <input id="searchInput" class="search-box" placeholder="Search by scanner or user">
+    <div class="filter-chips">
+      <span class="chip" data-type="WMS">WMS</span>
+      <span class="chip" data-type="MUSHINY">MUSHINY</span>
+      <span class="chip danger" data-type="OVERDUE">Overdue</span>
     </div>
+  </div>
 
-    <!-- TAKEN -->
-<div class="section" id="status">
-      <div class="section-header">
-        <h2>Currently Taken Scanners</h2>
-        <div class="controls">
-          <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
-          <button onclick="loadStatus()">Refresh</button>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Scanner</th>
-            <th>Type</th>
-            <th>User</th>
-            <th>Taken Since</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="statusTable">
-          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-        </tbody>
-      </table>
+  <!-- STATUS -->
+  <div class="section" id="status">
+    <div class="section-header">
+      <h2>Currently Taken Scanners</h2>
     </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Scanner</th>
+          <th>Type</th>
+          <th>User</th>
+          <th>Taken Since</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="statusTable">
+        <tr><td colspan="5" class="empty-row">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <!-- LOGS -->
-<div class="section" id="logs">
-      <div class="section-header">
-        <h2>Scanner Logs</h2>
-        <div class="controls">
-          <input type="date" id="fromDate">
-          <input type="date" id="toDate">
-          <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
-          <button onclick="loadLogs()">Refresh</button>
-        </div>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Scanner</th>
-            <th>Type</th>
-            <th>User</th>
-            <th>Date / Time</th>
-          </tr>
-        </thead>
-        <tbody id="logsTable">
-          <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-        </tbody>
-      </table>
+  <!-- LOGS -->
+  <div class="section" id="logs">
+    <div class="section-header">
+      <h2>Scanner Logs</h2>
     </div>
-
-        </div> <!-- container -->
-  </div> <!-- SCROLL END -->
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Scanner</th>
+          <th>Type</th>
+          <th>User</th>
+          <th>Date / Time</th>
+        </tr>
+      </thead>
+      <tbody id="logsTable">
+        <tr><td colspan="5" class="empty-row">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="footer">
     <button class="secondary" onclick="location.href='admin-home.html'">Back to Home</button>
   </div>
 
+</div>
 
-  </div>
+<script>
+  function showView(view) {
+    const sections = ["dashboard", "status", "logs", "dailySummary"];
+    const filters = document.getElementById("filtersRow");
 
-  <!-- FIREBASE -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="config.js"></script>
-
-  <script>
-    const SOFT = 8;
-    const HARD = 24;
-
-    let statusRows = [];
-    let logRows = [];
-    let userScanCount = {};
-
-    const elSearch = document.getElementById("searchInput");
-
-    elSearch.addEventListener("input", () => {
-      renderStatus();
-      renderLogs();
-    });
-    let activeType = "ALL";
-    let overdueOnly = false;
-
-    document.querySelectorAll(".chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-
-      const type = chip.dataset.type;
-
-      // Toggle logic
-      if (type === "OVERDUE") {
-        overdueOnly = !overdueOnly;
-        activeType = "ALL";
-      } else {
-        // clicking same type again resets filter
-        activeType = (activeType === type) ? "ALL" : type;
-        overdueOnly = false;
-      }
-
-      // Update UI
-      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-
-      if (overdueOnly) {
-        document.querySelector('.chip[data-type="OVERDUE"]').classList.add("active");
-      } else if (activeType !== "ALL") {
-        document.querySelector(`.chip[data-type="${activeType}"]`).classList.add("active");
-      }
-
-      renderStatus();
-    });
-  });
-
-    let autoRefreshTimer = null;
-
-    const autoToggle = document.getElementById("autoRefreshToggle");
-
-    autoToggle.addEventListener("change", () => {
-      if (autoToggle.checked) {
-        autoRefreshTimer = setInterval(() => {
-          loadStatus();
-          loadLogs();
-        }, 30000);
-      } else {
-        clearInterval(autoRefreshTimer);
-        autoRefreshTimer = null;
-      }
-    });
-
-    function hoursDiff(iso) {
-      return (Date.now() - new Date(iso).getTime()) / 3600000;
-    }
-
-    async function loadStatus() {
-      const db = firebase.database();
-      document.getElementById("statusTable").innerHTML =
-        `<tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
-
-      const [scannersSnap, takenSnap] = await Promise.all([
-        db.ref("scanners").once("value"),
-        db.ref("takenScanners").once("value"),
-      ]);
-
-      // available = count of /scanners
-      let availableCount = 0;
-      scannersSnap.forEach(typeSnap => typeSnap.forEach(() => availableCount++));
-
-      // taken = count of /takenScanners
-      statusRows = [];
-      userScanCount = {};   // RESET global object
-      let takenCount = 0;
-      let overdueCount = 0; // HARD overdue only (>= 24h)
-      let takenWMS = 0;
-      let takenMUSHINY = 0;
-
-      takenSnap.forEach(typeSnap => {
-        typeSnap.forEach(devSnap => {
-          takenCount++;
-          if (typeSnap.key === "WMS") takenWMS++;
-          if (typeSnap.key === "MUSHINY") takenMUSHINY++;
-
-          const v = devSnap.val() || {};
-          const user = v.user || "UNKNOWN";
-          userScanCount[user] = (userScanCount[user] || 0) + 1;
-
-          const h = Math.floor(hoursDiff(v.time || new Date().toISOString()));
-
-          let status = "OK";
-          let cls = "status-ok";
-
-          if (h >= HARD) {
-            status = "Overdue";
-            cls = "status-overdue";
-            overdueCount++; // ONLY 24h+ counted
-          }
-          else if (h >= SOFT) {
-            status = "Long";
-            cls = "status-long";
-          }
-
-          statusRows.push({
-            scanner: devSnap.key,
-            type: typeSnap.key,
-            user: v.user || "",
-            hours: h,
-            status,
-            cls
-          });
-        });
-      });
-
-      // total = available + taken (this keeps total stable if your DB is correct)
-      const TOTAL_SCANNERS = 53;
-      
-document.getElementById("statTotal").innerText = TOTAL_SCANNERS;
-document.getElementById("statTaken").innerText = takenCount;
-  document.getElementById("statTakenWMS").innerText = takenWMS;
-  document.getElementById("statTakenMUSHINY").innerText = takenMUSHINY;
-document.getElementById("statAvailable").innerText = TOTAL_SCANNERS - takenCount;
-document.getElementById("statOverdue").innerText = overdueCount;
-const multiUsers = Object.values(userScanCount).filter(c => c > 1).length;
-document.getElementById("statMulti").innerText = multiUsers;
-
-      document.getElementById("warningBanner").style.display =
-        overdueCount > 0 ? "block" : "none";
-
-      renderStatus();
-    }
-
-    function renderStatus() {
-      const q = (elSearch.value || "").toLowerCase().trim();
-      const tb = document.getElementById("statusTable");
-      tb.innerHTML = "";
-
-      const filtered = statusRows
-        .filter(r => {
-          const matchesSearch =
-            String(r.scanner || "").includes(q) ||
-            String(r.user || "").toLowerCase().includes(q);
-
-          const matchesType =
-            activeType === "ALL" || r.type === activeType;
-
-          const matchesOverdue =
-            !overdueOnly || r.status !== "OK";
-
-          return matchesSearch && matchesType && matchesOverdue;
-        })
-        .sort((a,b) => b.hours - a.hours);
-
-
-      if (!filtered.length) {
-        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(r => {
-        tb.innerHTML += `
-          <tr>
-            <td>${r.scanner}</td>
-            <td>${r.type}</td>
-          <td>
-            ${String(r.user || "").toUpperCase()}
-            ${userScanCount[r.user] > 1 ? " ⚠️" : ""}
-          </td>
-            <td>${r.hours}h</td>
-            <td class="${r.cls}">${r.status}</td>
-          </tr>
-        `;
-      });
-    }
-
-    async function loadLogs() {
-      const db = firebase.database();
-        document.getElementById("logsTable").innerHTML =
-    `      <tr><td class="empty-row" colspan="5">Loading…</td></tr>`;
-
-      const snap = await db.ref("logs").orderByChild("time").limitToLast(800).once("value");
-
-      logRows = [];
-      snap.forEach(child => {
-        const v = child.val();
-        if (v) logRows.push(v);
-      });
-
-      renderLogs();
-      loadDailySummary(); // ✅ STEP 3 (THIS IS THE ONLY CHANGE)
-    }
-
-    function renderLogs() {
-      const q = (elSearch.value || "").toLowerCase().trim();
-      const from = document.getElementById("fromDate").value;
-      const to = document.getElementById("toDate").value;
-
-      const tb = document.getElementById("logsTable");
-      tb.innerHTML = "";
-
-      // sort newest first (safe even if time missing)
-      const newestFirst = logRows.slice().sort((a,b) => {
-        const ta = new Date(a?.time || 0).getTime();
-        const tb2 = new Date(b?.time || 0).getTime();
-        return tb2 - ta;
-      });
-
-      const filtered = newestFirst.filter(l => {
-        if (!l) return false;
-
-        const d = new Date(l.time || 0);
-
-        if (from && d < new Date(from)) return false;
-        if (to && d > new Date(to + "T23:59:59")) return false;
-
-        // ✅ SAFE conversions (prevents silent break)
-        const device = String(l.device ?? "");
-        const user = String(l.user ?? "").toLowerCase();
-
-        return device.includes(q) || user.includes(q);
-      });
-
-      if (!filtered.length) {
-        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No logs found.</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(l => {
-        const act = String(l.action || "").toLowerCase();
-        tb.innerHTML += `
-          <tr>
-            <td class="${act === 'take' ? 'take' : 'return'}">${String(l.action || "").toUpperCase()}</td>
-            <td>${String(l.device ?? "")}</td>
-            <td>${String(l.type ?? "")}</td>
-            <td>${String(l.user ?? "").toUpperCase()}</td>
-            <td>${new Date(l.time || 0).toLocaleString()}</td>
-          </tr>
-        `;
-      });
-    }
-    // ===== DAILY SUMMARY (STEP 2) =====
-    function loadDailySummary() {
-      const today = new Date().toDateString();
-
-        let takenToday = 0;
-        let returnedToday = 0;
-
-        logRows.forEach(l => {
-          if (!l || !l.time) return;
-
-          const logDate = new Date(l.time).toDateString();
-          if (logDate !== today) return;
-
-          const action = String(l.action || "").toLowerCase();
-          if (action === "take") takenToday++;
-          if (action === "return") returnedToday++;
-        });
-
-        document.getElementById("sumTaken").innerText = takenToday;
-        document.getElementById("sumReturned").innerText = returnedToday;
-
-        document.getElementById("sumOverdue").innerText =
-          document.getElementById("statOverdue").innerText;
-
-        document.getElementById("sumMulti").innerText =
-          document.getElementById("statMulti").innerText;
-    }
-
-    function exportStatusCSV() {
-      exportCSV(
-        statusRows.map(r => ({
-          scanner: r.scanner,
-          type: r.type,
-          user: r.user,
-          taken_since_hours: r.hours,
-          status: r.status
-        })),
-        "scanner_status.csv"
-      );
-    }
-
-    function exportLogsCSV() {
-      exportCSV(
-        logRows
-          .slice()
-          .sort((a,b) => new Date(b?.time || 0) - new Date(a?.time || 0))
-          .map(l => ({
-            action: String(l.action || "").toUpperCase(),
-            scanner: String(l.device ?? ""),
-            type: String(l.type ?? ""),
-            user: String(l.user ?? ""),
-            time: l.time || ""
-          })),
-        "scanner_logs.csv"
-      );
-    }
-
-    function exportCSV(rows, name) {
-      if (!rows || !rows.length) return alert("No data to export");
-      const keys = Object.keys(rows[0]);
-      const csv = [keys.join(",")]
-        .concat(rows.map(r => keys.map(k => `"${String(r[k] ?? "").replace(/"/g,'""')}"`).join(",")))
-        .join("\n");
-
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-      a.download = name;
-      a.click();
-    }
-function showView(view) {
-  const sections = ["dashboard", "status", "logs"];
-
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add("hidden");
-  });
-
-  if (view === "dashboard") {
     sections.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.classList.remove("hidden");
+      if (el) el.classList.add("hidden");
     });
-  } else {
-    const el = document.getElementById(view);
-    if (el) el.classList.remove("hidden");
+
+    if (view === "dashboard") {
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove("hidden");
+      });
+      filters.classList.add("hidden");
+    } else {
+      document.getElementById(view)?.classList.remove("hidden");
+      filters.classList.remove("hidden");
+    }
   }
-}
 
-    loadStatus();
-    loadLogs();
-function applyViewFromHash() {
-  const hash = window.location.hash.replace("#", "");
+  function applyViewFromHash() {
+    const hash = location.hash.replace("#", "");
+    overdueOnly = false;
+    activeType = "ALL";
 
-  if (hash === "status") {
-    showView("status");
-  } else if (hash === "logs") {
-    showView("logs");
-  } else {
-    showView("dashboard"); // default
+    if (hash === "status-overdue") {
+      showView("status");
+      overdueOnly = true;
+      document.querySelector('.chip[data-type="OVERDUE"]')?.classList.add("active");
+    }
+    else if (hash === "status") showView("status");
+    else if (hash === "logs") showView("logs");
+    else showView("dashboard");
   }
-}
 
-window.addEventListener("load", applyViewFromHash);
-window.addEventListener("hashchange", applyViewFromHash);
+  window.addEventListener("load", applyViewFromHash);
+  window.addEventListener("hashchange", applyViewFromHash);
+</script>
 
-
-  </script>
 </body>
 </html>

@@ -754,8 +754,10 @@
         renderStatus();
       } else if (hash === "status") {
         showView("status");
+        renderStatus();
       } else if (hash === "logs") {
         showView("logs");
+        renderLogs();
       } else {
         showView("dashboard");
       }

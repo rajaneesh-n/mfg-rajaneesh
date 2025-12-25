@@ -169,10 +169,71 @@
       font-size: 13px;
       color: #111;
     }
+    /* ===== ADMIN LAYOUT (STEP 1) ===== */
+    .admin-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: #111827;
+      color: #fff;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Sidebar links */
+    .sidebar a {
+      color: #e5e7eb;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar a:hover {
+      background: #1f2937;
+    }
+
+    /* Push Back-to-Home to bottom */
+    .sidebar .spacer {
+      flex: 1;
+    }
+
+    /* Main content area */
+    .admin-content {
+      flex: 1;
+      background: #f4f6f8;
+    }
   </style>
 </head>
 
 <body>
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <a href="admin.html#dashboard">📊 Dashboard</a>
+      <a href="admin.html#status">📦 Live Status</a>
+      <a href="admin.html#logs">🧾 Logs</a>
+      <a href="admin.html#status-overdue">🚨 Overdue Scanners</a>
+
+      <div class="spacer"></div>
+
+      <a href="admin-home.html">⬅ Back to Home</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-content">
+
   <div class="container">
 
     <div id="warningBanner" class="warning">
@@ -675,5 +736,8 @@
     window.addEventListener("load", applyViewFromHash);
     window.addEventListener("hashchange", applyViewFromHash);
   </script>
+
+    </main>
+  </div>
 </body>
 </html>

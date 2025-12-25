@@ -685,18 +685,22 @@
        Status-overdue = status + overdue filter auto-enabled
     */
     function showView(view) {
-      const blocks = ["dashboard", "dailySummary", "status", "logs"];
       const filters = document.getElementById("filtersRow");
 
-      // Hide all content blocks first
-      blocks.forEach(id => document.getElementById(id)?.classList.add("hidden"));
+      // Always hide everything first
+      document.getElementById("dashboard")?.classList.add("hidden");
+      document.getElementById("dailySummary")?.classList.add("hidden");
+      document.getElementById("status")?.classList.add("hidden");
+      document.getElementById("logs")?.classList.add("hidden");
 
-      // Reset chips UI highlight (we manage it)
+      // Reset chip UI
       document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
 
       if (view === "dashboard") {
-        blocks.forEach(id => document.getElementById(id)?.classList.remove("hidden"));
-        filters?.classList.add("hidden");     // hide search/filters on dashboard
+        // ✅ DASHBOARD = HOME
+        document.getElementById("dashboard")?.classList.remove("hidden");
+        document.getElementById("dailySummary")?.classList.remove("hidden");
+        filters?.classList.add("hidden");
       }
       else if (view === "status") {
         document.getElementById("status")?.classList.remove("hidden");

@@ -378,6 +378,18 @@
       padding-left: 18px;
     }
 
+    .user-panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1500;
+    }
+    
+    .user-panel {
+      z-index: 1600;
+    }
+
+
     /* === USER NAME CLICK UX (LIVE STATUS ONLY) === */
     .user-link {
       cursor: pointer;
@@ -459,6 +471,7 @@
     </div>
 
     <!-- USER DRILL-DOWN PANEL (LIVE STATUS ONLY) -->
+    <div id="userPanelOverlay" class="user-panel-overlay hidden"></div>
     <div id="userPanel" class="user-panel hidden">
       <div class="user-panel-header">
         <h3 id="userPanelName">User</h3>
@@ -975,6 +988,7 @@
       if (!user) return;
     
       const panel = document.getElementById("userPanel");
+      const overlay = document.getElementById("userPanelOverlay");
       const nameEl = document.getElementById("userPanelName");
       const summaryEl = document.getElementById("userPanelSummary");
       const listEl = document.getElementById("userPanelScanners");
@@ -992,11 +1006,17 @@
       });
     
       panel.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
     }
+
     
     function closeUserPanel() {
       document.getElementById("userPanel").classList.add("hidden");
+      document.getElementById("userPanelOverlay").classList.add("hidden");
+      document.body.style.overflow = "";
     }
+
 
     // Initial loads
     loadStatus();
@@ -1037,6 +1057,10 @@
         }
       }
     });
+
+    document
+    .getElementById("userPanelOverlay")
+    .addEventListener("click", closeUserPanel);
 
   </script>
 

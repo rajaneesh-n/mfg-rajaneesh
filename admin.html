@@ -323,6 +323,16 @@
       z-index: 3;
     }
 
+    /* === TOOLTIP ONLY WHEN SIDEBAR COLLAPSED === */
+    .sidebar:not(.collapsed) a[title] {
+      pointer-events: auto;
+    }
+    
+    /* Ensure proper hover target when collapsed */
+    .sidebar.collapsed a {
+      position: relative;
+    }
+
   </style>
 </head>
 
@@ -348,22 +358,22 @@
           />
         </div>
 
-      <a href="admin.html#dashboard">
+      <a href="admin.html#dashboard" title="Dashboard">
         <span class="nav-icon">📊</span>
         <span class="nav-text">Dashboard</span>
       </a>
-
-      <a href="admin.html#status">
+      
+      <a href="admin.html#status" title="Live Status">
         <span class="nav-icon">📦</span>
         <span class="nav-text">Live Status</span>
       </a>
-
-      <a href="admin.html#logs">
+      
+      <a href="admin.html#logs" title="Logs">
         <span class="nav-icon">🧾</span>
         <span class="nav-text">Logs</span>
       </a>
-
-      <a href="admin.html#status-overdue">
+      
+      <a href="admin.html#status-overdue" title="Overdue Scanners">
         <span class="nav-icon">🚨</span>
         <span class="nav-text">Overdue Scanners</span>
       </a>
@@ -897,6 +907,17 @@
     if (window.innerWidth < 768) {
       sidebar.classList.add("collapsed");
     }
+
+    // === KEYBOARD SHORTCUT: CTRL/CMD + B ===
+    document.addEventListener("keydown", (e) => {
+      const isMac = navigator.platform.toUpperCase().includes("MAC");
+      const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
+    
+      if (modifierPressed && e.key.toLowerCase() === "b") {
+        e.preventDefault(); // prevent browser bold action
+        sidebar.classList.toggle("collapsed");
+      }
+    });
 
   </script>
 

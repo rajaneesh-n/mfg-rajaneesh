@@ -389,6 +389,12 @@
       text-decoration: underline;
     }
 
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 4px 0 10px;
+    }
+
   </style>
 </head>
 
@@ -463,6 +469,8 @@
         <p id="userPanelSummary"></p>
     
         <h4>Currently held scanners</h4>
+        <p class="hint">Showing active scanners only</p>
+        
         <ul id="userPanelScanners"></ul>
       </div>
     </div>
@@ -1017,6 +1025,16 @@
       if (modifierPressed && e.key.toLowerCase() === "b") {
         e.preventDefault(); // prevent browser bold action
         sidebar.classList.toggle("collapsed");
+      }
+    });
+
+    // === ESC KEY CLOSE FOR USER DRILL-DOWN PANEL ===
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const panel = document.getElementById("userPanel");
+        if (panel && !panel.classList.contains("hidden")) {
+          closeUserPanel();
+        }
       }
     });
 

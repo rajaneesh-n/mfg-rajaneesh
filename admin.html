@@ -185,6 +185,14 @@
       flex-direction: column;
       gap: 8px;
     }
+    /* STEP 2 — LOGO COLLAPSE FIX */
+    .sidebar.collapsed img {
+      width: 36px !important;
+    }
+
+    .sidebar.collapsed > div {
+      padding: 6px !important;
+    }
 
     /* === SIDEBAR COLLAPSE === */
     .sidebar {
@@ -196,15 +204,20 @@
       width: 72px;
     }
     
-    /* Toggle button */
+    /* STEP 4 — TOGGLE BUTTON POSITION */
     .sidebar-toggle {
-      background: none;
+      background: #111827;
       border: none;
       color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
-      margin: 8px auto 12px;
-      display: block;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin: 8px auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     /* Rotate arrow when collapsed */
@@ -212,14 +225,18 @@
       transform: rotate(180deg);
     }
     
-    /* Hide link text when collapsed */
+    /* STEP 3 — COLLAPSE VISUALS */
     .sidebar.collapsed a {
       justify-content: center;
+      padding: 12px 0;
     }
-    
-    /* Optional: tighten spacing */
-    .sidebar.collapsed a span {
+
+    .sidebar.collapsed .nav-text {
       display: none;
+    }
+
+    .sidebar.collapsed .nav-icon {
+      font-size: 18px;
     }
 
     /* Sidebar links */
@@ -293,10 +310,25 @@
           ◀
         </button>
 
-      <a href="admin.html#dashboard">📊 Dashboard</a>
-      <a href="admin.html#status">📦 Live Status</a>
-      <a href="admin.html#logs">🧾 Logs</a>
-      <a href="admin.html#status-overdue">🚨 Overdue Scanners</a>
+      <a href="admin.html#dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+
+      <a href="admin.html#status">
+        <span class="nav-icon">📦</span>
+        <span class="nav-text">Live Status</span>
+      </a>
+
+      <a href="admin.html#logs">
+        <span class="nav-icon">🧾</span>
+        <span class="nav-text">Logs</span>
+      </a>
+
+      <a href="admin.html#status-overdue">
+        <span class="nav-icon">🚨</span>
+        <span class="nav-text">Overdue Scanners</span>
+      </a>
 
       <div class="spacer"></div>
 

@@ -204,20 +204,30 @@
       width: 72px;
     }
     
-    /* STEP 4 — TOGGLE BUTTON POSITION */
+    /* STEP 4 — FLOATING TOGGLE (EDGE BUTTON) */
+    .sidebar {
+      position: relative; /* REQUIRED */
+    }
+    
     .sidebar-toggle {
-      background: #111827;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      right: -18px;              /* pushes button outside */
+      transform: translateY(-50%);
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      margin: 8px auto 16px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 1000;
     }
     
     /* Rotate arrow when collapsed */
@@ -304,11 +314,6 @@
             style="width:120px; max-width:100%;"
           />
         </div>
-      
-        <!-- COLLAPSE BUTTON -->
-        <button id="sidebarToggle" class="sidebar-toggle">
-          ◀
-        </button>
 
       <a href="admin.html#dashboard">
         <span class="nav-icon">📊</span>
@@ -331,7 +336,12 @@
       </a>
 
       <div class="spacer"></div>
-
+      
+      <!-- FLOATING COLLAPSE BUTTON -->
+      <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+        ◀
+      </button>
+      
     </aside>
 
     <!-- MAIN CONTENT -->

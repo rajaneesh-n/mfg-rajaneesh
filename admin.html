@@ -228,11 +228,12 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       z-index: 1000;
+      pointer-events: auto;
     }
     
-    /* Rotate arrow when collapsed */
+    /* Rotate arrow when collapsed — KEEP CENTERED */
     .sidebar.collapsed .sidebar-toggle {
-      transform: rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
     }
     
     /* STEP 3 — COLLAPSE VISUALS */

@@ -333,6 +333,62 @@
       position: relative;
     }
 
+    /* === USER DRILL-DOWN PANEL === */
+    .user-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 340px;
+      height: 100vh;
+      background: #ffffff;
+      box-shadow: -6px 0 20px rgba(0,0,0,0.15);
+      z-index: 2000;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .user-panel.hidden {
+      display: none;
+    }
+    
+    .user-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .user-panel-header h3 {
+      margin: 0;
+    }
+    
+    .user-panel-header button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    
+    .user-panel-body {
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    
+    .user-panel-body ul {
+      padding-left: 18px;
+    }
+
+    /* === USER NAME CLICK UX (LIVE STATUS ONLY) === */
+    .user-link {
+      cursor: pointer;
+      font-weight: 700;
+      color: #2563eb;
+    }
+    
+    .user-link:hover {
+      text-decoration: underline;
+    }
+
   </style>
 </head>
 
@@ -394,6 +450,21 @@
 
     <div id="warningBanner" class="warning">
       ⚠️ Overdue scanners detected. Immediate action required.
+    </div>
+
+    <!-- USER DRILL-DOWN PANEL (LIVE STATUS ONLY) -->
+    <div id="userPanel" class="user-panel hidden">
+      <div class="user-panel-header">
+        <h3 id="userPanelName">User</h3>
+        <button onclick="closeUserPanel()">✕</button>
+      </div>
+    
+      <div class="user-panel-body">
+        <p id="userPanelSummary"></p>
+    
+        <h4>Currently held scanners</h4>
+        <ul id="userPanelScanners"></ul>
+      </div>
     </div>
 
     <!-- DASHBOARD STATS -->
@@ -690,7 +761,10 @@
             <td>${r.scanner}</td>
             <td>${r.type}</td>
             <td>
-              ${String(r.user || "").toUpperCase()}
+              <span class="user-link"
+                    onclick="openUserPanel('${r.user}')">
+                ${String(r.user || "").toUpperCase()}
+              </span>
               ${userScanCount[r.user] > 1 ? " ⚠️" : ""}
             </td>
             <td>${r.hours}h</td>
@@ -887,6 +961,33 @@
       } else {
         showView("dashboard");
       }
+    }
+
+    function openUserPanel(user) {
+      if (!user) return;
+    
+      const panel = document.getElementById("userPanel");
+      const nameEl = document.getElementById("userPanelName");
+      const summaryEl = document.getElementById("userPanelSummary");
+      const listEl = document.getElementById("userPanelScanners");
+    
+      nameEl.innerText = user.toUpperCase();
+      listEl.innerHTML = "";
+    
+      const rows = statusRows.filter(r => r.user === user);
+      summaryEl.innerText = `Currently holding ${rows.length} scanner(s)`;
+    
+      rows.forEach(r => {
+        const li = document.createElement("li");
+        li.innerText = `${r.scanner} (${r.type}) – ${r.hours}h`;
+        listEl.appendChild(li);
+      });
+    
+      panel.classList.remove("hidden");
+    }
+    
+    function closeUserPanel() {
+      document.getElementById("userPanel").classList.add("hidden");
     }
 
     // Initial loads

@@ -556,6 +556,29 @@
       }
     }
 
+    /* === DARK MODE === */
+    body.dark {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    
+    body.dark .section,
+    body.dark .stat-card,
+    body.dark .panel-box,
+    body.dark .user-panel {
+      background: #020617;
+      color: #e5e7eb;
+    }
+    
+    body.dark table thead {
+      background: #020617;
+    }
+    
+    body.dark th,
+    body.dark td {
+      border-color: #1e293b;
+    }
+
   </style>
 </head>
 
@@ -602,6 +625,15 @@
       </a>
 
       <div class="spacer"></div>
+
+      <!-- 🌙 DARK MODE TOGGLE -->
+      <button
+        class="dark-toggle"
+        onclick="toggleDarkMode()"
+        title="Toggle dark mode"
+      >
+        🌙 Dark Mode
+      </button>
       
       <!-- FLOATING COLLAPSE BUTTON -->
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
@@ -1335,6 +1367,10 @@
     document
       .getElementById("userPanelOverlay")
       .addEventListener("click", closeUserPanel);
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
 
   </script>
 

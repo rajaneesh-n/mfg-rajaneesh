@@ -352,7 +352,14 @@
       transform: translateX(100%);
       transition: transform 0.25s ease;
     }
-    
+
+    /* ✅ FIX: SCROLLABLE USER PANEL BODY */
+    .user-panel-body {
+      flex: 1;                 /* take remaining height */
+      overflow-y: auto;        /* enable vertical scroll */
+      padding-right: 6px;      /* avoids scrollbar overlap */
+    }
+
     .user-panel.hidden {
       transform: translateX(100%);
     }

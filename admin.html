@@ -319,7 +319,22 @@
     .dark-toggle:hover {
       background: #1d4ed8;
     }
+
+    /* ============================= */
+    /* 🧊 DARK MODE — COLLAPSED FIX */
+    /* ============================= */
     
+    /* Sidebar collapsed → icon only + centered */
+    .sidebar.collapsed .dark-toggle {
+      justify-content: center;
+      padding: 10px 0;
+    }
+    
+    /* Hide text only (keep icon visible) */
+    .sidebar.collapsed .dark-toggle .dark-text {
+      display: none;
+    }
+
     /* ============================= */
     /* 🧊 COLLAPSED SIDEBAR BEHAVIOUR */
     /* ============================= */
@@ -812,22 +827,7 @@
       color: #fecaca;
     }
 
-    /* Dark mode button layout */
-    .dark-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: flex-start;
-    }
     
-    /* Collapsed sidebar: icon only */
-    .sidebar.collapsed .dark-toggle {
-      justify-content: center;
-    }
-    
-    .sidebar.collapsed .dark-toggle .nav-text {
-      display: none;
-    }
 
   </style>
 </head>

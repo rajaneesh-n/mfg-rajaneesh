@@ -329,11 +329,15 @@
       padding: 10px 0;
     }
     
-    /* Hide text ONLY when collapsed */
-    .sidebar.collapsed .dark-toggle span {
+    /* Hide text only (keep icon visible) */
+    .sidebar.collapsed .dark-text {
       display: none;
     }
-
+    
+    /* Center icon when sidebar is collapsed */
+    .sidebar.collapsed .dark-toggle {
+      justify-content: center;
+    }
 
     .sidebar a:hover {
       background: #1f2937;
@@ -600,6 +604,13 @@
       /* Tables remain scrollable */
       .table-scroll {
         overflow-x: auto;
+      }
+      
+      /* Keep dark mode button always tappable on mobile */
+      .dark-toggle {
+        position: sticky;
+        bottom: 12px;
+        z-index: 2000;
       }
     }
 
@@ -871,9 +882,9 @@
         onclick="toggleDarkMode()"
         title="Toggle dark mode"
       >
-        🌙 <span>Dark Mode</span>
+        <span id="darkIcon">🌙</span>
+        <span class="dark-text">Dark Mode</span>
       </button>
-
       
       <!-- FLOATING COLLAPSE BUTTON -->
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
@@ -1581,6 +1592,11 @@
     if (savedDarkMode === "yes") {
       document.body.classList.add("dark");
     }
+    const icon = document.getElementById("darkIcon");
+    if (icon) {
+      icon.textContent = savedDarkMode === "yes" ? "☀️" : "🌙";
+    }
+
 
     // === RESTORE SIDEBAR STATE ON PAGE LOAD ===
     const savedSidebar = localStorage.getItem("sidebarCollapsed");
@@ -1624,8 +1640,12 @@
     function toggleDarkMode() {
       const isDark = document.body.classList.toggle("dark");
       localStorage.setItem("darkMode", isDark ? "yes" : "no");
+    
+      const icon = document.getElementById("darkIcon");
+      if (icon) {
+        icon.textContent = isDark ? "☀️" : "🌙";
+      }
     }
-
 
   </script>
 

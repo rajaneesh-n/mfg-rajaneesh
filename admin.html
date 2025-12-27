@@ -338,19 +338,19 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 360px;
+      width: 380px; /* ⬅️ wider like first image */
       height: 100vh;
       background: #ffffff;
-      border-left: 1px solid #e5e7eb;
-      box-shadow: -8px 0 24px rgba(0,0,0,0.08);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.12); /* ⬅️ stronger shadow */
+      border-radius: 16px 0 0 16px; /* ⬅️ rounded left edge */
       z-index: 1600;
-      padding: 16px;
+      padding: 20px;
     
       display: flex;
       flex-direction: column;
     
       transform: translateX(100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.25s ease;
     }
     
     .user-panel.hidden {
@@ -408,6 +408,69 @@
     .panel-stats li {
       font-size: 13px;
       margin-bottom: 4px;
+    }
+
+    /* === USER PANEL: SCANNER CARD ROWS (STEP 2) === */
+
+    #userPanelScanners {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .scanner-card-row {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .scanner-card-row .muted {
+      color: #6b7280;
+      margin-left: 6px;
+    }
+    
+    .scanner-card-row .right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .scanner-card-row .hours {
+      font-weight: 700;
+    }
+
+    /* === USER PANEL: QUICK STATS MINI CARDS (STEP 3) === */
+
+    .panel-stat-card {
+      background: #f3f4f6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    
+    .panel-stat-card strong {
+      font-size: 16px;
+    }
+    
+    .panel-stat-card.danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* === USER PANEL: HEADER ALIGNMENT (STEP 4) === */
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     /* === USER PANEL OVERLAY === */
@@ -511,10 +574,13 @@
 
     <div id="userPanel" class="user-panel hidden">
       <div class="user-panel-header">
-        <h3 id="userPanelName">User</h3>
+        <div class="header-left">
+          <h3 id="userPanelName">User</h3>
+          <span class="warn">⚠️</span>
+        </div>
         <button onclick="closeUserPanel()">✕</button>
       </div>
-    
+
       <div class="user-panel-body">
         <p id="userPanelSummary"></p>
     
@@ -525,11 +591,20 @@
         <!-- QUICK STATS -->
         <div class="panel-box">
           <h4>Quick stats</h4>
-          <ul class="panel-stats">
-            <li>Total scanners: <strong id="panelTotal">–</strong></li>
-            <li>Longest held: <strong id="panelLongest">–</strong></li>
-            <li>Status: <strong id="panelStatus">–</strong></li>
-          </ul>
+          <div class="panel-stat-card">
+            <span>📊 Total scanners</span>
+            <strong id="panelTotal">–</strong>
+          </div>
+          
+          <div class="panel-stat-card">
+            <span>⏱ Longest held</span>
+            <strong id="panelLongest">–</strong>
+          </div>
+          
+          <div class="panel-stat-card danger">
+            <span>🔴 Status</span>
+            <strong id="panelStatus">–</strong>
+          </div>
         </div>
         
         <!-- RECENT ACTIVITY -->
@@ -1066,11 +1141,23 @@
     
       rows.forEach(r => {
         const li = document.createElement("li");
-        li.innerText = `Scanner ${r.scanner} (${r.type}) – ${r.hours}h`;
+        li.className = "scanner-card-row";
+      
+        li.innerHTML = `
+          <div>
+            <strong>Scanner ${r.scanner}</strong>
+            <span class="muted">(${r.type})</span>
+          </div>
+          <div class="right">
+            <span class="hours">${r.hours}h</span>
+            <span class="warn">⚠️</span>
+          </div>
+        `;
+      
         listEl.appendChild(li);
         longest = Math.max(longest, r.hours);
       });
-    
+
       totalEl.innerText = rows.length;
       longestEl.innerText = longest ? `${longest}h` : "–";
       statusEl.innerText = rows.length ? "OVERDUE" : "OK";

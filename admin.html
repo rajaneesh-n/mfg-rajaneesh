@@ -1182,11 +1182,26 @@
     
       // Only overdue / long scanners (correct behaviour)
       const rows = statusRows.filter(
-        r => r.user === user && r.status !== "OK"
+        r => r.user === user
       );
     
       summaryEl.innerText = `Currently holding ${rows.length} scanner(s)`;
-    
+
+      // === EDGE CASE: USER HAS NO ACTIVE SCANNERS ===
+      if (rows.length === 0) {
+        listEl.innerHTML = "<li class='hint'>No active scanners.</li>";
+      
+        totalEl.innerText = "0";
+        longestEl.innerText = "–";
+        statusEl.innerText = "OK";
+      
+        panel.classList.remove("hidden");
+        overlay.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      
+        return; // ⬅️ IMPORTANT: stops old data rendering
+      }
+
       let longest = 0;
     
       rows.forEach(r => {
@@ -1213,7 +1228,9 @@
 
       totalEl.innerText = rows.length;
       longestEl.innerText = longest ? `${longest}h` : "–";
-      statusEl.innerText = rows.length ? "OVERDUE" : "OK";
+      statusEl.innerText = rows.some(r => r.status === "Overdue")
+        ? "OVERDUE"
+        : "OK";
     
       // Recent activity (last 3 actions)
       logRows

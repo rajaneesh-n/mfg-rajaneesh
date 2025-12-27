@@ -314,7 +314,18 @@
       border: none;
       width: 100%;
     }
+
+    /* 🎞️ Dark mode icon micro-animation (polish only) */
+    #darkIcon {
+      display: inline-block;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
     
+    /* Small animation when toggling */
+    body.dark #darkIcon {
+      transform: rotate(20deg) scale(1.1);
+    }
+
     /* Hover polish */
     .dark-toggle:hover {
       background: #1d4ed8;
@@ -625,7 +636,7 @@
       .dark-toggle {
         position: sticky;
         bottom: 12px;
-        z-index: 2000;
+        z-index: 3000;
       }
     }
 

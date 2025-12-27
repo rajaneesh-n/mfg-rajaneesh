@@ -959,8 +959,10 @@
             <td>${r.scanner}</td>
             <td>${r.type}</td>
             <td>
-              <span class="user-link"
-                    onclick="openUserPanelSafe('${r.user}')"
+              <span
+                class="user-link"
+                onclick="openUserPanelSafe('${r.user}')"
+              >
                 ${String(r.user || "").toUpperCase()}
               </span>
               ${r.status !== "OK" ? " ⚠️" : ""}

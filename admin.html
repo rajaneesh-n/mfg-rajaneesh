@@ -490,6 +490,12 @@
       gap: 8px;
     }
 
+    .user-panel-header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 8px;
+    }
+
     /* === USER PANEL OVERLAY === */
     .user-panel-overlay {
       position: fixed;
@@ -1159,7 +1165,10 @@
       rows.forEach(r => {
         const li = document.createElement("li");
         li.className = "scanner-card-row";
-      
+        if (r.status === "Overdue") {
+          li.classList.add("overdue");
+        }
+
         li.innerHTML = `
           <div>
             <strong>Scanner ${r.scanner}</strong>
@@ -1186,7 +1195,21 @@
         .reverse()
         .forEach(l => {
           const li = document.createElement("li");
-          li.innerText = `${l.action} scanner ${l.device}`;
+      
+          const time = l.time
+            ? new Date(l.time).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            : "";
+      
+          li.innerHTML = `
+            <span class="activity-text">
+              ${l.action} scanner <strong>${l.device}</strong>
+            </span>
+            <span class="activity-time">${time}</span>
+          `;
+      
           recentEl.appendChild(li);
         });
     

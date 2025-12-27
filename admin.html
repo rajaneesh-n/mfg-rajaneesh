@@ -294,6 +294,46 @@
       align-items: center;
       gap: 8px;
     }
+    
+    /* ============================= */
+    /* 🌙 DARK MODE TOGGLE BUTTON */
+    /* ============================= */
+    
+    .dark-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+    
+    /* Hover polish */
+    .dark-toggle:hover {
+      background: #1d4ed8;
+    }
+    
+    /* ============================= */
+    /* 🧊 COLLAPSED SIDEBAR BEHAVIOUR */
+    /* ============================= */
+    
+    .sidebar.collapsed .dark-toggle {
+      justify-content: center;   /* center icon */
+      padding: 10px 0;
+    }
+    
+    /* Hide text ONLY when collapsed */
+    .sidebar.collapsed .dark-toggle span {
+      display: none;
+    }
+
 
     .sidebar a:hover {
       background: #1f2937;
@@ -761,6 +801,23 @@
       color: #fecaca;
     }
 
+    /* Dark mode button layout */
+    .dark-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+    
+    /* Collapsed sidebar: icon only */
+    .sidebar.collapsed .dark-toggle {
+      justify-content: center;
+    }
+    
+    .sidebar.collapsed .dark-toggle .nav-text {
+      display: none;
+    }
+
   </style>
 </head>
 
@@ -814,8 +871,9 @@
         onclick="toggleDarkMode()"
         title="Toggle dark mode"
       >
-        🌙 Dark Mode
+        🌙 <span>Dark Mode</span>
       </button>
+
       
       <!-- FLOATING COLLAPSE BUTTON -->
       <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
@@ -1517,13 +1575,26 @@
     const sidebar = document.getElementById("sidebar");
     const toggleBtn = document.getElementById("sidebarToggle");
 
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-    });
+    // === RESTORE DARK MODE STATE ON PAGE LOAD ===
+    const savedDarkMode = localStorage.getItem("darkMode");
     
-    if (window.innerWidth < 768) {
-      sidebar.classList.add("collapsed");
+    if (savedDarkMode === "yes") {
+      document.body.classList.add("dark");
     }
+
+    // === RESTORE SIDEBAR STATE ON PAGE LOAD ===
+    const savedSidebar = localStorage.getItem("sidebarCollapsed");
+    
+    if (savedSidebar === "yes") {
+      sidebar.classList.add("collapsed");
+    } else if (savedSidebar === "no") {
+      sidebar.classList.remove("collapsed");
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      const isCollapsed = sidebar.classList.toggle("collapsed");
+      localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
+    });
 
     // === KEYBOARD SHORTCUT: CTRL/CMD + B ===
     document.addEventListener("keydown", (e) => {
@@ -1551,8 +1622,10 @@
       .addEventListener("click", closeUserPanel);
 
     function toggleDarkMode() {
-      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", isDark ? "yes" : "no");
     }
+
 
   </script>
 

@@ -963,7 +963,7 @@
                     onclick="openUserPanelSafe('${r.user}')"
                 ${String(r.user || "").toUpperCase()}
               </span>
-              ${userScanCount[r.user] > 1 ? " ⚠️" : ""}
+              ${r.status !== "OK" ? " ⚠️" : ""}
             </td>
             <td>${r.hours}h</td>
             <td class="${r.cls}">${r.status}</td>
@@ -1147,9 +1147,18 @@
 
       if (hash === "status-overdue") {
         showView("status");
+      
+        // 🔒 force overdue-only view
         overdueOnly = true;
-        document.querySelector('.chip[data-type="OVERDUE"]')?.classList.add("active");
+        activeType = "ALL";
+      
+        // update chip UI
+        document
+          .querySelector('.chip[data-type="OVERDUE"]')
+          ?.classList.add("active");
+      
         renderStatus();
+        return; // ⬅️ IMPORTANT: stop fall-through
       } else if (hash === "status") {
         showView("status");
         renderStatus();

@@ -626,7 +626,7 @@
       <div class="user-panel-header">
         <div class="header-left">
           <h3 id="userPanelName">User</h3>
-          <span class="warn">⚠️</span>
+          <span id="userPanelWarn" class="warn hidden">⚠️</span>
         </div>
         <button onclick="closeUserPanel()">✕</button>
       </div>
@@ -960,7 +960,7 @@
             <td>${r.type}</td>
             <td>
               <span class="user-link"
-                    onclick="openUserPanel('${r.user}')">
+                    onclick="openUserPanelSafe('${r.user}')"
                 ${String(r.user || "").toUpperCase()}
               </span>
               ${userScanCount[r.user] > 1 ? " ⚠️" : ""}
@@ -1187,6 +1187,13 @@
     
       summaryEl.innerText = `Currently holding ${rows.length} scanner(s)`;
 
+      const headerWarn = document.getElementById("userPanelWarn");
+
+      headerWarn.classList.toggle(
+        "hidden",
+        !rows.some(r => r.status !== "OK")
+      );
+
       // === EDGE CASE: USER HAS NO ACTIVE SCANNERS ===
       if (rows.length === 0) {
         listEl.innerHTML = "<li class='hint'>No active scanners.</li>";
@@ -1218,7 +1225,7 @@
           </div>
           <div class="right">
             <span class="hours">${r.hours}h</span>
-            <span class="warn">⚠️</span>
+            ${r.status !== "OK" ? '<span class="warn">⚠️</span>' : ''}
           </div>
         `;
       
@@ -1260,6 +1267,11 @@
       panel.classList.remove("hidden");
       overlay.classList.remove("hidden");
       document.body.style.overflow = "hidden";
+    }
+
+    async function openUserPanelSafe(user) {
+      await loadStatus();   // ensure latest Firebase data
+      openUserPanel(user);
     }
 
     function closeUserPanel() {

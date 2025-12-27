@@ -529,6 +529,33 @@
       margin: 4px 0 10px;
     }
 
+    /* === MOBILE RESPONSIVE BEHAVIOUR === */
+    @media (max-width: 768px) {
+    
+      /* User panel becomes full screen */
+      .user-panel {
+        width: 100vw;
+        border-radius: 0;
+      }
+    
+      /* Slightly larger close button for touch */
+      .user-panel-header button {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+    
+      /* Reduce padding so content fits better */
+      .user-panel {
+        padding: 16px;
+      }
+    
+      /* Tables remain scrollable */
+      .table-scroll {
+        overflow-x: auto;
+      }
+    }
+
   </style>
 </head>
 

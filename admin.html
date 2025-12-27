@@ -183,7 +183,9 @@
       padding: 16px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 8px
+      position: relative;
+      z-index: 3000;
     }
     /* STEP 2 — LOGO COLLAPSE FIX */
     .sidebar.collapsed img {
@@ -632,11 +634,19 @@
         overflow-x: auto;
       }
       
-      /* Keep dark mode button always tappable on mobile */
+      /* 📱 FIX 2 — Dark mode button always clickable on mobile */
       .dark-toggle {
-        position: sticky;
-        bottom: 12px;
-        z-index: 3000;
+        position: absolute;
+        bottom: 16px;
+        left: 12px;
+        right: 12px;
+        z-index: 4000;
+      }
+      
+      /* 📱 FIX 3 — iOS touch scrolling fix for sidebar */
+      .sidebar {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
     }
 

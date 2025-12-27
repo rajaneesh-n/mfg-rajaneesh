@@ -333,31 +333,32 @@
       position: relative;
     }
 
-    /* === USER DRILL-DOWN PANEL (FLOATING CARD) === */
+    /* === USER DRILL-DOWN PANEL (SLIDE-IN DRAWER) === */
     .user-panel {
       position: fixed;
-      top: 96px;
-      right: 24px;
-      width: 340px;
+      top: 0;
+      right: 0;
+      width: 360px;
+      height: 100vh;
       background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.08);
       z-index: 1600;
       padding: 16px;
     
       display: flex;
       flex-direction: column;
     
-      opacity: 0;
-      transform: translateY(8px);
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    
+    .user-panel.hidden {
+      transform: translateX(100%);
     }
     
     .user-panel:not(.hidden) {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+      transform: translateX(0);
     }
 
     .user-panel-header {
@@ -384,6 +385,29 @@
     
     .user-panel-body ul {
       padding-left: 18px;
+    }
+
+    .panel-box {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 16px;
+    }
+    
+    .panel-box h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+    
+    .panel-stats {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .panel-stats li {
+      font-size: 13px;
+      margin-bottom: 4px;
     }
 
     /* === USER PANEL OVERLAY === */
@@ -498,6 +522,21 @@
         <p class="hint">Showing active scanners only</p>
         
         <ul id="userPanelScanners"></ul>
+        <!-- QUICK STATS -->
+        <div class="panel-box">
+          <h4>Quick stats</h4>
+          <ul class="panel-stats">
+            <li>Total scanners: <strong id="panelTotal">–</strong></li>
+            <li>Longest held: <strong id="panelLongest">–</strong></li>
+            <li>Status: <strong id="panelStatus">–</strong></li>
+          </ul>
+        </div>
+        
+        <!-- RECENT ACTIVITY -->
+        <div class="panel-box">
+          <h4>Recent activity</h4>
+          <ul id="panelRecent"></ul>
+        </div>
       </div>
     </div>
 
@@ -1002,30 +1041,55 @@
     
       const panel = document.getElementById("userPanel");
       const overlay = document.getElementById("userPanelOverlay");
+    
       const nameEl = document.getElementById("userPanelName");
       const summaryEl = document.getElementById("userPanelSummary");
       const listEl = document.getElementById("userPanelScanners");
     
+      const totalEl = document.getElementById("panelTotal");
+      const longestEl = document.getElementById("panelLongest");
+      const statusEl = document.getElementById("panelStatus");
+      const recentEl = document.getElementById("panelRecent");
+    
       nameEl.innerText = user.toUpperCase();
       listEl.innerHTML = "";
+      recentEl.innerHTML = "";
     
+      // Only overdue / long scanners (correct behaviour)
       const rows = statusRows.filter(
         r => r.user === user && r.status !== "OK"
       );
-      
+    
       summaryEl.innerText = `Currently holding ${rows.length} scanner(s)`;
+    
+      let longest = 0;
     
       rows.forEach(r => {
         const li = document.createElement("li");
-        li.innerText = `${r.scanner} (${r.type}) – ${r.hours}h`;
+        li.innerText = `Scanner ${r.scanner} (${r.type}) – ${r.hours}h`;
         listEl.appendChild(li);
+        longest = Math.max(longest, r.hours);
       });
+    
+      totalEl.innerText = rows.length;
+      longestEl.innerText = longest ? `${longest}h` : "–";
+      statusEl.innerText = rows.length ? "OVERDUE" : "OK";
+    
+      // Recent activity (last 3 actions)
+      logRows
+        .filter(l => l.user === user)
+        .slice(-3)
+        .reverse()
+        .forEach(l => {
+          const li = document.createElement("li");
+          li.innerText = `${l.action} scanner ${l.device}`;
+          recentEl.appendChild(li);
+        });
     
       panel.classList.remove("hidden");
       overlay.classList.remove("hidden");
       document.body.style.overflow = "hidden";
     }
-
 
     function closeUserPanel() {
       document.getElementById("userPanel").classList.add("hidden");

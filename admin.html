@@ -1009,7 +1009,10 @@
       nameEl.innerText = user.toUpperCase();
       listEl.innerHTML = "";
     
-      const rows = statusRows.filter(r => r.user === user);
+      const rows = statusRows.filter(
+        r => r.user === user && r.status !== "OK"
+      );
+      
       summaryEl.innerText = `Currently holding ${rows.length} scanner(s)`;
     
       rows.forEach(r => {

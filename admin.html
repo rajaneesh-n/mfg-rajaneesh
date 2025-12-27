@@ -720,27 +720,38 @@
       color: #9ca3af;
     }
 
-    /* === DARK MODE: QUICK STATS FIX === */
-    body.dark .quick-stats,
-    body.dark .quick-stats .stat-card {
-      background: linear-gradient(135deg, #0f172a, #020617);
+    /* ============================= */
+    /* 🌙 DARK MODE — QUICK STATS FIX */
+    /* ============================= */
+    
+    body.dark .panel-box {
+      background: #0f1629;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    
+    body.dark .panel-box h4 {
+      color: #f9fafb;
+    }
+    
+    body.dark .panel-stat-card {
+      background: #050814;
       color: #e5e7eb;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
     }
     
-    body.dark .quick-stats .label {
-      color: #94a3b8;
+    body.dark .panel-stat-card span {
+      color: #9ca3af;
     }
     
-    body.dark .quick-stats .value {
+    body.dark .panel-stat-card strong {
       color: #f8fafc;
     }
     
-    /* Status card override */
-    body.dark .quick-stats .status-ok {
+    /* Status card */
+    body.dark .panel-stat-card.danger {
       background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
       color: #fecaca;
-      border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
   </style>

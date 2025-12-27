@@ -1136,7 +1136,7 @@
       }
       else if (view === "logs") {
         document.getElementById("logs")?.classList.remove("hidden");
-        filters?.classList.remove("hidden");
+        filters?.classList.add("hidden");   // ✅ HIDE filters on Logs
       }
     }
 

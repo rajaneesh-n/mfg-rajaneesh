@@ -720,6 +720,29 @@
       color: #9ca3af;
     }
 
+    /* === DARK MODE: QUICK STATS FIX === */
+    body.dark .quick-stats,
+    body.dark .quick-stats .stat-card {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: #e5e7eb;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    body.dark .quick-stats .label {
+      color: #94a3b8;
+    }
+    
+    body.dark .quick-stats .value {
+      color: #f8fafc;
+    }
+    
+    /* Status card override */
+    body.dark .quick-stats .status-ok {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fecaca;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
   </style>
 </head>
 

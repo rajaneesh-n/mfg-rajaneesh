@@ -372,15 +372,32 @@
     }
     
     .user-panel-header button {
-      background: none;
+      background: #e5e7eb;       /* ⬅️ visible background */
       border: none;
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111827;
     }
     
+    .user-panel-header button:hover {
+      background: #d1d5db;
+    }
+
     .user-panel-body {
-      margin-top: 16px;
+      margin-top: 6px;   /* ⬅️ reduce gap */
       font-size: 14px;
+    }
+    
+    #userPanelSummary {
+      margin: 4px 0 12px;   /* tight but readable */
+      font-size: 14px;
+      color: #374151;
     }
     
     .user-panel-body ul {

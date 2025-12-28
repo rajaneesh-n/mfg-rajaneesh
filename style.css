@@ -202,8 +202,9 @@ input[type="text"] {
 }
 
 /* ================= TAKE SCANNER ONLY ================= */
-body.mobile .row {
+body.take .row {
   text-align: center;
   justify-content: center;
 }
+
 

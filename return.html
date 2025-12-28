@@ -89,6 +89,9 @@
       document.querySelectorAll(".row").forEach(r => r.classList.remove("selected"));
       el.classList.add("selected");
       selectedDevice = id;
+    
+      // Auto-focus name input
+      document.getElementById("userName").focus();
     }
 
     async function returnScanner() {
@@ -133,6 +136,17 @@
       if (isReturning) return;
       history.back();
     }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+    
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 1000);
+    }
+
   </script>
   
   <div id="toast" class="toast hidden"></div>

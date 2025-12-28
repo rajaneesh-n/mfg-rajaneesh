@@ -111,7 +111,6 @@
       const submitBtn = document.getElementById("submitBtn");
 
       if (!selectedType || !selectedDevice || !user) {
-        alert("Please select scanner and enter name");
         return;
       }
 
@@ -140,16 +139,14 @@
           });
         })
         .then(() => {
-          alert("Scanner taken successfully");
-
-          // ✅ AUTO REDIRECT TO HOME
+          showToast("Scanner taken successfully");
+        
           setTimeout(() => {
             window.location.href = "index.html";
-          }, 1200);
+          }, 900);
         })
         .catch(err => {
           console.error(err);
-          alert("Something went wrong");
           isSubmitting = false;
           submitBtn.disabled = false;
           submitBtn.innerText = "Submit";
@@ -160,7 +157,20 @@
       if (isSubmitting) return;
       history.back();
     }
+    
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+    
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 1000);
+    }
+
   </script>
+
+  <div id="toast" class="toast hidden"></div>
 
 </body>
 </html>

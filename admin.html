@@ -315,6 +315,10 @@
       cursor: pointer;
       border: none;
       width: 100%;
+    
+      /* 📱 Ensure dark mode button is always tappable */
+      pointer-events: auto;
+      touch-action: manipulation;
     }
 
     /* 🎞️ Dark mode icon micro-animation (polish only) */
@@ -333,38 +337,14 @@
       background: #1d4ed8;
     }
 
-    /* ============================= */
-    /* 🧊 DARK MODE — COLLAPSED FIX */
-    /* ============================= */
-    
-    /* Sidebar collapsed → icon only + centered */
+    /* 🌙 Dark mode — collapsed sidebar (single source of truth) */
     .sidebar.collapsed .dark-toggle {
       justify-content: center;
       padding: 10px 0;
     }
     
-    /* Hide text only (keep icon visible) */
     .sidebar.collapsed .dark-toggle .dark-text {
       display: none;
-    }
-
-    /* ============================= */
-    /* 🧊 COLLAPSED SIDEBAR BEHAVIOUR */
-    /* ============================= */
-    
-    .sidebar.collapsed .dark-toggle {
-      justify-content: center;   /* center icon */
-      padding: 10px 0;
-    }
-    
-    /* Hide text only (keep icon visible) */
-    .sidebar.collapsed .dark-text {
-      display: none;
-    }
-    
-    /* Center icon when sidebar is collapsed */
-    .sidebar.collapsed .dark-toggle {
-      justify-content: center;
     }
 
     .sidebar a:hover {
@@ -632,21 +612,6 @@
       /* Tables remain scrollable */
       .table-scroll {
         overflow-x: auto;
-      }
-      
-      /* 📱 FIX 2 — Dark mode button always clickable on mobile */
-      .dark-toggle {
-        position: absolute;
-        bottom: 16px;
-        left: 12px;
-        right: 12px;
-        z-index: 4000;
-      }
-      
-      /* 📱 FIX 3 — iOS touch scrolling fix for sidebar */
-      .sidebar {
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
       }
     }
 

@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="mobile">
+<body class="mobile take">
 
   <!-- LOGO -->
   <img src="assets/logo.png" class="logo">
@@ -80,7 +80,7 @@
             if (child.val() === true) {
               const div = document.createElement("div");
               div.className = "row";
-              div.innerText = child.key;
+              div.innerHTML = `<span class="scanner-id-center">${child.key}</span>`;
               div.onclick = () => selectDevice(div, child.key);
               list.appendChild(div);
             }

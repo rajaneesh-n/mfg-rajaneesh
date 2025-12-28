@@ -118,8 +118,8 @@
 
         await db.ref().update(updates);
 
-        alert("Scanner returned successfully");
-        setTimeout(() => window.location.href = "index.html", 800);
+        showToast(`Scanner ${selectedDevice} returned`);
+        setTimeout(() => window.location.href = "index.html", 1200);
       } catch (err) {
         console.error(err);
         alert("Something went wrong");
@@ -134,5 +134,8 @@
       history.back();
     }
   </script>
+  
+  <div id="toast" class="toast hidden"></div>
+
 </body>
 </html>

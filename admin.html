@@ -860,6 +860,11 @@
       margin-top: auto;
     }
 
+    /* FIX: Currently Taken Scanners should scroll internally */
+    .table-scroll--taken {
+      max-height: 55vh;   /* fits laptop + large screens */
+      overflow-y: auto;
+    }
 
   </style>
 </head>
@@ -1057,7 +1062,7 @@
           </div>
         </div>
   
-        <div class="table-scroll">
+        <div class="table-scroll table-scroll--taken">
           <table>
             <thead>
               <tr>

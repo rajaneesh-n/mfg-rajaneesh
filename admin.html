@@ -822,24 +822,43 @@
       
     }
     
-    /* ================= ADMIN AUTO-STRETCH FIX ================= */
-
-    /* Full height page */
-    .admin-page {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    /* ================= ROOT LOCK ================= */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* STOP body scrolling */
     }
     
-    /* Section holding table should expand */
-    .admin-page .section {
+    /* ================= ADMIN PAGE ================= */
+    .admin-page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* ================= CONTENT WRAPPER ================= */
+    .admin-content {
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-height: 0; /* 🔴 CRITICAL */
     }
     
-    /* Table scrolls instead of page */
-    .admin-page .table-scroll {
+    /* ================= FILTER BAR ================= */
+    #filtersRow {
+      flex-shrink: 0;
+    }
+    
+    /* ================= SECTIONS ================= */
+    .section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0; /* 🔴 CRITICAL */
+    }
+    
+    /* ================= TABLE SCROLL ================= */
+    .table-scroll {
       flex: 1;
       overflow-y: auto;
     }
@@ -1008,81 +1027,83 @@
     </div>
     
   <div class="admin-page">
-    <!-- FILTERS (IMPORTANT: id="filtersRow") -->
-    <div class="search-row" id="filtersRow">
-      <input
-        id="searchInput"
-        class="search-box"
-        placeholder="Search by scanner or user"
-      />
-
-      <div class="filter-chips">
-        <span class="chip" data-type="WMS">WMS</span>
-        <span class="chip" data-type="MUSHINY">MUSHINY</span>
-        <span class="chip danger" data-type="OVERDUE">Overdue</span>
-
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;">
-          <input type="checkbox" id="autoRefreshToggle">
-          Auto Refresh (30s)
-        </label>
-      </div>
-    </div>
-
-    <!-- TAKEN -->
-    <div class="section" id="status">
-      <div class="section-header">
-        <h2 id="statusHeading">Currently Taken Scanners</h2>
-        <div class="controls">
-          <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
-          <button onclick="loadStatus()">Refresh</button>
+    <div class="admin-content">
+      <!-- FILTERS (IMPORTANT: id="filtersRow") -->
+      <div class="search-row" id="filtersRow">
+        <input
+          id="searchInput"
+          class="search-box"
+          placeholder="Search by scanner or user"
+        />
+  
+        <div class="filter-chips">
+          <span class="chip" data-type="WMS">WMS</span>
+          <span class="chip" data-type="MUSHINY">MUSHINY</span>
+          <span class="chip danger" data-type="OVERDUE">Overdue</span>
+  
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;">
+            <input type="checkbox" id="autoRefreshToggle">
+            Auto Refresh (30s)
+          </label>
         </div>
       </div>
-
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Scanner</th>
-              <th>Type</th>
-              <th>User</th>
-              <th>Taken Since</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="statusTable">
-            <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    
-    <!-- LOGS -->
-    <div class="section" id="logs">
-      <div class="section-header">
-        <h2>Scanner Logs</h2>
-        <div class="controls">
-          <input type="date" id="fromDate">
-          <input type="date" id="toDate">
-          <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
-          <button onclick="loadLogs()">Refresh</button>
+  
+      <!-- TAKEN -->
+      <div class="section" id="status">
+        <div class="section-header">
+          <h2 id="statusHeading">Currently Taken Scanners</h2>
+          <div class="controls">
+            <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
+            <button onclick="loadStatus()">Refresh</button>
+          </div>
+        </div>
+  
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Scanner</th>
+                <th>Type</th>
+                <th>User</th>
+                <th>Taken Since</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="statusTable">
+              <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Scanner</th>
-              <th>Type</th>
-              <th>User</th>
-              <th>Date / Time</th>
-            </tr>
-          </thead>
-          <tbody id="logsTable">
-            <tr><td class="empty-row" colspan="5">Loading…</td></tr>
-          </tbody>
-        </table>
+      
+      <!-- LOGS -->
+      <div class="section" id="logs">
+        <div class="section-header">
+          <h2>Scanner Logs</h2>
+          <div class="controls">
+            <input type="date" id="fromDate">
+            <input type="date" id="toDate">
+            <button class="secondary" onclick="exportLogsCSV()">Export CSV</button>
+            <button onclick="loadLogs()">Refresh</button>
+          </div>
+        </div>
+  
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Scanner</th>
+                <th>Type</th>
+                <th>User</th>
+                <th>Date / Time</th>
+              </tr>
+            </thead>
+            <tbody id="logsTable">
+              <tr><td class="empty-row" colspan="5">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

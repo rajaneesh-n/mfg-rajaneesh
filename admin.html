@@ -860,11 +860,12 @@
       margin-top: auto;
     }
 
-    /* FIX: Currently Taken Scanners should scroll internally */
+    /* Let page handle vertical scroll */
     .table-scroll--taken {
-      max-height: 55vh;   /* fits laptop + large screens */
-      overflow-y: auto;
+      max-height: none;
+      overflow-y: visible;
     }
+
 
   </style>
 </head>

@@ -203,7 +203,6 @@ input[type="text"] {
 
 /* ================= TAKE SCANNER ONLY ================= */
 body.take .row {
-  display: flex;
   justify-content: center !important;
   align-items: center;
   text-align: center;

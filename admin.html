@@ -822,51 +822,6 @@
       
     }
     
-    /* ===== ADMIN LAYOUT – STABLE VERSION ===== */
-
-    /* Allow page to scroll normally */
-    html, body {
-      height: auto;
-      overflow-y: auto;
-    }
-    
-    /* Main admin wrapper */
-    .admin-page {
-      display: block;
-      padding: 24px;
-    }
-    
-    /* Sections behave naturally */
-    .section {
-      margin-bottom: 32px;
-    }
-    
-    /* Tables grow naturally */
-    .table-scroll {
-      overflow-x: auto;
-    }
-    
-    /* Sidebar stays full height */
-    .sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    /* Dark mode button always visible */
-    .sidebar .dark-toggle {
-      margin-top: auto;
-    }
-
-    /* Let page handle vertical scroll */
-    .table-scroll--taken {
-      max-height: none;
-      overflow-y: visible;
-    }
-
-
   </style>
 </head>
 
@@ -1030,8 +985,7 @@
       </div>
     </div>
     
-  <div class="admin-page">
-      <!-- FILTERS (IMPORTANT: id="filtersRow") -->
+    <!-- FILTERS (IMPORTANT: id="filtersRow") -->
       <div class="search-row" id="filtersRow">
         <input
           id="searchInput"
@@ -1050,8 +1004,6 @@
           </label>
         </div>
       </div>
-
-      <div class="admin-content">
         
       <!-- TAKEN -->
       <div class="section" id="status">
@@ -1109,9 +1061,7 @@
             </tbody>
           </table>
         </div>
-      </div>
     </div>
-  </div>
 
   <!-- FIREBASE (KEEP) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>

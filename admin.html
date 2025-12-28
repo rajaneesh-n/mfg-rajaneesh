@@ -315,13 +315,6 @@
       cursor: pointer;
       border: none;
       width: 100%;
-    
-      /* 📱 Ensure dark mode button is always tappable */
-      pointer-events: auto;
-      touch-action: manipulation;
-
-      /* 🔒 iOS Safari fix */
-      isolation: isolate;
     }
 
     /* 🎞️ Dark mode icon micro-animation (polish only) */
@@ -593,27 +586,7 @@
 
     /* === MOBILE RESPONSIVE BEHAVIOUR === */
     @media (max-width: 768px) {
-    /* === MOBILE TOUCH FIX (CRITICAL) === */
-
-    /* Sidebar must control scrolling properly on iOS */
-    .sidebar {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
     
-    /* Dark mode must be tappable */
-    .dark-toggle {
-      position: relative;
-      z-index: 2;
-      isolation: isolate;
-      pointer-events: auto;
-      touch-action: manipulation;
-    }
-    
-    /* Floating collapse button must NOT steal taps */
-    .sidebar-toggle {
-      pointer-events: none;
-    }
 
       /* User panel becomes full screen */
       .user-panel {
@@ -837,7 +810,43 @@
       color: #fecaca;
     }
 
+    /* ============================= */
+    /* 📱 FINAL iOS SAFARI FIX */
+    /* ============================= */
     
+    @media (max-width: 768px) {
+    
+      /* Hide sidebar dark toggle completely */
+      .sidebar .dark-toggle {
+        display: none !important;
+      }
+    
+      /* Floating dark mode button */
+      .dark-toggle-mobile {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        font-size: 22px;
+        font-weight: 700;
+    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+        z-index: 9999;
+        pointer-events: auto;
+        touch-action: manipulation;
+        isolation: isolate;
+    
+        box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+      }
+    }
 
   </style>
 </head>
@@ -1652,14 +1661,25 @@
       localStorage.setItem("darkMode", isDark ? "yes" : "no");
     
       const icon = document.getElementById("darkIcon");
-      if (icon) {
-        icon.textContent = isDark ? "☀️" : "🌙";
-      }
+      const iconMobile = document.getElementById("darkIconMobile");
+    
+      if (icon) icon.textContent = isDark ? "☀️" : "🌙";
+      if (iconMobile) iconMobile.textContent = isDark ? "☀️" : "🌙";
     }
 
   </script>
 
     </main>
   </div>
+  
+  <!-- 🌙 MOBILE DARK MODE BUTTON (ADD HERE) -->
+  <button
+    class="dark-toggle-mobile"
+    onclick="toggleDarkMode()"
+    aria-label="Toggle dark mode"
+  >
+    <span id="darkIconMobile">🌙</span>
+  </button>
+
 </body>
 </html>

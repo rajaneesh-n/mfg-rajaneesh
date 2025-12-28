@@ -200,3 +200,10 @@ input[type="text"] {
   pointer-events: none;
   transform: translateX(-50%) translateY(10px);
 }
+
+/* ================= TAKE SCANNER ONLY ================= */
+body.mobile .row {
+  text-align: center;
+  justify-content: center;
+}
+

@@ -821,6 +821,28 @@
       }
       
     }
+    
+    /* ================= ADMIN AUTO-STRETCH FIX ================= */
+
+    /* Full height page */
+    .admin-page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    /* Section holding table should expand */
+    .admin-page .section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Table scrolls instead of page */
+    .admin-page .table-scroll {
+      flex: 1;
+      overflow-y: auto;
+    }
 
   </style>
 </head>
@@ -984,7 +1006,8 @@
         </div>
       </div>
     </div>
-
+    
+  <div class="admin-page">
     <!-- FILTERS (IMPORTANT: id="filtersRow") -->
     <div class="search-row" id="filtersRow">
       <input
@@ -1032,7 +1055,8 @@
         </table>
       </div>
     </div>
-
+  </div>
+    
     <!-- LOGS -->
     <div class="section" id="logs">
       <div class="section-header">

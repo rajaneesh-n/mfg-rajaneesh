@@ -183,7 +183,7 @@
       padding: 16px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px
+      gap: 8px;
       position: relative;
       z-index: 3000;
     }
@@ -319,6 +319,9 @@
       /* 📱 Ensure dark mode button is always tappable */
       pointer-events: auto;
       touch-action: manipulation;
+
+      /* 🔒 iOS Safari fix */
+      isolation: isolate;
     }
 
     /* 🎞️ Dark mode icon micro-animation (polish only) */
@@ -590,7 +593,28 @@
 
     /* === MOBILE RESPONSIVE BEHAVIOUR === */
     @media (max-width: 768px) {
+    /* === MOBILE TOUCH FIX (CRITICAL) === */
+
+    /* Sidebar must control scrolling properly on iOS */
+    .sidebar {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     
+    /* Dark mode must be tappable */
+    .dark-toggle {
+      position: relative;
+      z-index: 2;
+      isolation: isolate;
+      pointer-events: auto;
+      touch-action: manipulation;
+    }
+    
+    /* Floating collapse button must NOT steal taps */
+    .sidebar-toggle {
+      pointer-events: none;
+    }
+
       /* User panel becomes full screen */
       .user-panel {
         width: 100vw;

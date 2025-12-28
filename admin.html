@@ -1008,7 +1008,7 @@
     <!-- TAKEN -->
     <div class="section" id="status">
       <div class="section-header">
-        <h2>Currently Taken Scanners</h2>
+        <h2 id="statusHeading">Currently Taken Scanners</h2>
         <div class="controls">
           <button class="secondary" onclick="exportStatusCSV()">Export CSV</button>
           <button onclick="loadStatus()">Refresh</button>
@@ -1225,7 +1225,15 @@
         .sort((a,b) => b.hours - a.hours);
 
       if (!filtered.length) {
-        tb.innerHTML = `<tr><td class="empty-row" colspan="5">No taken scanners found.</td></tr>`;
+        const isOverdueView = overdueOnly === true;
+      
+        tb.innerHTML = `
+          <tr>
+            <td class="empty-row" colspan="5">
+              ${isOverdueView ? "🎉 No overdue scanners." : "No taken scanners found."}
+            </td>
+          </tr>
+        `;
         return;
       }
 
@@ -1390,31 +1398,41 @@
     */
     function showView(view) {
       const filters = document.getElementById("filtersRow");
-
-      // Always hide everything first
+      const heading = document.getElementById("statusHeading");
+    
+      // Hide all sections first
       document.getElementById("dashboard")?.classList.add("hidden");
       document.getElementById("dailySummary")?.classList.add("hidden");
       document.getElementById("status")?.classList.add("hidden");
       document.getElementById("logs")?.classList.add("hidden");
-
-      // Reset chip UI
+    
+      // Reset chips
       document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-
+    
       if (view === "dashboard") {
-        // ✅ DASHBOARD = HOME
         document.getElementById("dashboard")?.classList.remove("hidden");
         document.getElementById("dailySummary")?.classList.remove("hidden");
         filters?.classList.add("hidden");
       }
+    
       else if (view === "status") {
         document.getElementById("status")?.classList.remove("hidden");
         filters?.classList.remove("hidden");
+        heading.innerText = "Currently Taken Scanners";
       }
+    
+      else if (view === "overdue") {
+        document.getElementById("status")?.classList.remove("hidden");
+        filters?.classList.add("hidden");           // 🚫 hide filters
+        heading.innerText = "Overdue Scanners";     // ✅ heading change
+      }
+    
       else if (view === "logs") {
         document.getElementById("logs")?.classList.remove("hidden");
-        filters?.classList.add("hidden");   // ✅ HIDE filters on Logs
+        filters?.classList.add("hidden");
       }
     }
+
 
     function applyViewFromHash() {
       const hash = window.location.hash.replace("#", "");
@@ -1424,7 +1442,7 @@
       activeType = "ALL";
 
       if (hash === "status-overdue") {
-        showView("status");
+        showView("overdue");
       
         // 🔒 force overdue-only view
         overdueOnly = true;

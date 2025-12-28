@@ -820,7 +820,15 @@
       .sidebar .dark-toggle {
         display: none !important;
       }
+
+      .sidebar {
+        pointer-events: none;
+      }
     
+      .sidebar * {
+        pointer-events: none;
+      }
+      
       /* Floating dark mode button */
       .dark-toggle-mobile {
         position: fixed;
@@ -1607,14 +1615,18 @@
 
     // === RESTORE DARK MODE STATE ON PAGE LOAD ===
     const savedDarkMode = localStorage.getItem("darkMode");
+    const isDarkSaved = savedDarkMode === "yes";
     
-    if (savedDarkMode === "yes") {
+    if (isDarkSaved) {
       document.body.classList.add("dark");
     }
+    
     const icon = document.getElementById("darkIcon");
-    if (icon) {
-      icon.textContent = savedDarkMode === "yes" ? "☀️" : "🌙";
-    }
+    const iconMobile = document.getElementById("darkIconMobile");
+    
+    if (icon) icon.textContent = isDarkSaved ? "☀️" : "🌙";
+    if (iconMobile) iconMobile.textContent = isDarkSaved ? "☀️" : "🌙";
+
 
 
     // === RESTORE SIDEBAR STATE ON PAGE LOAD ===

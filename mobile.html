@@ -102,6 +102,11 @@
       );
       el.classList.add("selected");
       selectedDevice = id;
+    
+      // ✅ AUTO-FOCUS NAME INPUT
+      setTimeout(() => {
+        document.getElementById("userName").focus();
+      }, 100);
     }
 
     function submitScanner() {

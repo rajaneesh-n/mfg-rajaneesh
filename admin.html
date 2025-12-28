@@ -858,7 +858,7 @@
     
     /* Tables scroll internally if needed */
     .table-scroll {
-      max-height: 60vh;
+      max-height: calc(100vh - 260px);
       overflow-y: auto;
     }
 
@@ -1026,7 +1026,6 @@
     </div>
     
   <div class="admin-page">
-    <div class="admin-content">
       <!-- FILTERS (IMPORTANT: id="filtersRow") -->
       <div class="search-row" id="filtersRow">
         <input
@@ -1046,7 +1045,9 @@
           </label>
         </div>
       </div>
-  
+
+      <div class="admin-content">
+        
       <!-- TAKEN -->
       <div class="section" id="status">
         <div class="section-header">

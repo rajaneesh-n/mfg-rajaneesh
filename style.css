@@ -209,3 +209,9 @@ body.take .row {
   text-align: center;
 }
 
+/* ================= TAKE SCANNER – CENTERED NUMBER ================= */
+body.take .scanner-id-center {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}

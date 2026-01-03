@@ -1627,22 +1627,24 @@
       sidebar.classList.remove("collapsed");
     }
 
+    // Restore toggle arrow direction
+    toggleBtn.textContent = sidebar.classList.contains("collapsed") ? "▶" : "◀";
+
     toggleBtn.addEventListener("click", () => {
-      // Lock interaction during animation
       sidebar.classList.add("is-animating");
     
-      // Toggle collapsed state
       const isCollapsed = sidebar.classList.toggle("collapsed");
+    
+      // Update arrow direction
+      toggleBtn.textContent = isCollapsed ? "▶" : "◀";
     
       // Persist state
       localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
     
-      // Unlock interaction after animation completes
       setTimeout(() => {
         sidebar.classList.remove("is-animating");
-      }, 260); // must match CSS transition (~250ms)
+      }, 260);
     });
-
 
     // === KEYBOARD SHORTCUT: CTRL/CMD + B ===
     document.addEventListener("keydown", (e) => {

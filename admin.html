@@ -187,6 +187,10 @@
       position: relative;
       z-index: 3000;
     }
+    /* Lock sidebar interaction during expand/collapse animation */
+    .sidebar.is-animating {
+      pointer-events: none;
+    }
     /* STEP 2 — LOGO COLLAPSE FIX */
     .sidebar.collapsed img {
       width: 36px !important;
@@ -1612,7 +1616,6 @@
     if (iconMobile) iconMobile.textContent = isDarkSaved ? "☀️" : "🌙";
 
 
-
     // === RESTORE SIDEBAR STATE ON PAGE LOAD ===
     const savedSidebar = localStorage.getItem("sidebarCollapsed");
     
@@ -1623,9 +1626,21 @@
     }
 
     toggleBtn.addEventListener("click", () => {
+      // Lock interaction during animation
+      sidebar.classList.add("is-animating");
+    
+      // Toggle collapsed state
       const isCollapsed = sidebar.classList.toggle("collapsed");
+    
+      // Persist state
       localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
+    
+      // Unlock interaction after animation completes
+      setTimeout(() => {
+        sidebar.classList.remove("is-animating");
+      }, 260); // must match CSS transition (~250ms)
     });
+
 
     // === KEYBOARD SHORTCUT: CTRL/CMD + B ===
     document.addEventListener("keydown", (e) => {
@@ -1633,8 +1648,17 @@
       const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
     
       if (modifierPressed && e.key.toLowerCase() === "b") {
-        e.preventDefault(); // prevent browser bold action
-        sidebar.classList.toggle("collapsed");
+        e.preventDefault();
+      
+        // Lock interaction during animation
+        sidebar.classList.add("is-animating");
+      
+        const isCollapsed = sidebar.classList.toggle("collapsed");
+        localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
+      
+        setTimeout(() => {
+          sidebar.classList.remove("is-animating");
+        }, 260);
       }
     });
 

@@ -201,24 +201,6 @@
       width: 64px;
     }
     
-    /* Prevent inner content from animating independently */
-    .sidebar * {
-      transition: none !important;
-    }
-
-    /* Lock sidebar interaction during expand/collapse animation */
-    .sidebar.is-animating {
-      pointer-events: none;
-    }
-    /* STEP 2 — LOGO COLLAPSE FIX */
-    .sidebar.collapsed img {
-      width: 36px !important;
-    }
-
-    .sidebar.collapsed > div {
-      padding: 6px !important;
-    }
-    
     /* STEP 4 — FLOATING TOGGLE (EDGE BUTTON) */
     .sidebar {
       position: relative; /* REQUIRED */

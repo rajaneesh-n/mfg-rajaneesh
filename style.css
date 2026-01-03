@@ -261,3 +261,45 @@ body.take .scanner-id-center {
 .home-icon {
   font-size: 24px;
 }
+
+/* ================= DARK MODE — HOME PAGE ================= */
+body.dark {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+body.dark .list,
+body.dark .home-row {
+  background: #020617;
+  box-shadow: none;
+}
+
+body.dark .page-subtitle {
+  color: #9ca3af;
+}
+
+@media (max-width: 420px) {
+  .home-row {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+  }
+}
+
+/* Tap feedback */
+.home-row:active {
+  transform: scale(0.97);
+  background: #e0edff;
+}
+
+/* ================= ICON STYLE — MATCH ADMIN SIDEBAR ================= */
+
+/* Light mode icon colour */
+.home-icon {
+  color: #2563eb;   /* same blue used in admin sidebar */
+}
+
+/* Dark mode icon colour */
+body.dark .home-icon {
+  color: #60a5fa;   /* softer blue for dark backgrounds */
+}

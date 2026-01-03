@@ -262,22 +262,6 @@ body.take .scanner-id-center {
   font-size: 24px;
 }
 
-/* ================= DARK MODE — HOME PAGE ================= */
-body.dark {
-  background: #0f172a;
-  color: #e5e7eb;
-}
-
-body.dark .list,
-body.dark .home-row {
-  background: #020617;
-  box-shadow: none;
-}
-
-body.dark .page-subtitle {
-  color: #9ca3af;
-}
-
 @media (max-width: 420px) {
   .home-row {
     margin-left: 0;
@@ -297,9 +281,4 @@ body.dark .page-subtitle {
 /* Light mode icon colour */
 .home-icon {
   color: #2563eb;   /* same blue used in admin sidebar */
-}
-
-/* Dark mode icon colour */
-body.dark .home-icon {
-  color: #60a5fa;   /* softer blue for dark backgrounds */
 }

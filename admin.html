@@ -187,6 +187,25 @@
       position: relative;
       z-index: 3000;
     }
+    /* === STEP 2: LOCK SIDEBAR ANIMATION CLEANLY === */
+
+    /* Sidebar base animation */
+    .sidebar {
+      transition: width 220ms ease-in-out;
+      will-change: width;
+      overflow: hidden;
+    }
+    
+    /* Collapsed width */
+    .sidebar.collapsed {
+      width: 64px;
+    }
+    
+    /* Prevent inner content from animating independently */
+    .sidebar * {
+      transition: none !important;
+    }
+
     /* Lock sidebar interaction during expand/collapse animation */
     .sidebar.is-animating {
       pointer-events: none;

@@ -214,3 +214,50 @@ body.take .scanner-id-center {
   font-weight: bold;
   text-align: center;
 }
+
+/* ===================================================== */
+/* Scanner Management – Home Page Enhancements (SAFE) */
+/* ===================================================== */
+
+/* Logo spacing improvement */
+.app-logo {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+
+/* Page title hierarchy */
+.page-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 6px 0 4px;
+}
+
+/* Subtitle under title */
+.page-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin: 6px 0 26px;
+}
+
+/* Home action cards polish (reuses existing .home-row safely) */
+.home-row {
+  border-radius: 16px;
+  margin: 14px 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Tap / hover feedback */
+.home-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+}
+
+/* Icon balance */
+.home-icon {
+  font-size: 24px;
+}

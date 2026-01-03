@@ -187,25 +187,12 @@
       position: relative;
       z-index: 3000;
     }
-    /* === STEP 2: LOCK SIDEBAR ANIMATION CLEANLY === */
 
-    /* Sidebar base animation */
-    .sidebar {
-      transition: width 220ms ease-in-out;
-      will-change: width;
-      overflow: hidden;
-    }
-    
-    /* Collapsed width */
+    /* Collapsed sidebar — OLD CORRECT SIZE */
     .sidebar.collapsed {
-      width: 64px;
+      width: 72px;
     }
-    
-    /* STEP 4 — FLOATING TOGGLE (EDGE BUTTON) */
-    .sidebar {
-      position: relative; /* REQUIRED */
-    }
-    
+
     .sidebar-toggle {
       position: absolute;
       top: 50%;
@@ -252,12 +239,6 @@
       box-shadow:
         0 0 0 4px rgba(37, 99, 235, 0.35),
         0 6px 16px rgba(0, 0, 0, 0.35);
-    }
-    
-    /* Fade text when collapsing */
-    .sidebar.collapsed .nav-text {
-      opacity: 0;
-      transform: translateX(-4px);
     }
     
     /* Slight icon emphasis */

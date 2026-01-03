@@ -173,7 +173,6 @@
     .admin-layout {
       display: flex;
       min-height: 100vh;
-      position: relative;
     }
 
     /* Sidebar */
@@ -188,73 +187,36 @@
       position: relative;
       z-index: 3000;
       flex-shrink: 0;
-    
-      /* animation */
-      transition: width 0.25s ease;
       overflow: hidden;
-      will-change: width;
+    }
+    /* STEP 2 — LOGO COLLAPSE FIX */
+    .sidebar.collapsed img {
+      width: 36px !important;
+    }
+
+    .sidebar.collapsed > div {
+      padding: 6px !important;
+    }
+
+    /* === SIDEBAR COLLAPSE === */
+    .sidebar {
+      transition: width 0.25s ease;
     }
     
-    /* COLLAPSED — OLD CORRECT SIZE */
+    /* Collapsed sidebar */
     .sidebar.collapsed {
       width: 72px;
     }
     
-    /* LOCK INTERACTION DURING ANIMATION */
-    .sidebar.is-animating {
-      pointer-events: none;
+    /* STEP 4 — FLOATING TOGGLE (EDGE BUTTON) */
+    .sidebar {
+      position: relative; /* REQUIRED */
     }
     
-    /* LOGO FIX */
-    .sidebar.collapsed img {
-      width: 36px !important;
-    }
-    
-    .sidebar.collapsed > div {
-      padding: 6px !important;
-    }
-    
-    /* SIDEBAR LINKS */
-    .sidebar a {
-      color: #e5e7eb;
-      text-decoration: none;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .sidebar a:hover {
-      background: #1f2937;
-    }
-    
-    /* COLLAPSE VISUALS */
-    .sidebar.collapsed a {
-      justify-content: center;
-      padding: 12px 0;
-    }
-    
-    .sidebar.collapsed .nav-text {
-      display: none;
-    }
-    
-    .sidebar .nav-icon {
-      transition: transform 0.2s ease;
-    }
-    
-    .sidebar.collapsed .nav-icon {
-      font-size: 18px;
-      transform: scale(1.1);
-    }
-    
-    /* FLOATING TOGGLE (EDGE BUTTON) */
     .sidebar-toggle {
       position: absolute;
       top: 50%;
-      right: -22px; /* pushes button outside */
+      right: -18px;              /* pushes button outside */
       transform: translateY(-50%);
       width: 36px;
       height: 36px;
@@ -270,15 +232,77 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       z-index: 1000;
+      pointer-events: auto;
     }
     
+    /* Rotate arrow when collapsed — KEEP CENTERED */
+    .sidebar.collapsed .sidebar-toggle {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    
+    /* STEP 3 — COLLAPSE VISUALS */
+    .sidebar.collapsed a {
+      justify-content: center;
+      padding: 12px 0;
+    }
+
+    .sidebar.collapsed .nav-text {
+      display: none;
+    }
+
+    .sidebar.collapsed .nav-icon {
+      font-size: 18px;
+    }
+    
+    /* === HOVER GLOW FOR SIDEBAR TOGGLE === */
     .sidebar-toggle:hover {
       box-shadow:
         0 0 0 4px rgba(37, 99, 235, 0.35),
         0 6px 16px rgba(0, 0, 0, 0.35);
     }
     
-    /* DARK MODE BUTTON */
+    /* === SMOOTH SIDEBAR CONTENT ANIMATION === */
+    .sidebar,
+    .sidebar a,
+    .sidebar img {
+      transition:
+        width 0.25s ease,
+        opacity 0.2s ease,
+        transform 0.2s ease;
+    }
+    
+    /* Fade text when collapsing */
+    .sidebar.collapsed .nav-text {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+    
+    /* Slight icon emphasis */
+    .sidebar .nav-icon {
+      transition: transform 0.2s ease;
+    }
+    
+    .sidebar.collapsed .nav-icon {
+      transform: scale(1.1);
+    }
+
+    /* Sidebar links */
+    .sidebar a {
+      color: #e5e7eb;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* ============================= */
+    /* 🌙 DARK MODE TOGGLE BUTTON */
+    /* ============================= */
+    
     .dark-toggle {
       display: flex;
       align-items: center;
@@ -294,7 +318,6 @@
       border: none;
       width: 100%;
     }
-
 
     /* 🎞️ Dark mode icon micro-animation (polish only) */
     #darkIcon {
@@ -326,29 +349,6 @@
       background: #1f2937;
     }
 
-    /* ============================= */
-    /* ⌨️ KEYBOARD FOCUS STYLES */
-    /* ============================= */
-    
-    /* Sidebar links */
-    .sidebar a:focus-visible {
-      outline: 3px solid #2563eb;
-      outline-offset: 2px;
-      background: #1f2937;
-    }
-    
-    /* Sidebar toggle button */
-    .sidebar-toggle:focus-visible {
-      outline: 3px solid #2563eb;
-      outline-offset: 3px;
-    }
-    
-    /* Dark mode button */
-    .dark-toggle:focus-visible {
-      outline: 3px solid #2563eb;
-      outline-offset: 3px;
-    }
-
     /* Push Back-to-Home to bottom */
     .sidebar .spacer {
       flex: 1;
@@ -357,8 +357,11 @@
     /* Main content area */
     .admin-content {
       flex: 1;
+      min-width: 0;        /* 🔑 REQUIRED for flexbox */
+      overflow-x: hidden; /* removes white space */
       background: #f4f6f8;
     }
+
     /* ===== SCROLLABLE TABLE WITH STICKY HEADERS ===== */
     .table-scroll {
       max-height: 420px;          /* adjust if you want */
@@ -1614,6 +1617,7 @@
     if (iconMobile) iconMobile.textContent = isDarkSaved ? "☀️" : "🌙";
 
 
+
     // === RESTORE SIDEBAR STATE ON PAGE LOAD ===
     const savedSidebar = localStorage.getItem("sidebarCollapsed");
     
@@ -1623,23 +1627,9 @@
       sidebar.classList.remove("collapsed");
     }
 
-    // Restore toggle arrow direction
-    toggleBtn.textContent = sidebar.classList.contains("collapsed") ? "▶" : "◀";
-
     toggleBtn.addEventListener("click", () => {
-      sidebar.classList.add("is-animating");
-    
       const isCollapsed = sidebar.classList.toggle("collapsed");
-    
-      // Update arrow direction
-      toggleBtn.textContent = isCollapsed ? "▶" : "◀";
-    
-      // Persist state
       localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
-    
-      setTimeout(() => {
-        sidebar.classList.remove("is-animating");
-      }, 260);
     });
 
     // === KEYBOARD SHORTCUT: CTRL/CMD + B ===
@@ -1648,17 +1638,8 @@
       const modifierPressed = isMac ? e.metaKey : e.ctrlKey;
     
       if (modifierPressed && e.key.toLowerCase() === "b") {
-        e.preventDefault();
-      
-        // Lock interaction during animation
-        sidebar.classList.add("is-animating");
-      
-        const isCollapsed = sidebar.classList.toggle("collapsed");
-        localStorage.setItem("sidebarCollapsed", isCollapsed ? "yes" : "no");
-      
-        setTimeout(() => {
-          sidebar.classList.remove("is-animating");
-        }, 260);
+        e.preventDefault(); // prevent browser bold action
+        sidebar.classList.toggle("collapsed");
       }
     });
 

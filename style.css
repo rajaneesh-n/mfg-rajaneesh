@@ -16,9 +16,9 @@ body.mobile {
 
   display: flex;
   flex-direction: column;
-  /* ✅ Mobile keyboard-safe */
-  min-height: 100vh;
-  overflow-y: auto;
+
+  height: 100vh;
+  overflow: hidden; /* 🔒 LOCK PAGE */
 }
 
 /* ================= LOGO ================= */
@@ -62,7 +62,8 @@ h2 {
 .scroll-area {
   flex: 1;
   overflow-y: auto;
-  padding: 0 16px;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
 }
 
 /* ================= SCANNER LIST ================= */
@@ -105,20 +106,6 @@ h2 {
 .row.selected {
   background: #e0edff;
   border-left: 5px solid #2563eb;
-}
-
-/* ================= INPUT ================= */
-input[type="text"] {
-  margin: 12px 16px;
-  padding: 14px;
-  width: calc(100% - 32px);
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-@media (max-width: 768px) {
-  input[type="text"] {
-    margin-bottom: 24px;
-  }
 }
 
 /* ================= ACTION BAR ================= */
@@ -293,21 +280,19 @@ body.take .scanner-id-center {
   color: #2563eb;   /* same blue used in admin sidebar */
 }
 
-/* ================= MOBILE KEYBOARD FIX ================= */
+/* ================= FIXED INPUT ZONE ================= */
 
-/* Allow scroll area to actually scroll */
-.scroll-area {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+.input-wrap {
+  padding: 12px 16px;
+  background: #f4f6f8;
+  border-top: 1px solid #e5e7eb;
+
+  margin-bottom: 4px;
 }
 
-/* Give space below input so keyboard doesn’t cover buttons */
-.scroll-area input[type="text"] {
-  margin-bottom: 24px;
-}
-
-/* Prevent action bar from shrinking */
-.actions {
-  flex-shrink: 0;
+.input-wrap input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }

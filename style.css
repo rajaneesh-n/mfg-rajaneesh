@@ -319,8 +319,8 @@ body.take .scanner-id-center {
 
 /* HOME PAGE LOGO (INDEX ONLY) */
 .logo-dark {
-  max-width: 180px;   /* ⬅️ slightly bigger */
-  margin: 10px auto 4px;
+  max-width: 190px;   /* ⬅️ slightly bigger */
+  margin: 8px auto 4px;
   display: block;
 }
 

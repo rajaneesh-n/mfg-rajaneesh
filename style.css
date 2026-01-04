@@ -16,7 +16,9 @@ body.mobile {
 
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* stop page scrolling */
+  /* ✅ Mobile keyboard-safe */
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
 /* ================= LOGO ================= */
@@ -113,6 +115,11 @@ input[type="text"] {
   border-radius: 10px;
   border: 1px solid #ccc;
 }
+@media (max-width: 768px) {
+  input[type="text"] {
+    margin-bottom: 24px;
+  }
+}
 
 /* ================= ACTION BAR ================= */
 .actions {
@@ -120,6 +127,9 @@ input[type="text"] {
   background: #f4f6f8;
   display: flex;
   gap: 12px;
+  
+  /* ✅ stay usable on mobile */
+  flex-shrink: 0;
 }
 
 /* DEFAULT ACTION BUTTON → SUBMIT / RETURN */

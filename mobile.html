@@ -25,10 +25,17 @@
     <div id="scannerList" class="list">
       <p class="hint">Select WMS or Mushiny</p>
     </div>
-  
-    <!-- USER NAME (MOVE INSIDE SCROLL AREA) -->
+
+  </div>
+
+  <!-- STICKY BOTTOM BAR -->
+  <div class="bottom-bar">
     <input type="text" id="userName" placeholder="Enter your name">
   
+    <div class="actions">
+      <button id="submitBtn" onclick="submitScanner()">Submit</button>
+      <button class="secondary" onclick="safeBack()">Back</button>
+    </div>
   </div>
 
   <!-- ACTION BAR -->
@@ -107,7 +114,7 @@
     
       // ✅ AUTO-FOCUS NAME INPUT
       setTimeout(() => {
-        document.getElementById("userName").focus();
+        document.getElementById("userName").focus({ preventScroll: true });
       }, 100);
     }
 

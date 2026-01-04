@@ -316,3 +316,16 @@ body.take .scanner-id-center {
   margin: 0 0 12px;
   font-size: 16px; /* ✅ prevents iOS zoom */
 }
+
+/* HOME PAGE LOGO (INDEX ONLY) */
+.logo-dark {
+  max-width: 180px;   /* ⬅️ slightly bigger */
+  margin: 20px auto 12px;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .logo-dark {
+    max-width: 150px;
+  }
+}

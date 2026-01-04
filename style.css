@@ -320,7 +320,7 @@ body.take .scanner-id-center {
 /* HOME PAGE LOGO (INDEX ONLY) */
 .logo-dark {
   max-width: 190px;   /* ⬅️ slightly bigger */
-  margin: 8px auto 4px;
+  margin: 8px auto 0;
   display: block;
 }
 

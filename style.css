@@ -17,8 +17,9 @@ body.mobile {
   display: flex;
   flex-direction: column;
 
-  height: 100vh;
-  overflow: hidden; /* 🔒 LOCK PAGE */
+  /* ✅ better than 100vh on mobile Safari */
+  height: 100dvh;
+  overflow: hidden; /* page itself does not scroll */
 }
 
 /* ================= LOGO ================= */
@@ -110,8 +111,8 @@ h2 {
 
 /* ================= ACTION BAR ================= */
 .actions {
-  padding: 16px;
-  background: #f4f6f8;
+  padding: 0;
+  background: transparent;
   display: flex;
   gap: 12px;
   
@@ -295,4 +296,23 @@ body.take .scanner-id-center {
   padding: 14px;
   border-radius: 10px;
   border: 1px solid #ccc;
+}
+
+/* ================= STICKY BOTTOM BAR (NAME + BUTTONS) ================= */
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  background: #f4f6f8;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 16px calc(16px + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+.bottom-bar input[type="text"] {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin: 0 0 12px;
+  font-size: 16px; /* ✅ prevents iOS zoom */
 }

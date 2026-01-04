@@ -220,8 +220,8 @@ body.take .scanner-id-center {
 /* Logo spacing improvement */
 .app-logo {
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 12px;
+  margin-top: 16px;
+  margin-bottom: 4px;
 }
 
 /* Page title hierarchy */
@@ -229,7 +229,7 @@ body.take .scanner-id-center {
   text-align: center;
   font-size: 26px;
   font-weight: 800;
-  margin: 6px 0 4px;
+  margin: 2px 0 4px;
 }
 
 /* Subtitle under title */

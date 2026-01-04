@@ -292,3 +292,22 @@ body.take .scanner-id-center {
 .home-icon {
   color: #2563eb;   /* same blue used in admin sidebar */
 }
+
+/* ================= MOBILE KEYBOARD FIX ================= */
+
+/* Allow scroll area to actually scroll */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Give space below input so keyboard doesn’t cover buttons */
+.scroll-area input[type="text"] {
+  margin-bottom: 24px;
+}
+
+/* Prevent action bar from shrinking */
+.actions {
+  flex-shrink: 0;
+}
